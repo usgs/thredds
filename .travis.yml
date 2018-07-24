@@ -40,7 +40,7 @@ jdk:
 install: true
 
 script:
-  - travis/script.sh
+  - travis/script.sh jacoco:report coveralls:report
 
 after_script:
   - travis/after_script.sh
