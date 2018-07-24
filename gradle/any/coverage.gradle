@@ -46,7 +46,7 @@ tasks.withType(JacocoReport).all {  // Will apply to ":<subproject>:jacocoTestRe
     dependsOn tasks.withType(Test)
     
     reports {
-        xml.enabled = true
+        xml.enabled = false
         html.enabled = true
         csv.enabled = false
     }
