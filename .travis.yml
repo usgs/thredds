@@ -41,6 +41,10 @@ install: true
 
 script:
   - travis/script.sh
+  - ./gradlew sonarqube \
+    -Dsonar.organization=skaymen-github \
+    -Dsonar.host.url=https://sonarcloud.io \
+    -Dsonar.login=c797a5effed7daae1f141683566499c25a21eee9
 
 after_script:
   - travis/after_script.sh
@@ -58,4 +62,3 @@ cache:
 after_success:
   - ./gradlew jacocoTestReport
   - bash <(curl -s https://codecov.io/bash)
-  - ./gradlew sonarqube
