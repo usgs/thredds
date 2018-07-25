@@ -56,11 +56,5 @@ cache:
     - $HOME/.gradle/wrapper/
 
 after_success:
-  - ./gradlew rootJacocoReport coveralls
-  - ./gradlew jacocoTestReport
-  - bash <(curl -s https://codecov.io/bash)
-
-after_failure:
-  - ./gradlew rootJacocoReport coveralls
   - ./gradlew jacocoTestReport
   - bash <(curl -s https://codecov.io/bash)
