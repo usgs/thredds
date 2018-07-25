@@ -33,7 +33,7 @@ addons:
     target_paths: Travis/$TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER/$TRAVIS_JOB_NUMBER
   sonarcloud:
     organization: "skaymen-github" # the key of the org you chose at step #3
-    login: "7c4c4e18b4f871b96662d43843d510075308b4c1"
+    token: "7c4c4e18b4f871b96662d43843d510075308b4c1"
 
 jdk:
   - oraclejdk8
@@ -44,7 +44,7 @@ install: true
 
 script:
   - travis/script.sh
-  - ./gradlew sonarqube
+  - sonar-scanner
 
 after_script:
   - travis/after_script.sh
