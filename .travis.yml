@@ -33,7 +33,7 @@ addons:
     target_paths: Travis/$TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER/$TRAVIS_JOB_NUMBER
   sonarcloud:
     organization: "skaymen-github" # the key of the org you chose at step #3
-    token: SONARQUBE_USER_TOKEN_KEY
+    token: c797a5effed7daae1f141683566499c25a21eee9
 
 jdk:
   - oraclejdk8
