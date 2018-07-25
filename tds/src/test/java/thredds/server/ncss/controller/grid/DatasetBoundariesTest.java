@@ -1,7 +1,11 @@
+
+
 /*
  * Copyright (c) 1998-2018 University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
- 
+ */
+
+/**
 package thredds.server.ncss.controller.grid;
 
 import junitparams.JUnitParamsRunner;
@@ -36,7 +40,8 @@ import java.lang.invoke.MethodHandles;
  *
  * @author mhermida
  * @author cwardgar
- */
+ 
+
 @RunWith(JUnitParamsRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(locations = { "/WEB-INF/applicationContext.xml" }, loader = MockTdsContextLoader.class)
