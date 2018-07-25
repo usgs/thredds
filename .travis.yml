@@ -59,6 +59,6 @@ after_success:
   - ./gradlew jacocoTestReport
   - bash <(curl -s https://codecov.io/bash)
   - ./gradlew sonarqube \ 
-    -Dsonar.organization=skaymen-github \ 
-    -Dsonar.host.url=https://sonarcloud.io \ 
-    -Dsonar.login=4830d40887d1036d928799e96e998d125f5b38df
+    sonar.organization=skaymen-github \ 
+    sonar.host.url=https://sonarcloud.io \ 
+    sonar.login=4830d40887d1036d928799e96e998d125f5b38df
