@@ -31,6 +31,10 @@ addons:
       - $TEST_REPORT_DIR
       - $TDS_LOGS_DIR
     target_paths: Travis/$TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER/$TRAVIS_JOB_NUMBER
+  sonarcloud:
+    organization: "skaymen-github" # the key of the org you chose at step #3
+    token:
+      secure: "c797a5effed7daae1f141683566499c25a21eee9" # encrypted value of your token
 
 jdk:
   - oraclejdk8
@@ -41,6 +45,7 @@ install: true
 
 script:
   - travis/script.sh
+  - ./gradlew sonarqube
 
 after_script:
   - travis/after_script.sh
