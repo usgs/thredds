@@ -1,8 +1,7 @@
 ![THREDDS icon](http://www.unidata.ucar.edu/images/logos/thredds_netcdf-75x75.png)
 [![Build Status](https://travis-ci.org/usgs/thredds.svg?branch=5.0.0)](https://travis-ci.org/usgs/thredds)
 [![codecov](https://codecov.io/gh/usgs/thredds/branch/5.0.0/graph/badge.svg)](https://codecov.io/gh/usgs/thredds)
-
-[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-black.svg)](https://sonarcloud.io/dashboard?id=thredds)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4fbc89191aeb4c6da62b22de1ebe2426)](https://www.codacy.com/app/skaymen/thredds?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=usgs/thredds&amp;utm_campaign=Badge_Grade)
 
 # Unidata's THREDDS Project
 
