@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1998-2018 University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
- */
+ 
 package thredds.server.ncss.controller.grid;
 
 import junitparams.JUnitParamsRunner;
@@ -123,3 +123,5 @@ public class DatasetBoundariesTest {
 				.andExpect(content().string(expectedResponse));
 	}
 }
+
+*/
