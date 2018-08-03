@@ -135,7 +135,18 @@ public class CF1Convention extends CSMConvention {
           v.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.Ensemble.toString()));
           continue;
         }
-
+        
+        //sjk code
+        if (sname.equalsIgnoreCase(CF.GEOMETRY)) {
+        	v.addAttribute(new Attribute(_Coordinate.Axes, CF.NODES));
+        	v.addAttribute(new Attribute(_Coordinate.Axes, CF.NODE_COUNT));
+        	v.addAttribute(new Attribute(_Coordinate.Axes, CF.NODE_COORDINATES));
+        	if (v.findAttribute(CF.GEOMETRY_TYPE) == "polygon") {
+        		v.addAttribute(new Attribute(_Coordinate.Axes, CF.INTERIOR_RING));
+        	}
+        	continue;
+        }
+        
         for (String vertical_coord : vertical_coords)
           if (sname.equalsIgnoreCase(vertical_coord)) {
             v.addAttribute(new Attribute(_Coordinate.TransformType, TransformType.Vertical.toString()));
