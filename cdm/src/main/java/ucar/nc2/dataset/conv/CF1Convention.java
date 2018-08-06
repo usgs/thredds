@@ -137,14 +137,16 @@ public class CF1Convention extends CSMConvention {
         }
         
         //sjk code
-        if (sname.equalsIgnoreCase(CF.GEOMETRY)) {
-        	v.addAttribute(new Attribute(_Coordinate.Axes, CF.NODES));
-        	v.addAttribute(new Attribute(_Coordinate.Axes, CF.NODE_COUNT));
-        	v.addAttribute(new Attribute(_Coordinate.Axes, CF.NODE_COORDINATES));
-        	if (v.findAttribute(CF.GEOMETRY_TYPE) == "polygon") {
-        		v.addAttribute(new Attribute(_Coordinate.Axes, CF.INTERIOR_RING));
+        if (v.findAttribute(CF.GEOMETRY) != null) {
+        	v.addAttribute(new Attribute(CF.NODES, v.findAttIgnoreCase(CF.NODES, "nodes")));
+        	v.addAttribute(new Attribute(CF.NODE_COUNT, v.findAttIgnoreCase(CF.NODE_COUNT, "node_count")));
+        	v.addAttribute(new Attribute(CF.NODE_COORDINATES, v.findAttIgnoreCase(CF.NODE_COORDINATES, "node_coordinates")));
+        	v.addAttribute(new Attribute(CF.PART_NODE_COUNT, v.findAttIgnoreCase(CF.PART_NODE_COUNT, "part_node_count")));
+        	if (v.findAttValueIgnoreCase(CF.GEOMETRY_TYPE, "geometry_type").equalsIgnoreCase("polygon")) {
+            	v.addAttribute(new Attribute(CF.INTERIOR_RING, v.findAttIgnoreCase(CF.INTERIOR_RING, "interior_ring")));
         	}
         	continue;
+
         }
         
         for (String vertical_coord : vertical_coords)
