@@ -146,7 +146,6 @@ public class CF1Convention extends CSMConvention {
             	v.addAttribute(new Attribute(CF.INTERIOR_RING, v.findAttIgnoreCase(CF.INTERIOR_RING, "interior_ring")));
         	}
         	continue;
-
         }
         
         for (String vertical_coord : vertical_coords)
