@@ -136,18 +136,6 @@ public class CF1Convention extends CSMConvention {
           continue;
         }
         
-        //sjk code
-        if (v.findAttribute(CF.GEOMETRY) != null) {
-        	v.addAttribute(new Attribute(CF.NODES, v.findAttIgnoreCase(CF.NODES, "nodes")));
-        	v.addAttribute(new Attribute(CF.NODE_COUNT, v.findAttIgnoreCase(CF.NODE_COUNT, "node_count")));
-        	v.addAttribute(new Attribute(CF.NODE_COORDINATES, v.findAttIgnoreCase(CF.NODE_COORDINATES, "node_coordinates")));
-        	v.addAttribute(new Attribute(CF.PART_NODE_COUNT, v.findAttIgnoreCase(CF.PART_NODE_COUNT, "part_node_count")));
-        	if (v.findAttValueIgnoreCase(CF.GEOMETRY_TYPE, "geometry_type").equalsIgnoreCase("polygon")) {
-            	v.addAttribute(new Attribute(CF.INTERIOR_RING, v.findAttIgnoreCase(CF.INTERIOR_RING, "interior_ring")));
-        	}
-        	continue;
-        }
-        
         for (String vertical_coord : vertical_coords)
           if (sname.equalsIgnoreCase(vertical_coord)) {
             v.addAttribute(new Attribute(_Coordinate.TransformType, TransformType.Vertical.toString()));
@@ -181,6 +169,19 @@ public class CF1Convention extends CSMConvention {
 
           got_grid_mapping = true;
         }
+      }
+      
+      //simple geometry
+      if (v.findAttribute(CF.GEOMETRY) != null) {
+      	v.addAttribute(new Attribute(CF.NODES, ds.findAttValueIgnoreCase(v, CF.NODES, null)));
+      	v.addAttribute(new Attribute(CF.NODE_COUNT, ds.findAttValueIgnoreCase(v, CF.NODE_COUNT, null)));
+      	v.addAttribute(new Attribute(CF.NODE_COORDINATES, ds.findAttValueIgnoreCase(v, CF.NODE_COORDINATES, null)));
+      	v.addAttribute(new Attribute(CF.PART_NODE_COUNT, ds.findAttValueIgnoreCase(v, CF.PART_NODE_COUNT, null)));
+      	if (ds.findAttValueIgnoreCase(v, CF.GEOMETRY_TYPE, null) != null) {
+      		if (ds.findAttValueIgnoreCase(v, CF.GEOMETRY_TYPE, null).equalsIgnoreCase("polygon")){
+      			v.addAttribute(new Attribute(CF.INTERIOR_RING, ds.findAttValueIgnoreCase(v, CF.INTERIOR_RING, null)));
+      		}
+      	}
       }
     }
 
