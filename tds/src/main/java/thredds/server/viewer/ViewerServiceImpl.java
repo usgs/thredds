@@ -5,6 +5,8 @@
 
 package thredds.server.viewer;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -17,13 +19,15 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
-import com.coverity.security.Escape;
-import opendap.util.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import thredds.client.catalog.*;
+import thredds.core.AllowedServices;
+import thredds.core.StandardService;
+import thredds.server.notebook.JupyterNotebookServiceCache;
 import ucar.nc2.constants.FeatureType;
 import ucar.nc2.util.IO;
 import ucar.unidata.util.StringUtil2;
@@ -39,6 +43,12 @@ public class ViewerServiceImpl implements ViewerService {
 
   private List<Viewer> viewers = new ArrayList<>();
   private HashMap<String, String> templates = new HashMap<>();
+
+  @Autowired
+  private JupyterNotebookServiceCache  jupyterNotebooks;
+
+  @Autowired
+  private AllowedServices allowedServices;
 
   @Override
   public List<Viewer> getViewers() {
@@ -127,12 +137,13 @@ public class ViewerServiceImpl implements ViewerService {
     registerViewer(new ToolsUI());
     registerViewer(new IDV());
     registerViewer(new StaticView());
+    registerViewer(new JupyterNotebookViewer(jupyterNotebooks, allowedServices));
   }
 
   // Viewers...
   // ToolsUI
   private static class ToolsUI implements Viewer {
-    private static final String title = "NetCDF-Java toolUi (webstart)";
+    private static final String title = "NetCDF-Java ToolsUi (webstart)";
 
     public boolean isViewable(Dataset ds) {
       String id = ds.getID();
@@ -207,6 +218,40 @@ public class ViewerServiceImpl implements ViewerService {
       if (access == null)
         access = ds.getAccess(ServiceType.OPENDAP);
       return access;
+    }
+  }
+
+  private static class JupyterNotebookViewer implements Viewer {
+    private static final String title = "Jupyter Notebook viewer";
+
+    private JupyterNotebookServiceCache jupyterNotebooks;
+
+    private AllowedServices allowedServices;
+
+    public JupyterNotebookViewer (JupyterNotebookServiceCache jupyterNotebooks, AllowedServices allowedServices) {
+      this.jupyterNotebooks = jupyterNotebooks;
+      this.allowedServices = allowedServices;
+    }
+
+    public boolean isViewable(Dataset ds) {
+      return this.allowedServices.isAllowed(StandardService.jupyterNotebook)
+        && jupyterNotebooks.getNotebookFilename(ds) != null;
+    }
+
+    public String getViewerLinkHtml( Dataset ds, HttpServletRequest req) {
+      ViewerLinkProvider.ViewerLink viewerLink = this.getViewerLink(ds, req);
+      return "<a href='" + viewerLink.getUrl() +  "'>" + viewerLink.getTitle() + "</a>";
+    }
+
+    public ViewerLinkProvider.ViewerLink getViewerLink(Dataset ds, HttpServletRequest req) {
+      String catUrl = ds.getCatalogUrl();
+      if (catUrl.indexOf('#') > 0)
+        catUrl = catUrl.substring(0, catUrl.lastIndexOf('#'));
+      String catalogServiceBase = StandardService.catalogRemote.getBase();
+      catUrl = catUrl.substring(catUrl.indexOf(catalogServiceBase) + catalogServiceBase.length()).replace("html", "xml");
+
+      String url = req.getContextPath() + StandardService.jupyterNotebook.getBase() + ds.getID() + "?catalog=" + catUrl;
+      return new ViewerLinkProvider.ViewerLink(JupyterNotebookViewer.title, url);
     }
   }
 
