@@ -134,8 +134,8 @@ public class CF1Convention extends CSMConvention {
         if (sname.equalsIgnoreCase("ensemble") || sname.equalsIgnoreCase("realization")) {
           v.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.Ensemble.toString()));
           continue;
-        }       
-        
+        }
+
         for (String vertical_coord : vertical_coords)
           if (sname.equalsIgnoreCase(vertical_coord)) {
             v.addAttribute(new Attribute(_Coordinate.TransformType, TransformType.Vertical.toString()));
@@ -173,13 +173,13 @@ public class CF1Convention extends CSMConvention {
       
       //simple geometry
       if (v.findAttribute(CF.GEOMETRY) != null) {
-      	v.addAttribute(new Attribute(CF.NODES, ds.findAttValueIgnoreCase(v, CF.NODES, "0")));
-      	v.addAttribute(new Attribute(CF.NODE_COUNT, ds.findAttValueIgnoreCase(v, CF.NODE_COUNT, "0")));
-      	v.addAttribute(new Attribute(CF.NODE_COORDINATES, ds.findAttValueIgnoreCase(v, CF.NODE_COORDINATES, "0")));
-      	v.addAttribute(new Attribute(CF.PART_NODE_COUNT, ds.findAttValueIgnoreCase(v, CF.PART_NODE_COUNT, "0")));
+      	v.addAttribute(new Attribute(CF.NODES, ds.findAttValueIgnoreCase(v, CF.NODES, "")));
+      	v.addAttribute(new Attribute(CF.NODE_COUNT, ds.findAttValueIgnoreCase(v, CF.NODE_COUNT, "")));
+      	v.addAttribute(new Attribute(CF.NODE_COORDINATES, ds.findAttValueIgnoreCase(v, CF.NODE_COORDINATES, "")));
+      	v.addAttribute(new Attribute(CF.PART_NODE_COUNT, ds.findAttValueIgnoreCase(v, CF.PART_NODE_COUNT, "")));
       	if (ds.findAttValueIgnoreCase(v, CF.GEOMETRY_TYPE, "") != null) {
       		if (ds.findAttValueIgnoreCase(v, CF.GEOMETRY_TYPE, "").equalsIgnoreCase("polygon")){
-      			v.addAttribute(new Attribute(CF.INTERIOR_RING, ds.findAttValueIgnoreCase(v, CF.INTERIOR_RING, "0")));
+      			v.addAttribute(new Attribute(CF.INTERIOR_RING, ds.findAttValueIgnoreCase(v, CF.INTERIOR_RING, "")));
       		}
       	}
       	
@@ -192,20 +192,20 @@ public class CF1Convention extends CSMConvention {
       		for (int i = 0; i < coords.length; i++) {
       			Variable temp = ds.findVariable(coords[i]);
       			if (temp != null) {
-	      			Attribute axis = temp.findAttribute(CF.AXIS);
-	      			if (axis != null) {
-	      				if (axis.getStringValue().equalsIgnoreCase("x")) {
-	      					temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoX.toString()));
-	      				}
-	      				if (axis.getStringValue().equalsIgnoreCase("y")) {
-	      					temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoY.toString()));
-	      				}
-	      				if (axis.getStringValue().equalsIgnoreCase("z")) {
-	      					temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoZ.toString()));
-	      				}
-	      				cds += coords[i] + " ";
-	      				
-	      			}
+      			Attribute axis = temp.findAttribute(CF.AXIS);
+      			if (axis != null) {
+      				if (axis.getStringValue().equalsIgnoreCase("x")) {
+      					temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoX.toString()));
+      				}
+      				if (axis.getStringValue().equalsIgnoreCase("y")) {
+      					temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoY.toString()));
+      				}
+      				if (axis.getStringValue().equalsIgnoreCase("z")) {
+      					temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoZ.toString()));
+      				}
+      				cds += coords[i] + " ";
+      				
+      			}
       			}
       		}
       		v.addAttribute(new Attribute(_Coordinate.Axes, cds.trim()));
