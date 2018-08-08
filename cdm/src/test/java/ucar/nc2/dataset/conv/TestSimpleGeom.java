@@ -33,7 +33,7 @@ public class TestSimpleGeom {
     	String failMessage, found, expected;
         boolean testCond;
 
-        String tstFile = TestDir.cdmLocalTestDataDir + "dataset/hru_soil_moist_vlen_3hru_5timestep.nc";
+        String tstFile = TestDir.cdmLocalTestDataDir + "dataset/SimpleGeos/hru_soil_moist_vlen_3hru_5timestep.nc";
 
         // open the test file
         NetcdfDataset ncd = NetcdfDataset.openDataset(tstFile);
@@ -64,7 +64,7 @@ public class TestSimpleGeom {
     	String failMessage, found, expected;
         boolean testCond;
 
-        String tstFile = TestDir.cdmLocalTestDataDir + "dataset/outflow_3seg_5timesteps_vlen.nc";
+        String tstFile = TestDir.cdmLocalTestDataDir + "dataset/SimpleGeos/outflow_3seg_5timesteps_vlen.nc";
 
         // open the test file
         NetcdfDataset ncd = NetcdfDataset.openDataset(tstFile);
@@ -87,7 +87,5 @@ public class TestSimpleGeom {
         	}
         }       
     	ncd.close();
-    }
-
-    
+    }    
 }
