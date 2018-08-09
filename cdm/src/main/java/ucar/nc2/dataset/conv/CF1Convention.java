@@ -177,7 +177,7 @@ public class CF1Convention extends CSMConvention {
       	v.addAttribute(new Attribute(CF.NODE_COUNT, ds.findAttValueIgnoreCase(v, CF.NODE_COUNT, "")));
       	v.addAttribute(new Attribute(CF.NODE_COORDINATES, ds.findAttValueIgnoreCase(v, CF.NODE_COORDINATES, "")));
       	v.addAttribute(new Attribute(CF.PART_NODE_COUNT, ds.findAttValueIgnoreCase(v, CF.PART_NODE_COUNT, "")));
-      	if (ds.findAttValueIgnoreCase(v, CF.GEOMETRY_TYPE, "").equalsIgnoreCase("polygon")){
+      	if ("polygon".equalsIgnoreCase(ds.findAttValueIgnoreCase(v, CF.GEOMETRY_TYPE, ""))) {
       		v.addAttribute(new Attribute(CF.INTERIOR_RING, ds.findAttValueIgnoreCase(v, CF.INTERIOR_RING, "")));
       	}
       	
@@ -192,13 +192,13 @@ public class CF1Convention extends CSMConvention {
       			if (temp != null) {
       			Attribute axis = temp.findAttribute(CF.AXIS);
       			if (axis != null) {
-      				if (axis.getStringValue().equalsIgnoreCase("x")) {
+      				if ("x".equalsIgnoreCase(axis.getStringValue())) {
       					temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoX.toString()));
       				}
-      				if (axis.getStringValue().equalsIgnoreCase("y")) {
+      				if ("y".equalsIgnoreCase(axis.getStringValue())) {
       					temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoY.toString()));
       				}
-      				if (axis.getStringValue().equalsIgnoreCase("z")) {
+      				if ("z".equalsIgnoreCase(axis.getStringValue())) {
       					temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoZ.toString()));
       				}
       				cds += coords[i] + " ";
