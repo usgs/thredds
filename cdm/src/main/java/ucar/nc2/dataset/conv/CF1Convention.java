@@ -177,10 +177,8 @@ public class CF1Convention extends CSMConvention {
       	v.addAttribute(new Attribute(CF.NODE_COUNT, ds.findAttValueIgnoreCase(v, CF.NODE_COUNT, "")));
       	v.addAttribute(new Attribute(CF.NODE_COORDINATES, ds.findAttValueIgnoreCase(v, CF.NODE_COORDINATES, "")));
       	v.addAttribute(new Attribute(CF.PART_NODE_COUNT, ds.findAttValueIgnoreCase(v, CF.PART_NODE_COUNT, "")));
-//      	if (ds.findAttValueIgnoreCase(v, CF.GEOMETRY_TYPE, "") != null) {
-      		if (ds.findAttValueIgnoreCase(v, CF.GEOMETRY_TYPE, "").equalsIgnoreCase("polygon")){
-      			v.addAttribute(new Attribute(CF.INTERIOR_RING, ds.findAttValueIgnoreCase(v, CF.INTERIOR_RING, "")));
-//      		}
+      	if (ds.findAttValueIgnoreCase(v, CF.GEOMETRY_TYPE, "").equalsIgnoreCase("polygon")){
+      		v.addAttribute(new Attribute(CF.INTERIOR_RING, ds.findAttValueIgnoreCase(v, CF.INTERIOR_RING, "")));
       	}
       	
       	if (v.findAttribute(CF.NODE_COORDINATES) != null) {
