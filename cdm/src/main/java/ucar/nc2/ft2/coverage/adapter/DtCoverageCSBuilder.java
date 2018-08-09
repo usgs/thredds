@@ -277,6 +277,8 @@ public class DtCoverageCSBuilder {
         return new CurvilinearCS(this);
       case SWATH:
         return new SwathCS(this);
+      case SIMPLE_GEOMETRY:
+    	return new SimpleGeometryCS(this);
     }
     return new DtCoverageCS(this);
   }
