@@ -170,6 +170,45 @@ public class CF1Convention extends CSMConvention {
           got_grid_mapping = true;
         }
       }
+      
+      //simple geometry
+      if (v.findAttribute(CF.GEOMETRY) != null) {
+      	v.addAttribute(new Attribute(CF.NODES, ds.findAttValueIgnoreCase(v, CF.NODES, "")));
+      	v.addAttribute(new Attribute(CF.NODE_COUNT, ds.findAttValueIgnoreCase(v, CF.NODE_COUNT, "")));
+      	v.addAttribute(new Attribute(CF.NODE_COORDINATES, ds.findAttValueIgnoreCase(v, CF.NODE_COORDINATES, "")));
+      	v.addAttribute(new Attribute(CF.PART_NODE_COUNT, ds.findAttValueIgnoreCase(v, CF.PART_NODE_COUNT, "")));
+      	if ("polygon".equalsIgnoreCase(ds.findAttValueIgnoreCase(v, CF.GEOMETRY_TYPE, ""))) {
+      		v.addAttribute(new Attribute(CF.INTERIOR_RING, ds.findAttValueIgnoreCase(v, CF.INTERIOR_RING, "")));
+      	}
+      	
+      	if (v.findAttribute(CF.NODE_COORDINATES) != null) {
+      		Attribute container = v.findAttribute(CF.GEOMETRY);
+      		Variable coordsvar = ds.findVariable(container.getStringValue());
+      		String[] coords = ds.findAttValueIgnoreCase(coordsvar, CF.NODE_COORDINATES, "").split(" ");
+      
+  			String cds = "";
+      		for (int i = 0; i < coords.length; i++) {
+      			Variable temp = ds.findVariable(coords[i]);
+      			if (temp != null) {
+      			Attribute axis = temp.findAttribute(CF.AXIS);
+      			if (axis != null) {
+      				if ("x".equalsIgnoreCase(axis.getStringValue())) {
+      					temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoX.toString()));
+      				}
+      				if ("y".equalsIgnoreCase(axis.getStringValue())) {
+      					temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoY.toString()));
+      				}
+      				if ("z".equalsIgnoreCase(axis.getStringValue())) {
+      					temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoZ.toString()));
+      				}
+      				cds += coords[i] + " ";
+      				
+      			}
+      			}
+      		}
+      		v.addAttribute(new Attribute(_Coordinate.Axes, cds.trim()));
+      	}
+      }
     }
 
     if (!got_grid_mapping) { // see if there are any grid mappings anyway

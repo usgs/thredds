@@ -9,6 +9,7 @@ import thredds.server.catalog.FeatureCollectionRef;
 import thredds.server.config.HtmlConfigBean;
 import thredds.server.config.TdsContext;
 import thredds.server.config.TdsServerInfoBean;
+import thredds.server.notebook.JupyterNotebookServiceCache;
 import thredds.server.viewer.ViewerLinkProvider;
 import thredds.server.viewer.ViewerService;
 import ucar.nc2.units.DateType;
@@ -62,7 +63,7 @@ public class CatalogViewContextParser {
     Map<String, Object> model = new HashMap<>();
     addBaseContext(model);
 
-    DatasetContext context = new DatasetContext(ds, isLocalCatalog);
+    DatasetContext context = new DatasetContext(ds, isLocalCatalog, tdsContext.getContentRootPathProperty());
     populateDatasetContext(ds, context, req, isLocalCatalog);
 
     model.put("dataset", context);
@@ -326,6 +327,8 @@ class CatalogItemContext {
 
 class DatasetContext {
 
+  private String contentDir;
+
   private String name;
 
   private String catUrl;
@@ -364,13 +367,14 @@ class DatasetContext {
 
   private List<Map<String, String>> viewerLinks;
 
-  public DatasetContext (Dataset ds, boolean isLocalCatalog) {
+  public DatasetContext (Dataset ds, boolean isLocalCatalog, String contentDir) {
+    this.contentDir = contentDir;
     // Get display name and catalog url
     this.name = ds.getName();
     String catUrl = ds.getCatalogUrl();
     if (catUrl.indexOf('#') > 0)
       catUrl = catUrl.substring(0, catUrl.lastIndexOf('#'));
-    this.catUrl = catUrl;
+    this.catUrl = catUrl.replace("xml", "html");
     this.catName = ds.getParentCatalog().getName();
 
     setContext(ds);
@@ -447,7 +451,8 @@ class DatasetContext {
       Service s = a.getService();
       String urlString = !isLocalCatalog ? a.getStandardUrlName() : a.getUnresolvedUrlName();
       String queryString = null;
-      // String fullUrlString = urlString;
+      String catalogUrl = null;
+      String datasetId = null;
 
       ServiceType stype = s.getType();
       if (stype != null) {
@@ -472,13 +477,27 @@ class DatasetContext {
           case NCML:
           case UDDC:
           case ISO:
-            String catalogUrl = ds.getCatalogUrl();
-            String datasetId = ds.getId();
+            catalogUrl = ds.getCatalogUrl();
+            datasetId = ds.getId();
             if (catalogUrl != null && datasetId != null) {
               if (catalogUrl.indexOf('#') > 0)
                 catalogUrl = catalogUrl.substring(0, catalogUrl.lastIndexOf('#'));
               queryString = "catalog=" + catalogUrl + "&dataset=" + datasetId;
             }
+            break;
+
+          case JupyterNotebook:
+            datasetId = ds.getId();
+            catalogUrl = ds.getCatalogUrl();
+            if (catalogUrl.indexOf('#') > 0)
+              catalogUrl = catalogUrl.substring(0, catalogUrl.lastIndexOf('#'));
+            if (catalogUrl.indexOf(contentDir) > -1) {
+              catalogUrl = catalogUrl.substring(catalogUrl.indexOf(contentDir) + contentDir.length());
+            }
+            catalogUrl = catalogUrl.substring(catalogUrl.indexOf("/catalog/") + ("/catalog/").length())
+                    .replace("html", "xml");
+            queryString = "catalog=" + catalogUrl;
+            urlString = urlString.substring(0, urlString.indexOf(s.getBase()) + s.getBase().length()) + datasetId;
             break;
 
           case NetcdfSubset:
