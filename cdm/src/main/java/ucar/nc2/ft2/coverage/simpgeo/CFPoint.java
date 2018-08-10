@@ -84,7 +84,7 @@ public class CFPoint {
 	 * @param next - next point if part of a multipoint
 	 * @param prev - previous point if part of a multipoint
 	 */
-	public CFPoint(int x, int y, CFPoint next, CFPoint prev)
+	public CFPoint(double x, double y, CFPoint next, CFPoint prev)
 	{
 		this.next = next;
 		this.prev = prev;
