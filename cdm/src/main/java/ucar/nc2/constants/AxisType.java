@@ -28,10 +28,7 @@ public enum AxisType {
   RadialElevation(6),
   Spectral(1),
   TimeOffset(1,"TO"),  // time offset from runtime / reference time
-  Dimension(99,"Dim"),      // used for dimension axis (experimental);
-  ShapeX(9, "ShapeX"),	// specfic axis not for defining a grid but for defining a locus of points which in part define a (simple geometry) shape or many
-  ShapeY(10, "ShapeY"),	// ditto to ShapeX but for the Y axis
-  ShapeZ(11, "ShapeZ");	// ditto to ShapeX but for the Z axis
+  Dimension(99,"Dim");      // used for dimension axis (experimental);
 
   private final int order; // canonical ordering runTime - ensemble - time - z - y - x  or elev - azimuth - distance
   private final String cfAxisName; // X, Y, Z, T from http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.6/cf-conventions.html#coordinate-types
