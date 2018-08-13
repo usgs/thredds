@@ -1,7 +1,8 @@
-package ucar.nc2.ft2.coverage.simpgeo;
+package ucar.nc2.ft2.coverage.simpgeometry;
 
 import java.util.ArrayList;
 import java.util.List;
+import ucar.ma2.Array;
 
 /**
  * A CF 1.8 compliant Line
@@ -16,6 +17,7 @@ public class CFLine {
 	private List<CFPoint> points;	// a list of the constitutent points of the Line, connected in ascending order as in the CF convention
 	private CFLine next;	// if non-null, next refers to the next line part of a multi-line
 	private CFLine prev;	// if non-null, prev refers to the previous line part of a multi-line	
+	Array data;		// data associated with the line
 
 	/**
 	 * Add a point to the end of the line. 
@@ -44,6 +46,15 @@ public class CFLine {
 	}
 	
 	/**
+	 * Get the data associated with this line
+	 * 
+	 * @return data
+	 */
+	public Array getData() {
+		return data;
+	}
+	
+	/**
 	 * If part of a multiline, returns the next line within that line
 	 * if it is present.
 	 * 
@@ -65,6 +76,15 @@ public class CFLine {
 		return prev;
 	}
 
+	/**
+	 * Set the data associated with this Line
+	 * 
+	 * @param data - array of data to set to
+	 */
+	public void setData(Array data) {
+		this.data = data;
+	}
+	
 	/**
 	 * Sets the next line which make up the multiline which this line is a part of.
 	 * Automatically connects the other line to this line as well.
@@ -108,6 +128,7 @@ public class CFLine {
 		this.points = new ArrayList<CFPoint>();
 		this.next = null;
 		this.prev = null;
+		this.data = null;
 	}
 	
 	/**
@@ -118,5 +139,7 @@ public class CFLine {
 	public CFLine(List<CFPoint> new_pt)
 	{
 		this.points = new_pt;
+		this.next = null;
+		this.data = null;
 	}
 }

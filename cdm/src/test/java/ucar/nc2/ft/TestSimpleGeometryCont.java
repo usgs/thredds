@@ -1,4 +1,4 @@
-package ucar.nc2.ft2.coverage.simpgeo;
+package ucar.nc2.ft2.coverage.simpgeometry;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,7 +14,7 @@ import java.util.List;
 public class TestSimpleGeometryCont {
 	
 	static final double delt = 0.00;
-	static final int testsize = 10000;
+	static final int testsize = 100000;
 	Random rnd = new Random();
 	CFPoint pt[] = new CFPoint[testsize];
 	double ref_x[] = new double[testsize];
@@ -309,4 +309,16 @@ public class TestSimpleGeometryCont {
 		}
 	}
 
+	
+	@Test
+	public void testPolyAddt()
+	{
+		// Test interior ring
+		CFPolygon test_out = new CFPolygon();
+		test_out.addPoint(5.0, 3.0);
+		CFPolygon test_inner = new CFPolygon();
+		test_inner.addPoint(2.0, 4.0);
+		test_out.setInteriorRing(test_inner);
+		Assert.assertEquals(test_inner, test_out.getInteriorRing());
+	}
 }

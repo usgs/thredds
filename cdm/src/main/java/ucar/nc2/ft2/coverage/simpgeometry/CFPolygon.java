@@ -1,7 +1,8 @@
-package ucar.nc2.ft2.coverage.simpgeo;
+package ucar.nc2.ft2.coverage.simpgeometry;
 
 import java.util.List;
 import java.util.ArrayList;
+import ucar.ma2.Array;
 
 /**
  * A CF 1.8 compliant Polygon
@@ -17,6 +18,7 @@ public class CFPolygon  {
 	private CFPolygon next;	// if non-null, next refers to the next line part of a multi-polygon
 	private CFPolygon prev;	// if non-null, prev refers to the previous line part of a multi-polygon
 	private CFPolygon interior_ring; // the polygon that makes up an interior ring, if any
+	Array data;	// data array associated with the polygon
 	
 	/**
 	 * Get the list of points which constitute the polygon.
@@ -25,6 +27,15 @@ public class CFPolygon  {
 	 */
 	public List<CFPoint> getPoints() {
 		return points;
+	}
+
+	/**
+	 * Get the data associated with this Polygon
+	 * 
+	 * @return data
+	 */
+	public Array getData() {
+		return data;
 	}
 	
 	/**
@@ -66,6 +77,15 @@ public class CFPolygon  {
 		}
 		
 		this.points.add(new CFPoint(x, y, pt_prev, null));
+	}
+	
+	/**
+	 * Set the data associated with this Polygon
+	 * 
+	 * @param data - array of data to set to
+	 */
+	public void setData(Array data) {
+		this.data = data;
 	}
 	
 	/**
@@ -117,6 +137,7 @@ public class CFPolygon  {
 		this.next = null;
 		this.prev = null;
 		this.interior_ring = null;
+		this.data = null;
 	}
 	
 	/**
@@ -124,5 +145,9 @@ public class CFPolygon  {
 	 */
 	public CFPolygon(List<CFPoint> points) {
 		this.points = points;
+		this.next = null;
+		this.prev = null;
+		this.interior_ring = null;
+		this.data = null;
 	}
 }
