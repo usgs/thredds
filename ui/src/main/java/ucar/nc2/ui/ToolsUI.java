@@ -287,13 +287,13 @@ public class ToolsUI extends JPanel {
     // nested tab - features
     ftTabPane.addTab("Grids", new JLabel("Grids"));
     ftTabPane.addTab("Coverages", new JLabel("Coverages"));
+    ftTabPane.addTab("SimpleGeometry", new JLabel("SimpleGeometry"));
     ftTabPane.addTab("WMS", new JLabel("WMS"));
     ftTabPane.addTab("PointFeature", new JLabel("PointFeature"));
     ftTabPane.addTab("Images", new JLabel("Images"));
     ftTabPane.addTab("Radial", new JLabel("Radial"));
     ftTabPane.addTab("FeatureScan", new JLabel("FeatureScan"));
     ftTabPane.addTab("FeatureCollection", fcTabPane);
-    ftTabPane.addTab("SimpleGeometry", new JLabel("SimpleGeometry"));
     addListeners(ftTabPane);
 
     // nested tab - feature collection
