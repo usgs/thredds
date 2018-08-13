@@ -21,7 +21,7 @@ public class CFLine {
 	 * Add a point to the end of the line. 
 	 *
 	 */
-	public void addPoint(int x, int y)
+	public void addPoint(double x, double y)
 	{
 		CFPoint pt_prev = null;
 		
@@ -30,7 +30,7 @@ public class CFLine {
 			pt_prev = points.get(points.size() - 1);
 		}
 		
-		this.points.add(new CFPoint(x, y, null, pt_prev));
+		this.points.add(new CFPoint(x, y, pt_prev, null));
 	}
 	
 	/**
@@ -69,28 +69,34 @@ public class CFLine {
 	 * Sets the next line which make up the multiline which this line is a part of.
 	 * Automatically connects the other line to this line as well.
 	 */
-	public void setNext(CFLine next)
-	{
+	public void setNext(CFLine next) {
 		this.next = next;
 		
-		if(next != null)
-		{
-			next.setPrev(this);
+		if(next != null) {
+			next.setPrevOnce(this);
 		}
 	}
+	
+	private void setNextOnce(CFLine next) {
+		this.next = next;
+	}
+	
 
 	/**
 	 * Sets the previous line which makes up the multiline which this line is a part of.
 	 * Automatically connect the other line to this line as well.
 	 */
-	public void setPrev(CFLine prev)
-	{
+	public void setPrev(CFLine prev) {
 		this.prev = prev;
 		
-		if(prev != null)
-		{
-			prev.setNext(this);
+		if(prev != null) {
+			prev.setNextOnce(this);
 		}
+	}
+	
+	private void setPrevOnce(CFLine prev)
+	{
+		this.prev = prev;
 	}
 	
 	/**

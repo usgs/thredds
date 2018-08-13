@@ -20,8 +20,7 @@ public class CFPoint {
 	 * 
 	 * @return x of the point
 	 */
-	public double getX()
-	{
+	public double getX() {
 		return x;
 	}
 	
@@ -30,8 +29,7 @@ public class CFPoint {
 	 * 
 	 * @ return y of the point
 	 */
-	public double getY()
-	{
+	public double getY() {
 		return y;
 	}
 	
@@ -40,8 +38,7 @@ public class CFPoint {
 	 * 
 	 * @return next point if it exists, null if not
 	 */
-	public CFPoint getNext()
-	{
+	public CFPoint getNext() {
 		return next;
 	}
 	
@@ -50,8 +47,7 @@ public class CFPoint {
 	 * 
 	 * @return previous point if it exists null if not
 	 */
-	public CFPoint getPrev()
-	{
+	public CFPoint getPrev() {
 		return prev;
 	}
 	
@@ -59,8 +55,7 @@ public class CFPoint {
 	 *  Sets the next point in a multipoint
 	 * 
 	 */
-	protected void setNext(CFPoint next)
-	{
+	protected void setNext(CFPoint next) {
 		this.next = next;
 	}
 	
@@ -69,8 +64,7 @@ public class CFPoint {
 	 *  Set the previous point in a multipoint
 	 * 
 	 */
-	protected void setPrev(CFPoint prev)
-	{
+	protected void setPrev(CFPoint prev) {
 		this.prev = prev;
 	}
 	
@@ -81,22 +75,19 @@ public class CFPoint {
 	 * 
 	 * @param x - the x coordinate of the point
 	 * @param y - the y coordinate of the point
-	 * @param next - next point if part of a multipoint
 	 * @param prev - previous point if part of a multipoint
+	 * @param next - next point if part of a multipoint
 	 */
-	public CFPoint(double x, double y, CFPoint next, CFPoint prev)
-	{
+	public CFPoint(double x, double y, CFPoint prev, CFPoint next) {
 		this.next = next;
 		this.prev = prev;
 		
 		// Create links automatically
-		if(next != null)
-		{
+		if(next != null) {
 			next.setPrev(this);
 		}
 		
-		if(prev != null)
-		{
+		if(prev != null) {
 			prev.setNext(this);
 		}
 		
