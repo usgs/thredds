@@ -43,33 +43,6 @@ public class SimpleGeometryCS extends DtCoverageCS {
     return (CoordinateAxis1D) super.getYHorizAxis();
   }
   
-  /**
-   * Returns a list of X Axis which define various
-   * Simple Geometry shapes.
-   * 
-   */
-  public List<CoordinateAxis1D>getShapeXCollection() {
-	  return null;
-  }
-  
-  /**
-   * Returns a list of Y Axis which define various
-   * Simple Geometry shapes.
-   * 
-   */
-  public List<CoordinateAxis1D>getShapeYCollection() {
-	  return null;
-  }
-
-  /**
-   * Returns a list of Z Axis which define various
-   * Simple Geometry shapes.
-   * 
-   */
-  public List<CoordinateAxis1D>getShapeZCollection() {
-	  return null;
-  }
-  
   // LOOK another possibility is a scalar runtime and a 1D time offset
 
   @Override
