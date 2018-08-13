@@ -6,12 +6,12 @@ import java.util.Random;
 import java.util.List;
 
 /**
- * Very simple tests for Simple Geometry Polygon objects.
+ * Very simple tests for Simple Geometry container objects.
  * 
  * @author wchen@usgs.gov
  *
  */
-public class TestSimpleGeometryCont {
+public class TestCFSimpleGeometryCont {
 	
 	static final double delt = 0.00;
 	static final int testsize = 100000;
@@ -32,13 +32,11 @@ public class TestSimpleGeometryCont {
 			double x = rnd.nextDouble();
 			double y = rnd.nextDouble();
 			
-			if(i == 0)
-			{
+			if(i == 0) {
 				pt[i] = new CFPoint(x, y, null, null);
 			}
 			
-			else
-			{
+			else {
 				pt[i] = new CFPoint(x, y, pt[i-1], null);
 			}
 			
@@ -84,13 +82,11 @@ public class TestSimpleGeometryCont {
 			double x = rnd.nextDouble();
 			double y = rnd.nextDouble();
 				
-			if(i == 0)
-			{
+			if(i == 0) {
 				pt[i] = new CFPoint(x, y, null, null);
 			}
 				
-			else
-			{
+			else {
 				pt[i] = new CFPoint(x, y, pt[i - 1], null);
 			}
 				
@@ -156,8 +152,7 @@ public class TestSimpleGeometryCont {
 			line[i] = new CFLine();
 			line[i].addPoint(rnd.nextDouble(), rnd.nextDouble());
 			
-			if(i != 0)
-			{
+			if(i != 0) {
 				line[i].setPrev(line[i - 1]);
 			}
 			
@@ -191,8 +186,7 @@ public class TestSimpleGeometryCont {
 			line[i] = new CFLine();
 			line[i].addPoint(rnd.nextDouble(), rnd.nextDouble());
 			
-			if(i != 0)
-			{
+			if(i != 0) {
 				line[i].setNext(line[i - 1]);
 			}
 			
@@ -241,8 +235,7 @@ public class TestSimpleGeometryCont {
 		/* Test multipoly
 		 */
 		
-		for(int i = 0; i < testsize; i++)
-		{
+		for(int i = 0; i < testsize; i++) {
 			poly[i] = new CFPolygon();
 			poly[i].addPoint(rnd.nextDouble(), rnd.nextDouble());
 			
@@ -311,8 +304,7 @@ public class TestSimpleGeometryCont {
 
 	
 	@Test
-	public void testPolyAddt()
-	{
+	public void testPolyAddt() {
 		// Test interior ring
 		CFPolygon test_out = new CFPolygon();
 		test_out.addPoint(5.0, 3.0);

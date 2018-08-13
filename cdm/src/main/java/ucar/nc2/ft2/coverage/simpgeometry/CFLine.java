@@ -23,12 +23,10 @@ public class CFLine {
 	 * Add a point to the end of the line. 
 	 *
 	 */
-	public void addPoint(double x, double y)
-	{
+	public void addPoint(double x, double y) {
 		CFPoint pt_prev = null;
 		
-		if(points.size() > 0)
-		{
+		if(points.size() > 0) {
 			pt_prev = points.get(points.size() - 1);
 		}
 		
@@ -40,8 +38,7 @@ public class CFLine {
 	 * 
 	 * @return points - the collection of points that make up this line
 	 */
-	public List<CFPoint> getPoints()
-	{
+	public List<CFPoint> getPoints() {
 		return points;
 	}
 	
@@ -60,8 +57,7 @@ public class CFLine {
 	 * 
 	 * @return next line if present, null if not
 	 */
-	public CFLine getNext()
-	{
+	public CFLine getNext() {
 		return next;
 	}
 	
@@ -71,8 +67,7 @@ public class CFLine {
 	 * 
 	 * @return previous line if present, null if not
 	 */
-	public CFLine getPrev()
-	{
+	public CFLine getPrev() {
 		return prev;
 	}
 
@@ -114,8 +109,7 @@ public class CFLine {
 		}
 	}
 	
-	private void setPrevOnce(CFLine prev)
-	{
+	private void setPrevOnce(CFLine prev) {
 		this.prev = prev;
 	}
 	
@@ -123,8 +117,7 @@ public class CFLine {
 	 *  Constructs an "empty" line with no members using an ArrayList to implement the point list.
 	 * 
 	 */
-	public CFLine()
-	{
+	public CFLine() {
 		this.points = new ArrayList<CFPoint>();
 		this.next = null;
 		this.prev = null;
@@ -136,8 +129,7 @@ public class CFLine {
 	 * 
 	 * @param new_pt The list of points which will constitute the new line
 	 */
-	public CFLine(List<CFPoint> new_pt)
-	{
+	public CFLine(List<CFPoint> new_pt) {
 		this.points = new_pt;
 		this.next = null;
 		this.data = null;

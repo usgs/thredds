@@ -124,8 +124,7 @@ public class CFPolygon  {
 	 *  Simply sets the interior ring of the polygon.
 	 * 
 	 */
-	public void setInteriorRing(CFPolygon interior)
-	{
+	public void setInteriorRing(CFPolygon interior) {
 		this.interior_ring = interior;
 	}
 	
