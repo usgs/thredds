@@ -18,7 +18,7 @@ public class CFPolygon  {
 	private CFPolygon next;	// if non-null, next refers to the next line part of a multi-polygon
 	private CFPolygon prev;	// if non-null, prev refers to the previous line part of a multi-polygon
 	private CFPolygon interior_ring; // the polygon that makes up an interior ring, if any
-	Array data;	// data array associated with the polygon
+	private Array data;	// data array associated with the polygon
 	
 	/**
 	 * Get the list of points which constitute the polygon.

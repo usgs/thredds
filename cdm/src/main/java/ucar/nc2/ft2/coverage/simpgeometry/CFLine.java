@@ -17,7 +17,7 @@ public class CFLine {
 	private List<CFPoint> points;	// a list of the constitutent points of the Line, connected in ascending order as in the CF convention
 	private CFLine next;	// if non-null, next refers to the next line part of a multi-line
 	private CFLine prev;	// if non-null, prev refers to the previous line part of a multi-line	
-	Array data;		// data associated with the line
+	private Array data;		// data associated with the line
 
 	/**
 	 * Add a point to the end of the line. 

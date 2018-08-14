@@ -13,16 +13,16 @@ import java.util.List;
  */
 public class TestCFSimpleGeometryCont {
 	
-	static final double delt = 0.00;
-	static final int testsize = 100000;
-	Random rnd = new Random();
-	CFPoint pt[] = new CFPoint[testsize];
-	double ref_x[] = new double[testsize];
-	double ref_y[] = new double[testsize];
-	CFLine line[] = new CFLine[testsize];
-	CFLine ref_line[] = new CFLine[testsize];
-	CFPolygon poly[] = new CFPolygon[testsize];
-	CFPolygon ref_poly[] = new CFPolygon[testsize];
+	private static final double delt = 0.00;
+	private static final int testsize = 100000;
+	private Random rnd = new Random();
+	private CFPoint pt[] = new CFPoint[testsize];
+	private double ref_x[] = new double[testsize];
+	private double ref_y[] = new double[testsize];
+	private CFLine line[] = new CFLine[testsize];
+	private CFLine ref_line[] = new CFLine[testsize];
+	private CFPolygon poly[] = new CFPolygon[testsize];
+	private CFPolygon ref_poly[] = new CFPolygon[testsize];
 	
 	@Test
 	public void testPtBckwd() {		

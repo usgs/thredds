@@ -16,7 +16,7 @@ public class CFPoint {
 	private double y;	// y coordinate
 	private CFPoint next;	// next element in a multipoint
 	private CFPoint prev;	// previous element in a multipoint
-	Array data;	// data of the point
+	private Array data;	// data of the point
 	
 	/**
 	 * Get the data associated with this point
