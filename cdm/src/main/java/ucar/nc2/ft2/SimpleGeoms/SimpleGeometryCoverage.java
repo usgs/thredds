@@ -13,6 +13,7 @@ import ucar.nc2.AttributeContainerHelper;
 import ucar.nc2.Dimension;
 import ucar.nc2.VariableSimpleIF;
 import ucar.nc2.util.Indent;
+import ucar.nc2.ft2.SimpleGeoms.CFGEOMETRY;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -37,11 +38,11 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
   protected final CoverageReader reader;
   protected final Object user;
   
-  private final String geometry; //use enum?
+  private final CFGEOMETRY geometry; //use enum?
 
   private CoverageCoordSys coordSys; // almost immutable use coordsys that winor made?
 
-  public SimpleGeometryCoverage(String name, DataType dataType, List<Attribute> atts, String coordSysName, String units, String description, CoverageReader reader, Object user, String Geometry) {
+  public SimpleGeometryCoverage(String name, DataType dataType, List<Attribute> atts, String coordSysName, String units, String description, CoverageReader reader, Object user, CFGEOMETRY geometry) {
     this.name = name;
     this.dataType = dataType;
     this.atts = new AttributeContainerHelper(name, atts);
@@ -108,8 +109,21 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
   public Object getUserObject() {
     return user;
   }
-  public String getGeometry() {
+  public CFGEOMETRY getGeometry() {
 	  return geometry; 
+  }
+  public String getGeometryDescription() {
+	  switch (geometry) {
+	  
+	  case CFGEOMETRY.CFPOINT:
+		  return "Point";
+	  case CFGEOMETRY.CFLINE:
+		  return "Line";
+	  case CFGEOMETRY.CFPOLYGON:
+		  return "Polygon";
+	  default:
+		  return "";
+	  }
   }
   @Override
   public String toString() {
@@ -121,7 +135,7 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
 
   public void toString(Formatter f, Indent indent) {
     indent.incr();
-    f.format("%n%s  %s %s(%s) desc='%s' units='%s' geometry='%s'%n", indent, dataType, name, coordSysName, description, units);
+    f.format("%n%s  %s %s(%s) desc='%s' units='%s' geometry='%s'%n", indent, dataType, name, coordSysName, description, units, this.getGeometryDescription());
     f.format("%s    attributes:%n", indent);
     for (Attribute att : atts.getAttributes())
       f.format("%s     %s%n", indent, att);
@@ -169,9 +183,7 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
   }
   
   /**
-   *need to change from regular array
-   *need to add method to reader?
-   *need to create SimpleGeom class
+   *need to add method to reader
    */
   public List<SimpleGeometry> readGeometries(SubsetParams subset) throws IOException, InvalidRangeException {
 	    return reader.readGeometries(this, subset, false);

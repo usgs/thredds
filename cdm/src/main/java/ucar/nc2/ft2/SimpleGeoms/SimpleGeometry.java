@@ -12,12 +12,14 @@ import ucar.ma2.Array;
  *
  */
 enum CFGEOMETRY {
-	CFPOINT, CFLINE, CFPOLYGON
+	CFPOINT, CFLINE, CFPOLYGON;
+	
 }
+
 public interface SimpleGeometry{
 	
-	public CFGEOMETRY getGeometryType();
-	
+	public CFGEOMETRY getGeometryType(); //need to add to CFLINE, POLY, POINT
+		
 	public Array getData();
 	
 	public Array setData();
