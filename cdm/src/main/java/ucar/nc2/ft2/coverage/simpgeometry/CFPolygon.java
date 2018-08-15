@@ -140,6 +140,10 @@ public class CFPolygon implements Polygon  {
 	/**
 	 * Given a dataset, variable and index, automatically constructs a new Polygon
 	 * 
+	 * @param dataset which the variable is a part of
+	 * @param polyvar the variable which has a geometry attribute
+	 * @param index of the polygon within the variable
+	 * 
 	 */
 	public CFPolygon(NetcdfDataset dataset, Variable polyvar, int index)
 	{
@@ -212,6 +216,8 @@ public class CFPolygon implements Polygon  {
 	
 	/**
 	 * Constructs a new polygon whose points constitute the points passed in.
+	 * 
+	 * @param points which make up the Polygon
 	 */
 	public CFPolygon(List<CFPoint> points) {
 		this.points = points;
