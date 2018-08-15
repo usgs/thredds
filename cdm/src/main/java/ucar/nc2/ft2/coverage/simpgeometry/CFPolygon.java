@@ -147,16 +147,15 @@ public class CFPolygon implements Polygon  {
 		Array xPts = null;
 		Array yPts = null;
 
-		List<Variable> vars = dataset.getVariables();
-		//List<CoordinateAxis> axes = dataset.getCoordinateAxes();
-		Variable x = null; Variable y = null;
+		List<CoordinateAxis> axes = dataset.getCoordinateAxes();
+		CoordinateAxis x = null; CoordinateAxis y = null;
 		
 		// Look for x and y
 		
-		for(Variable ax : vars){
+		for(CoordinateAxis ax : axes){
 			
-			if(ax.findAttValueIgnoreCase("axis", "").equalsIgnoreCase("X")) x = ax;
-			if(ax.findAttValueIgnoreCase("axis", "").equalsIgnoreCase("Y")) y = ax;
+			if(ax.getAxisType() == AxisType.GeoX) x = ax;
+			if(ax.getAxisType() == AxisType.GeoY) y = ax;
 		}
 		
 		try {
