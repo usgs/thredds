@@ -14,6 +14,7 @@ import ucar.nc2.dataset.*;
 import ucar.nc2.ft2.coverage.simpgeometry.Line;
 import ucar.nc2.ft2.coverage.simpgeometry.Point;
 import ucar.nc2.ft2.coverage.simpgeometry.Polygon;
+import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometryReader;
 import ucar.nc2.units.SimpleUnit;
 import ucar.unidata.geoloc.ProjectionImpl;
 import ucar.unidata.geoloc.projection.RotatedPole;
@@ -67,7 +68,7 @@ public class DtCoverageCSBuilder {
   List<CoordinateAxis> otherAxes;
   List<CoordinateAxis> allAxes;
   List<CoordinateTransform> coordTransforms;
-  List<Variable> geometry_variables;	// support for simple geometries
+  SimpleGeometryReader geometry_reader;
   ProjectionImpl orgProj;
 
   DtCoverageCSBuilder(NetcdfDataset ds, CoordinateSystem cs, Formatter errlog) {
@@ -233,12 +234,9 @@ public class DtCoverageCSBuilder {
         ensAxis = (CoordinateAxis1D) eAxis;
     }
 
-    // Add geometries, if any
-    Group geo_group = ds.findGroup("cf_geometry");
+    // Make a Geometry Reader for Simple Geometries
+    geometry_reader = new SimpleGeometryReader(ds);
     
-    if(geo_group != null) {
-    	geometry_variables = geo_group.getVariables();
-    } else geometry_variables = null;
     
     this.type = classify();
     this.coordTransforms = new ArrayList<>(cs.getCoordinateTransforms());
@@ -287,7 +285,7 @@ public class DtCoverageCSBuilder {
    */
   public Polygon getPolygon(String name, int index)
   {
-	  return null;
+	  return geometry_reader.readPolygon(name, index);
   }
   
   /**
@@ -299,10 +297,7 @@ public class DtCoverageCSBuilder {
    */
   public Line getLine(String name, int index)
   {
-	  // Find the line
-	  
-	  
-	  return null;
+	  return geometry_reader.readLine(name, index);
   }
   
   /**
@@ -315,7 +310,7 @@ public class DtCoverageCSBuilder {
    */
   public Point getPoint(String name, int index)
   {
-	  return null;
+	  return geometry_reader.readPoint(name, index);
   }
 
   public DtCoverageCS makeCoordSys() {
