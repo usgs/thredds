@@ -1,8 +1,17 @@
 package ucar.nc2.ft2.coverage.simpgeometry;
 
 import java.util.List;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+
 import ucar.ma2.Array;
+import ucar.ma2.IndexIterator;
+import ucar.ma2.InvalidRangeException;
+import ucar.nc2.Variable;
+import ucar.nc2.constants.AxisType;
+import ucar.nc2.dataset.CoordinateAxis;
+import ucar.nc2.dataset.NetcdfDataset;
 
 /**
  * A CF 1.8 compliant Polygon
@@ -127,6 +136,69 @@ public class CFPolygon implements Polygon  {
 	public void setInteriorRing(CFPolygon interior) {
 		this.interior_ring = interior;
 	}
+	
+	/**
+	 * Given a dataset, variable and index, automatically constructs a new Polygon
+	 * 
+	 */
+	public CFPolygon(NetcdfDataset dataset, Variable polyvar, int index)
+	{
+		this.points = new ArrayList<CFPoint>();
+		Array xPts = null;
+		Array yPts = null;
+
+		List<Variable> vars = dataset.getVariables();
+		//List<CoordinateAxis> axes = dataset.getCoordinateAxes();
+		Variable x = null; Variable y = null;
+		
+		// Look for x and y
+		
+		for(Variable ax : vars){
+			
+			if(ax.findAttValueIgnoreCase("axis", "").equalsIgnoreCase("X")) x = ax;
+			if(ax.findAttValueIgnoreCase("axis", "").equalsIgnoreCase("Y")) y = ax;
+		}
+		
+		try {
+			xPts = x.read( ":").reduce();
+			yPts = y.read( ":").reduce();
+		
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+			xPts = null;
+			yPts = null;
+		} catch (InvalidRangeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// This will be revised to get a single polygon
+		IndexIterator itr_x = xPts.getIndexIterator();
+		IndexIterator itr_y = yPts.getIndexIterator();
+		
+		// x and y should have the same shape, will add some handling on this
+		while(itr_x.hasNext())
+		{
+			this.addPoint(itr_x.getDoubleNext(), itr_y.getDoubleNext());
+		}
+		
+		
+		// Now set the Data
+		try {
+			this.setData(polyvar.read());
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// still things to set
+		this.next = null;
+		this.prev = null;
+		this.interior_ring = null;
+	}
+	
 	
 	/**
 	 * Constructs an empty polygon with nothing in it using an Array List.

@@ -12,6 +12,7 @@ import ucar.nc2.constants.AxisType;
 import ucar.nc2.constants.FeatureType;
 import ucar.nc2.dataset.*;
 import ucar.nc2.ft2.coverage.simpgeometry.Line;
+import ucar.nc2.ft2.coverage.simpgeometry.Point;
 import ucar.nc2.ft2.coverage.simpgeometry.Polygon;
 import ucar.nc2.units.SimpleUnit;
 import ucar.unidata.geoloc.ProjectionImpl;
@@ -301,6 +302,19 @@ public class DtCoverageCSBuilder {
 	  // Find the line
 	  
 	  
+	  return null;
+  }
+  
+  /**
+   * Given a certain variable name and geometry index, returns a Simple Geometry Point
+   * 
+   * 
+   * @param name
+   * @param index
+   * @return
+   */
+  public Point getPoint(String name, int index)
+  {
 	  return null;
   }
 

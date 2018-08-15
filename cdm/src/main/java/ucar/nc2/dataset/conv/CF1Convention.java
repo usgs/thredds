@@ -205,7 +205,7 @@ public class CF1Convention extends CSMConvention {
       	
       	if (v.findAttribute(CF.NODE_COORDINATES) != null) {
 
-      		String[] coords = ds.findAttValueIgnoreCase(coordsvar, CF.NODE_COORDINATES, "").split(" ");
+   /*   		String[] coords = ds.findAttValueIgnoreCase(coordsvar, CF.NODE_COORDINATES, "").split(" ");
       
   			String cds = "";
       		for (int i = 0; i < coords.length; i++) {
@@ -214,13 +214,13 @@ public class CF1Convention extends CSMConvention {
       				Attribute axis = temp.findAttribute(CF.AXIS);
       				if (axis != null) {
       					if ("x".equalsIgnoreCase(axis.getStringValue())) {
-      						temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoX.toString()));
+      			//			temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoX.toString()));
       					}
       					if ("y".equalsIgnoreCase(axis.getStringValue())) {
-      						temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoY.toString()));
+      			//			temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoY.toString()));
       					}
       					if ("z".equalsIgnoreCase(axis.getStringValue())) {
-      						temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoZ.toString()));
+      			//			temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoZ.toString()));
       					}
       				
       					cds += coords[i] + " ";
@@ -239,8 +239,8 @@ public class CF1Convention extends CSMConvention {
       			if(di != null) pre = di.getShortName() + " " + pre;
       		}
       		
-      		v.addAttribute(new Attribute(_Coordinate.Axes, pre + cds.trim()));
-      		ds.addVariable(geometries, v);
+      		v.addAttribute(new Attribute(_Coordinate.Axes, pre + cds.trim()));*/
+      		//ds.addVariable(geometries, v);
       	}
       }
     }
