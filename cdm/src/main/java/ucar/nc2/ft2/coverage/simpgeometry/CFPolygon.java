@@ -12,7 +12,7 @@ import ucar.ma2.Array;
  * @author wchen@usgs.gov
  *
  */
-public class CFPolygon  {
+public class CFPolygon implements Polygon  {
 
 	private List<CFPoint> points;	// a list of the constitutent points of the Polygon, connected in ascending order as in the CF convention
 	private CFPolygon next;	// if non-null, next refers to the next line part of a multi-polygon
@@ -132,7 +132,7 @@ public class CFPolygon  {
 	 * Constructs an empty polygon with nothing in it using an Array List.
 	 */
 	public CFPolygon() {
-		this.points = new ArrayList();
+		this.points = new ArrayList<CFPoint>();
 		this.next = null;
 		this.prev = null;
 		this.interior_ring = null;

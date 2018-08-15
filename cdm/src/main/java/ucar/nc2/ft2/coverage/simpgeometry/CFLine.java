@@ -12,7 +12,7 @@ import ucar.ma2.Array;
  * @author wchen@usgs.gov
  *
  */
-public class CFLine {
+public class CFLine implements Line {
 
 	private List<CFPoint> points;	// a list of the constitutent points of the Line, connected in ascending order as in the CF convention
 	private CFLine next;	// if non-null, next refers to the next line part of a multi-line

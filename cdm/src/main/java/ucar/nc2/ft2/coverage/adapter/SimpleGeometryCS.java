@@ -5,9 +5,12 @@
 
 package ucar.nc2.ft2.coverage.adapter;
 
+import ucar.nc2.Variable;
 import ucar.nc2.dataset.CoordinateAxis1D;
 import ucar.nc2.dataset.CoordinateAxis1DTime;
+import ucar.nc2.dataset.NetcdfDataset;
 import ucar.nc2.time.CalendarDateRange;
+import ucar.nc2.ft2.coverage.simpgeometry.*;
 
 /**
  * Simple Geometry Coordinate System Implementation
@@ -38,26 +41,40 @@ public class SimpleGeometryCS extends DtCoverageCS {
     return (CoordinateAxis1D) super.getYHorizAxis();
   }
   
+  /**
+   * Given a Variable name and a geometry index
+   * returns a Polygon 
+   * 
+   * @param name - the name of the data variable
+   * @param index - the index of the variable
+   * 
+   * @return poly - the new polygon with all associated data, null if not found
+   */
+  public Polygon getPolygon(String name, int index)
+  {
+	 return builder.getPolygon(name, index);
+  }
+  
+  /**
+   * Given a Variable name and a geometry index
+   * returns a Line 
+   * 
+   * @param name - the name of the data variable
+   * @param index - the index of the variable
+   * 
+   * @return line - the new line with all associated data, null if not found
+   */
+  public Line getLine(String name, int index)
+  {
+	 return builder.getLine(name, index);
+  }
+  
   // LOOK another possibility is a scalar runtime and a 1D time offset
-
+  
   @Override
   public CoordinateAxis1DTime getTimeAxis() {
     return (CoordinateAxis1DTime) super.getTimeAxis();
   }
-
-  /*
-   @Override
- public List<CalendarDate> getCalendarDates() {
-    if (getTimeAxis() != null)
-      return getTimeAxis().getCalendarDates();
-
-    else if (getRunTimeAxis() != null)
-      return getRunTimeAxis().getCalendarDates();
-
-    else
-      return new ArrayList<>();
-  }
-  */
 
   @Override
   public CalendarDateRange getCalendarDateRange() {

@@ -1,6 +1,7 @@
 package ucar.nc2.ft2.coverage.simpgeometry;
 
 import ucar.ma2.Array;
+import ucar.nc2.ft2.coverage.simpgeometry.Point;
 
 /**
  * A CF 1.8 compliant Point
@@ -10,7 +11,7 @@ import ucar.ma2.Array;
  * @author wchen@usgs.gov
  *
  */
-public class CFPoint {
+public class CFPoint implements Point{
 
 	private double x;	// x coordinate
 	private double y;	// y coordinate
