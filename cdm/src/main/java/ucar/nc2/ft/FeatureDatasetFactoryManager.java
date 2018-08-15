@@ -58,6 +58,7 @@ public class FeatureDatasetFactoryManager {
     registerFactory(FeatureType.GRID, GridDatasetStandardFactory.class);
     registerFactory(FeatureType.FMRC, GridDatasetStandardFactory.class);
     registerFactory(FeatureType.CURVILINEAR, GridDatasetStandardFactory.class);
+    registerFactory(FeatureType.SIMPLE_GEOMETRY, GridDatasetStandardFactory.class);
 
     registerFactory(FeatureType.RADIAL, RadialDatasetStandardFactory.class);
     registerFactory(FeatureType.STATION_RADIAL, RadialDatasetStandardFactory.class);
