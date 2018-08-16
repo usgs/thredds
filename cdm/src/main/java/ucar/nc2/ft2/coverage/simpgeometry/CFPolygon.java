@@ -224,8 +224,9 @@ public class CFPolygon implements Polygon  {
 					// Set data of each
 					this.setData(polyvar.read(":," + index));
 
-					if(lower < upper) this.setNext(new CFPolygon());
-					tail = this.getNext();
+					
+					if(lower < upper) tail.setNext(new CFPolygon());
+					tail = tail.getNext();
 					i++;
 					
 				}
