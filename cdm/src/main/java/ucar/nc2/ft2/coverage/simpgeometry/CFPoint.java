@@ -129,6 +129,7 @@ public class CFPoint implements Point{
 		Array xPts = null;
 		Array yPts = null;
 		Integer ind = (int)index;
+		Variable node_counts = null;
 
 		List<CoordinateAxis> axes = set.getCoordinateAxes();
 		CoordinateAxis x = null; CoordinateAxis y = null;
@@ -139,6 +140,14 @@ public class CFPoint implements Point{
 			
 			if(ax.getAxisType() == AxisType.GeoX) x = ax;
 			if(ax.getAxisType() == AxisType.GeoY) y = ax;
+		}
+		
+		// Node count is used very differently in points
+		// Similar use to part_node_count in other geometries
+		String node_c_str = vari.findAttValueIgnoreCase(CF.NODE_COUNT, "");
+		
+		if(!node_c_str.equals("")) {
+			node_counts = set.findVariable(node_c_str);
 		}
 		
 		try {
