@@ -15,7 +15,7 @@ import ucar.nc2.ft2.coverage.simpgeometry.*;
  * The kitten remembers previous adventures so if the kitten is tasked to find a Simple Geometry close to one before it
  * will find it faster.
  * 
- * @author wchen
+ * @author wchen@usgs.gov
  *
  */
 public class SimpleGeometryKitten {
@@ -36,8 +36,6 @@ public class SimpleGeometryKitten {
 		{
 			return previous_end + 1;
 		}
-		
-
 		
 		// Otherwise, find it!
 		int new_beginning = 0;

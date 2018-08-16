@@ -152,7 +152,8 @@ public class CFPolygon implements Polygon  {
 		this.points = new ArrayList<CFPoint>();
 		Array xPts = null;
 		Array yPts = null;
-		Variable node_counts;
+		Variable node_counts = null;
+		Variable part_node_counts = null;
 
 		List<CoordinateAxis> axes = dataset.getCoordinateAxes();
 		CoordinateAxis x = null; CoordinateAxis y = null;
@@ -165,6 +166,7 @@ public class CFPolygon implements Polygon  {
 			if(ax.getAxisType() == AxisType.GeoY) y = ax;
 		}
 		
+		// Affirm node counts
 		String node_c_str = polyvar.findAttValueIgnoreCase(CF.NODE_COUNT, "");
 		
 		if(!node_c_str.equals("")) {
@@ -173,12 +175,30 @@ public class CFPolygon implements Polygon  {
 		
 		else return null;
 		
+		// Affirm part node counts
+		String p_node_c_str = polyvar.findAttValueIgnoreCase(CF.PART_NODE_COUNT, "");
+		
+		if(!p_node_c_str.equals("")) {
+			part_node_counts = dataset.findVariable(p_node_c_str);
+		}
+		
 		SimpleGeometryKitten kitty = new SimpleGeometryKitten(node_counts);
 		
-		try {
-			xPts = x.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
-			yPts = y.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
+		//Get beginning and ending indicies for this polygon
+		int upper = kitty.getBeginning(index);
+		int lower = kitty.getEnd(index);
 		
+		try {
+			
+			if(part_node_counts == null) {
+				xPts = x.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
+				yPts = y.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
+			}
+			
+			else {
+				
+			}
+			
 		} catch (IOException e) {
 
 				return null;
