@@ -18,23 +18,41 @@ import ucar.nc2.ft2.coverage.simpgeometry.*;
 public class SimpleGeometryKitten {
 	
 	Variable cat_toy;
+	Variable node_count;
+	Variable part_node_count;
+	String geometry_type;
 	int past_index;
-	int previous_last;
+	int previous_end, new_end;
+	int previous_begin, new_being;
+	
 	
 	public int getBeginning(int index) {
 		
 		//Test if the last end is the new beginning
 		if(index == (past_index + 1 ))
 		{
-			return previous_last;
+			return previous_end + 1;
 		}
 		
+		int new_beginning = -1;
+		
+		// Otherwise, find it!
 		
 		past_index = index;
+		return new_beginning;
 	}
 	
 	public int getEnd(int index) {
-		past_index = index;
+
+		// Test if the last beginning is the new end
+		if(index == (past_index - 1))
+		{
+			return previous_begin - 1;
+		}
+		
+		// Otherwise find it
+		
+		return new_end;
 	}
 	
 	/**
@@ -44,8 +62,13 @@ public class SimpleGeometryKitten {
 	 */
 	public SimpleGeometryKitten(Variable variable) {
 		cat_toy = variable;
-		cat_toy.findAttribute(CF.GEOMETRY);
+		
+		if(variable.findAttribute(CF.GEOMETRY_TYPE) != null)
+		{
+			geometry_type = variable.findAttribute(CF.GEOMETRY_TYPE).getStringValue();
+		}
+		
 		past_index = -3;
-		previous_last = -1;
+		previous_end = -1;
 	}
 }
