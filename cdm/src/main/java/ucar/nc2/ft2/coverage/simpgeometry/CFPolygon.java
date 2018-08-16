@@ -146,7 +146,7 @@ public class CFPolygon implements Polygon  {
 	 * @param index of the polygon within the variable
 	 * 
 	 */
-	public Polygon SetupPolygon(NetcdfDataset dataset, Variable polyvar, int index)
+	public Polygon setupPolygon(NetcdfDataset dataset, Variable polyvar, int index)
 	{
 		this.points = new ArrayList<CFPoint>();
 		Array xPts = null;
