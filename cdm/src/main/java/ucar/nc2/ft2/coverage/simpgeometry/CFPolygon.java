@@ -138,14 +138,15 @@ public class CFPolygon implements Polygon  {
 	}
 	
 	/**
-	 * Given a dataset, variable and index, automatically constructs a new Polygon
+	 * Given a dataset, variable and index, automatically sets up a previously constructed polygon.
+	 * If the specified polygon is not found in the dataset, returns null
 	 * 
 	 * @param dataset which the variable is a part of
 	 * @param polyvar the variable which has a geometry attribute
 	 * @param index of the polygon within the variable
 	 * 
 	 */
-	public CFPolygon(NetcdfDataset dataset, Variable polyvar, int index)
+	public Polygon SetupPolygon(NetcdfDataset dataset, Variable polyvar, int index)
 	{
 		this.points = new ArrayList<CFPoint>();
 		Array xPts = null;
@@ -167,10 +168,9 @@ public class CFPolygon implements Polygon  {
 			yPts = y.read( ":").reduce();
 		
 		} catch (IOException e) {
+
+				return null;
 			
-			e.printStackTrace();
-			xPts = null;
-			yPts = null;
 		} catch (InvalidRangeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -192,14 +192,17 @@ public class CFPolygon implements Polygon  {
 			this.setData(polyvar.read());
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			return null;
+			
 		}
 		
 		// still things to set
 		this.next = null;
 		this.prev = null;
 		this.interior_ring = null;
+		
+		return this;
 	}
 	
 	

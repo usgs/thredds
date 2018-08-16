@@ -27,9 +27,12 @@ public class SimpleGeometryReader {
 		Variable polyvar = ds.findVariable(name);
 		if(polyvar == null) return null;
 		
+		CFPolygon poly = new CFPolygon();
+		
 		// Check for convention to see which convention to use, later
 		
-		return new CFPolygon(ds, polyvar, index);
+		
+		return poly.SetupPolygon(ds, polyvar, index);
 	}
 	
 	/**
