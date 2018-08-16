@@ -9,7 +9,7 @@ import ucar.ma2.Array;
  * @author wchen@usgs.gov
  *
  */
-public interface Line {
+public interface Line extends SimpleGeometry{
 	/**
 	 * Add a point to the end of the line. 
 	 *

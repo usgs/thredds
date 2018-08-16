@@ -2,7 +2,7 @@
  * Copyright (c) 1998-2018 John Caron and University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
-package ucar.nc2.ft2.SimpleGeoms;
+package ucar.nc2.ft2.coverage.simpgeometry;
 
 import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
@@ -14,6 +14,8 @@ import ucar.nc2.Dimension;
 import ucar.nc2.VariableSimpleIF;
 import ucar.nc2.util.Indent;
 import ucar.nc2.ft2.SimpleGeoms.CFGEOMETRY;
+import ucar.nc2.ft2.coverage.CoverageReader;
+import ucar.nc2.ft2.coverage.adapter.SimpleGeometryCS;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -40,7 +42,7 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
   
   private final CFGEOMETRY geometry; //use enum?
 
-  private CoverageCoordSys coordSys; // almost immutable use coordsys that winor made?
+  private SimpleGeometryCS coordSys; // almost immutable use coordsys that winor made?
 
   public SimpleGeometryCoverage(String name, DataType dataType, List<Attribute> atts, String coordSysName, String units, String description, CoverageReader reader, Object user, CFGEOMETRY geometry) {
     this.name = name;
@@ -55,7 +57,7 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
   }
 
   // copy constructor
-  public SimpleGeometryCoverage(SimpleGeometry from, CoverageCoordSys coordSysSubset) {
+  public SimpleGeometryCoverage(SimpleGeometryCoverage from, SimpleGeometryCS coordSysSubset) {
     this.name = from.getName();
     this.dataType = from.getDataType();
     this.atts = from.atts;
@@ -67,7 +69,7 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
     this.geometry = from.geometry;
   }
 
-  void setCoordSys (CoverageCoordSys coordSys) {
+  void setCoordSys (SimpleGeometryCS coordSys) {
     if (this.coordSys != null) throw new RuntimeException("Cant change coordSys once set");
     this.coordSys = coordSys;
   }
@@ -115,11 +117,11 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
   public String getGeometryDescription() {
 	  switch (geometry) {
 	  
-	  case CFGEOMETRY.CFPOINT:
+	  case CFPOINT:
 		  return "Point";
-	  case CFGEOMETRY.CFLINE:
+	  case CFLINE:
 		  return "Line";
-	  case CFGEOMETRY.CFPOLYGON:
+	  case CFPOLYGON:
 		  return "Polygon";
 	  default:
 		  return "";
@@ -143,7 +145,7 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
   }
 
   @Nonnull
-  public CoverageCoordSys getCoordSys() {
+  public SimpleGeometryCS getCoordSys() {
     return coordSys;
   }
 
@@ -177,17 +179,37 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+  /**
   public GeoReferencedArray readData(SubsetParams subset) throws IOException, InvalidRangeException {
     return reader.readData(this, subset, false);
   }
   
-  /**
-   *need to add method to reader
-   */
-  public List<SimpleGeometry> readGeometries(SubsetParams subset) throws IOException, InvalidRangeException {
-	    return reader.readGeometries(this, subset, false);
+ */
+  
+	/**
+	 * Get the data associated the index
+	 * @param  index  number associated with the geometry 
+	 */
+  public SimpleGeometry readGeometry(int index) throws IOException, InvalidRangeException {
+
+	  SimpleGeometry geom = null;
+	  switch (geometry) {
+		  
+		  case CFPOINT:
+			  //implement getPoint
+			  break;
+		  case CFLINE:
+			  Line line = coordSys.getLine(name, index);
+			  geom = line;
+			  break;
+		  case CFPOLYGON:
+			  Polygon poly = coordSys.getPolygon(name, index);
+			  geom = poly;
+			  break;
+		  }
+	  return geom;
   }
+
 	  
   
   ////////////////////////////////////////////////////////////////////////////////////////

@@ -21,6 +21,15 @@ public class CFPolygon implements Polygon  {
 	private Array data;	// data array associated with the polygon
 	
 	/**
+	 * Get the geometry the data is associated with.
+	 * 
+	 */
+	
+	public CFGEOMETRY getGeometryType() {
+		return CFGEOMETRY.CFPOLYGON;
+	}
+	
+	/**
 	 * Get the list of points which constitute the polygon.
 	 * 
 	 * @return points

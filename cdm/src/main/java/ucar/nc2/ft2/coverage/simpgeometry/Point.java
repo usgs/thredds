@@ -8,7 +8,7 @@ import ucar.ma2.Array;
  * @author wchen@usgs.gov
  *
  */
-public interface Point {
+public interface Point extends SimpleGeometry {
 
 	/**
 	 * Get the data associated with this point
