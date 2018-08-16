@@ -2,6 +2,7 @@ package ucar.nc2.ft2.coverage.simpgeometry;
 
 import ucar.nc2.Variable;
 import ucar.nc2.constants.CF;
+import ucar.nc2.ft2.coverage.simpgeometry.*;
 
 /**
  * A cat (the animal) trained in finding Simple Geometry.
@@ -17,13 +18,23 @@ import ucar.nc2.constants.CF;
 public class SimpleGeometryKitten {
 	
 	Variable cat_toy;
+	int past_index;
+	int previous_last;
 	
-	public int getBeing(int index) {
+	public int getBeginning(int index) {
 		
+		//Test if the last end is the new beginning
+		if(index == (past_index + 1 ))
+		{
+			return previous_last;
+		}
+		
+		
+		past_index = index;
 	}
 	
 	public int getEnd(int index) {
-		
+		past_index = index;
 	}
 	
 	/**
@@ -34,5 +45,7 @@ public class SimpleGeometryKitten {
 	public SimpleGeometryKitten(Variable variable) {
 		cat_toy = variable;
 		cat_toy.findAttribute(CF.GEOMETRY);
+		past_index = -3;
+		previous_last = -1;
 	}
 }

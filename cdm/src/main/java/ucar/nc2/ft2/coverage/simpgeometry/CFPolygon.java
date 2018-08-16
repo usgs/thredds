@@ -163,9 +163,11 @@ public class CFPolygon implements Polygon  {
 			if(ax.getAxisType() == AxisType.GeoY) y = ax;
 		}
 		
+		SimpleGeometryKitten kitty = new SimpleGeometryKitten(polyvar);
+		
 		try {
-			xPts = x.read( ":").reduce();
-			yPts = y.read( ":").reduce();
+			xPts = x.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
+			yPts = y.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
 		
 		} catch (IOException e) {
 
