@@ -237,6 +237,57 @@ public class SimpleGeomController {
     state = store.getBoolean( "drawVertAction", false);
     drawVertAction.putValue(BAMutil.STATE, state);
     drawVertOn = state;
+
+       // show grid
+    showGridAction = new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        Boolean state = (Boolean) getValue(BAMutil.STATE);
+        // System.out.println("showGridAction state "+state);
+        renderGrid.setDrawGridLines(state);
+        draw(false);
+      }
+    };
+    BAMutil.setActionProperties( showGridAction, "Grid", "show grid lines", true, 'G', 0);
+    state = store.getBoolean( "showGridAction", false);
+    showGridAction.putValue(BAMutil.STATE, state);
+    renderGrid.setDrawGridLines( state);
+
+     // contouring
+    showContoursAction = new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        Boolean state = (Boolean) getValue(BAMutil.STATE);
+        renderGrid.setDrawContours(state);
+        draw(false);
+      }
+    };
+    BAMutil.setActionProperties( showContoursAction, "Contours", "show contours", true, 'C', 0);
+    state = store.getBoolean( "showContoursAction", false);
+    showContoursAction.putValue(BAMutil.STATE, state);
+    renderGrid.setDrawContours( state);
+
+     // contouring labels
+    showContourLabelsAction = new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        Boolean state = (Boolean) getValue(BAMutil.STATE);
+        renderGrid.setDrawContourLabels(state);
+        draw(false);
+      }
+    };
+    BAMutil.setActionProperties( showContourLabelsAction, "ContourLabels", "show contour labels", true, 'L', 0);
+    state = store.getBoolean( "showContourLabelsAction", false);
+    showContourLabelsAction.putValue(BAMutil.STATE, state);
+    renderGrid.setDrawContourLabels( state);
+
+     /* winds
+    showWindsAction = new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        Boolean state = (Boolean) getValue(BAMutil.STATE);
+        drawWinds = state.booleanValue();
+        draw(true, false, false);
+      }
+    };
+    BAMutil.setActionProperties( showWindsAction, "ShowWinds", "show wind", true, 'W', 0);
+    */
   }
 
   private void makeEventManagement() {
@@ -777,6 +828,15 @@ public class SimpleGeomController {
       }
     }
 
+    /* draw Winds
+    if (drawWinds) {
+      startTime = System.currentTimeMillis();
+      renderWind.draw(gNP, currentLevel, currentTime);
+      if (Debug.isSet("timing/WindsDraw")) {
+        tookTime = System.currentTimeMillis() - startTime;
+        System.out.println("timing.WindsDraw: " + tookTime*.001 + " seconds");
+      }
+    } */
 
      // copy buffer to the screen
     if (immediate)
@@ -864,6 +924,11 @@ public class SimpleGeomController {
     if (gridDataset != null)
       store.put(LastDatasetName, gridDataset.getTitle());
     store.putBeanObject(ColorScaleName, cs);
+
+    store.putBoolean( "showGridAction", ((Boolean)showGridAction.getValue(BAMutil.STATE)).booleanValue());
+    store.putBoolean( "showContoursAction", ((Boolean)showContoursAction.getValue(BAMutil.STATE)).booleanValue());
+    store.putBoolean( "showContourLabelsAction", ((Boolean)showContourLabelsAction.getValue(BAMutil.STATE)).booleanValue());
+
   }
 }
 
