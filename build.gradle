@@ -20,6 +20,10 @@ buildscript {
             url "https://dl.bintray.com/cwardgar/maven/"  // For 'com.cwardgar.gretty-fork:gretty'.
         }
     }
+    
+     plugins {
+        id 'net.researchgate.release' version '2.6.0'
+    }
 
     dependencies {
         classpath libraries["gretty"]
@@ -34,7 +38,7 @@ buildscript {
 
 allprojects {
     // Matches Maven's "project.groupId". Used in MANIFEST.MF for "Implementation-Vendor-Id".
-    group = "edu.ucar"
+    group = "gov.usgs.water"
     // Matches Maven's "project.version". Used in MANIFEST.MF for "Implementation-Version".
     version = '5.0.0-SNAPSHOT'
     // Eventually, we'll stop appending "SNAPSHOT" to our versions and just use this.
