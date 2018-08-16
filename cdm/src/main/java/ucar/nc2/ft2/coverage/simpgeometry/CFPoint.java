@@ -156,7 +156,7 @@ public class CFPoint implements Point{
 		
 		// Now set the Data
 		try {
-			this.data = vari.read(":," + index);
+			this.data = vari.read(":," + index).reduce();
 			
 		} catch (IOException | InvalidRangeException e) {
 
@@ -166,7 +166,7 @@ public class CFPoint implements Point{
 		
 		// still things to set
 		this.x = xPts.getDouble(0);
-		this.y = xPts.getDouble(0);
+		this.y = yPts.getDouble(0);
 		this.next = null;
 		this.prev = null;
 		
