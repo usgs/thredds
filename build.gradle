@@ -35,6 +35,12 @@ buildscript {
 plugins {
     id 'net.researchgate.release' version '2.6.0'
  }
+ 
+release {
+    git {
+    requireBranch = '5.0.0-usgs'
+    }
+ }
 
 allprojects {
     // Matches Maven's "project.groupId". Used in MANIFEST.MF for "Implementation-Vendor-Id".
