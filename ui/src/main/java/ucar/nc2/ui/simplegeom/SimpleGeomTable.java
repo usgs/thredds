@@ -86,34 +86,6 @@ public class SimpleGeomTable extends JPanel {
       }
     });
 
-    /* csPopup.addAction("WCS DescribeCoverage", new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        GeoGridBean vb = (GeoGridBean) varTable.getSelectedBean();
-        if (gridDataset.findGridDatatype(vb.getName()) != null) {
-          List<String> coverageIdList = Collections.singletonList(vb.getName());
-          try {
-            DescribeCoverage descCov =
-                    ((DescribeCoverageBuilder)
-                            WcsRequestBuilder
-                                    .newWcsRequestBuilder("1.0.0",
-                                            Request.Operation.DescribeCoverage,
-                                            gridDataset, ""))
-                            .setCoverageIdList(coverageIdList)
-                            .buildDescribeCoverage();
-            String dc = descCov.writeDescribeCoverageDocAsString();
-            infoTA.clear();
-            infoTA.appendLine(dc);
-            infoTA.gotoTop();
-            infoWindow.show();
-          } catch (WcsException e1) {
-            e1.printStackTrace();
-          } catch (IOException e1) {
-            e1.printStackTrace();
-          }
-        }
-      }
-    }); */
-
     // the info window
     infoTA = new TextHistoryPane();
     infoWindow = new IndependentWindow("Variable Information", BAMutil.getImage("netcdfUI"), infoTA);
@@ -158,39 +130,6 @@ public class SimpleGeomTable extends JPanel {
     });
     buttPanel.add(infoButton);
 
-    /* JButton wcsButton = new JButton("WCS");
-    wcsButton.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        if (gridDataset != null) {
-          URI gdUri = null;
-          try {
-            gdUri = new URI("http://none.such.server/thredds/wcs/dataset");
-          } catch (URISyntaxException e1) {
-            e1.printStackTrace();
-            return;
-          }
-          GetCapabilities getCap =
-                  ((GetCapabilitiesBuilder)
-                          WcsRequestBuilder
-                                  .newWcsRequestBuilder("1.0.0",
-                                          Request.Operation.GetCapabilities,
-                                          gridDataset, ""))
-                          .setServerUri(gdUri)
-                          .setSection(GetCapabilities.Section.All)
-                          .buildGetCapabilities();
-          try {
-            String gc = getCap.writeCapabilitiesReportAsString();
-            infoTA.setText(gc);
-            infoTA.gotoTop();
-            infoWindow.show();
-          } catch (WcsException e1) {
-            e1.printStackTrace();
-          }
-        }
-      }
-    });
-    buttPanel.add(wcsButton);  */
-
     JButton invButton = new JButton("GridInv");
     invButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -212,7 +151,7 @@ public class SimpleGeomTable extends JPanel {
         if (gridDataset == null) return;
         List<String> gridList = getSelectedGrids();
         if (gridList.size() == 0) {
-          JOptionPane.showMessageDialog(SimpleGeomTable.this, "No Grids are selected");
+          JOptionPane.showMessageDialog(SimpleGeomTable.this, "No Simple Geometries are selected");
           return;
         }
 

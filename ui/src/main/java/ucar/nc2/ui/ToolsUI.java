@@ -4435,7 +4435,7 @@ public class ToolsUI extends JPanel {
 
 	    private void makeSimpleGeomUI() {
 	      // a little tricky to get the parent right for GridUI
-	      viewerWindow = new IndependentWindow("Simple Geom Viewer", BAMutil.getImage("netcdfUI"));
+	      viewerWindow = new IndependentWindow("Simple Geometry Viewer", BAMutil.getImage("netcdfUI"));
 
 	      sgUI = new SimpleGeomUI((PreferencesExt) prefs.node("SimpleGeomUI"), viewerWindow, fileChooser, 800);
 	      sgUI.addMapBean(new WorldMapBean());
@@ -4450,7 +4450,7 @@ public class ToolsUI extends JPanel {
 	    }
 
 	    private void makeImageWindow() {
-	      imageWindow = new IndependentWindow("Grid Image Viewer", BAMutil.getImage("netcdfUI"));
+	      imageWindow = new IndependentWindow("Simple Geometry Image Viewer", BAMutil.getImage("netcdfUI"));
 	      imageViewer = new ImageViewPanel(null);
 	      imageWindow.setComponent(imageViewer);
 	      imageWindow.setBounds((Rectangle) mainPrefs.getBean(GRIDIMAGE_FRAME_SIZE, new Rectangle(77, 22, 700, 900)));
