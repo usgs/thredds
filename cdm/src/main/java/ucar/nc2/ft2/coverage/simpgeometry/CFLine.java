@@ -138,7 +138,13 @@ public class CFLine implements Line {
 	}
 	
 	/**
+	 * Given a dataset, variable, and index, automatically populates this Line and
+	 * returns it.
 	 * 
+	 * @param dataset which the variable is a part of
+	 * @param var the variable which has a geometry attribute
+	 * @param index of the line within the variable
+	 * @return return a line
 	 */
 	public Line setupLine(NetcdfDataset dataset, Variable var, int index)
 	{
