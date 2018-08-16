@@ -15,10 +15,12 @@ import ucar.nc2.VariableSimpleIF;
 import ucar.nc2.util.Indent;
 import ucar.nc2.ft2.SimpleGeoms.CFGEOMETRY;
 import ucar.nc2.ft2.coverage.CoverageReader;
+import ucar.nc2.ft2.coverage.SubsetParams;
 import ucar.nc2.ft2.coverage.adapter.SimpleGeometryCS;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 
@@ -190,6 +192,7 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
 	 * Get the data associated the index
 	 * @param  index  number associated with the geometry 
 	 */
+  //COME BACK TO: does is make sense for geometry to be a feild in coverage type?
   public SimpleGeometry readGeometry(int index) throws IOException, InvalidRangeException {
 
 	  SimpleGeometry geom = null;
@@ -210,7 +213,24 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
 	  return geom;
   }
 
-	  
+	 public List<SimpleGeometry> readGeometries(SubsetParams params){
+		 
+		 List<SimpleGeometry> geometries = null;
+		 switch (geometry) {
+		  
+		  case CFPOINT:
+			  geometries = coordSys.getPoints(name, params);
+			  break;
+		  case CFLINE:
+			  geometries = coordSys.getLines(name, params);
+			  break;
+		  case CFPOLYGON:
+			  geometries = coordSys.getPolygons(name, params);
+			  break;
+		  }
+		 
+		 return geometries;
+	 }
   
   ////////////////////////////////////////////////////////////////////////////////////////
   // implement VariableSimpleIF
