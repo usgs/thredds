@@ -126,7 +126,6 @@ public class CFPoint implements Point{
 	{
 		// Points are much simpler, node_count is used multigeometries so it's a bit different
 		// No need for the cat here
-		Variable node_counts;
 		Array xPts = null;
 		Array yPts = null;
 		Integer ind = (int)index;
@@ -143,8 +142,8 @@ public class CFPoint implements Point{
 		}
 		
 		try {
-			xPts = x.read( index ).reduce();
-			yPts = y.read( index ).reduce();
+			xPts = x.read( ind.toString() ).reduce();
+			yPts = y.read( ind.toString() ).reduce();
 		
 		} catch (IOException e) {
 
@@ -155,19 +154,9 @@ public class CFPoint implements Point{
 			e.printStackTrace();
 		}
 		
-		IndexIterator itr_x = xPts.getIndexIterator();
-		IndexIterator itr_y = yPts.getIndexIterator();
-		
-		// x and y should have the same shape, will add some handling on this
-		while(itr_x.hasNext())
-		{
-			this.addPoint(itr_x.getDoubleNext(), itr_y.getDoubleNext());
-		}
-		
-		
 		// Now set the Data
 		try {
-			this.setData(polyvar.read(":," + index).reduce());
+			this.data = vari.read(":," + index);
 			
 		} catch (IOException | InvalidRangeException e) {
 
@@ -176,9 +165,10 @@ public class CFPoint implements Point{
 		}
 		
 		// still things to set
+		this.x = xPts.getDouble(0);
+		this.y = xPts.getDouble(0);
 		this.next = null;
 		this.prev = null;
-		this.interior_ring = null;
 		
 		return this;
 	}
