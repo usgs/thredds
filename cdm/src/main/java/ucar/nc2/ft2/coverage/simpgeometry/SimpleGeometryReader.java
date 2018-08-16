@@ -27,6 +27,7 @@ public class SimpleGeometryReader {
 		Variable polyvar = ds.findVariable(name);
 		if(polyvar == null) return null;
 		
+		// create a blank cf Polygon
 		Polygon poly = new CFPolygon();
 		
 		// Check for convention to see which convention to use, later
