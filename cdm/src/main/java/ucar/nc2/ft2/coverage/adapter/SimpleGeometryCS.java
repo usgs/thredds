@@ -82,6 +82,20 @@ public class SimpleGeometryCS extends DtCoverageCS {
 	 return builder.getPoint(name,index);
   }
   
+  /**
+   * Given a Variable name and a beginning index and end index
+   * returns a list of points (inclusive on both sides)
+   * 
+   * @param name of the data variable
+   * @param index_begin within the variable
+   * @param index_end within the varible
+   * @return a list of points with associated data
+   */
+  public List<Point> getPoints(String name, int index_begin, int index_end)
+  {
+	  return builder.getPoints(name, index_begin, index_end);
+  }
+  
   // LOOK another possibility is a scalar runtime and a 1D time offset
   
   @Override

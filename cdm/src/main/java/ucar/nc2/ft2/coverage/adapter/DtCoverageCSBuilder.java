@@ -317,6 +317,19 @@ public class DtCoverageCSBuilder {
   {
 	  return geometry_reader.readPoint(name, index);
   }
+  
+  /**
+   * Given a certain variable name and geometry begin and end indicies, returns a list of Simple Geometry Points
+   * 
+   * @param name
+   * @param index_begin
+   * @param index_end
+   * @return
+   */
+  public List<Point> getPoint(String name, int index_begin, int index_end)
+  {
+	  
+  }
 
   public DtCoverageCS makeCoordSys() {
     if (type == null) return null;

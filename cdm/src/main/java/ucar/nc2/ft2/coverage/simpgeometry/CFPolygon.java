@@ -201,9 +201,9 @@ public class CFPolygon implements Polygon  {
 		
 		// Now set the Data
 		try {
-			this.setData(polyvar.read());
+			this.setData(polyvar.read(":," + index).reduce());
 			
-		} catch (IOException e) {
+		} catch (IOException | InvalidRangeException e) {
 
 			return null;
 			
