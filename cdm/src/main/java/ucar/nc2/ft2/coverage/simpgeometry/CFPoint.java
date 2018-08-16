@@ -1,6 +1,8 @@
 package ucar.nc2.ft2.coverage.simpgeometry;
 
 import ucar.ma2.Array;
+import ucar.nc2.Variable;
+import ucar.nc2.dataset.NetcdfDataset;
 import ucar.nc2.ft2.coverage.simpgeometry.Point;
 
 /**
@@ -109,6 +111,11 @@ public class CFPoint implements Point{
 		
 		this.x = x;
 		this.y = y;
+	}
+	
+	public Point setupPoint(NetcdfDataset set, Variable vari, int index)
+	{
+		return null;
 	}
 	
 	/**

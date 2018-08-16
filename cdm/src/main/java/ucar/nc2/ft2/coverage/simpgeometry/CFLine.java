@@ -3,6 +3,8 @@ package ucar.nc2.ft2.coverage.simpgeometry;
 import java.util.ArrayList;
 import java.util.List;
 import ucar.ma2.Array;
+import ucar.nc2.Variable;
+import ucar.nc2.dataset.NetcdfDataset;
 
 /**
  * A CF 1.8 compliant Line
@@ -140,6 +142,6 @@ public class CFLine implements Line {
 	 */
 	public Line setupLine(NetcdfDataset dataset, Variable var, int index)
 	{
-		
+		return null;
 	}
 }
