@@ -20,10 +20,6 @@ buildscript {
             url "https://dl.bintray.com/cwardgar/maven/"  // For 'com.cwardgar.gretty-fork:gretty'.
         }
     }
-    
-     plugins {
-        id 'net.researchgate.release' version '2.6.0'
-    }
 
     dependencies {
         classpath libraries["gretty"]
@@ -35,6 +31,10 @@ buildscript {
         classpath libraries["guava"]  // For various utility methods used in the build scripts.
     }
 }
+
+plugins {
+    id 'net.researchgate.release' version '2.6.0'
+ }
 
 allprojects {
     // Matches Maven's "project.groupId". Used in MANIFEST.MF for "Implementation-Vendor-Id".
