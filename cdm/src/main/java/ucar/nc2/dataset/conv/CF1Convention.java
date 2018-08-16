@@ -108,8 +108,6 @@ public class CF1Convention extends CSMConvention {
   public void augmentDataset(NetcdfDataset ds, CancelTask cancelTask) throws IOException {
     boolean got_grid_mapping = false;
     
-    Group geometries = new Group(ds.getReferencedFile(), null, "cf_geometry");
-    
     // look for transforms
     List<Variable> vars = ds.getVariables();
     for (Variable v : vars) {
@@ -240,7 +238,6 @@ public class CF1Convention extends CSMConvention {
       		}
       		
       		v.addAttribute(new Attribute(_Coordinate.Axes, pre + cds.trim()));
-      		ds.addVariable(geometries, v);
       	}
       }
     }

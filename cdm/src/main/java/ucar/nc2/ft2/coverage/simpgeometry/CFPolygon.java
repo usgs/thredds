@@ -1,8 +1,17 @@
 package ucar.nc2.ft2.coverage.simpgeometry;
 
 import java.util.List;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+
 import ucar.ma2.Array;
+import ucar.ma2.IndexIterator;
+import ucar.ma2.InvalidRangeException;
+import ucar.nc2.Variable;
+import ucar.nc2.constants.AxisType;
+import ucar.nc2.dataset.CoordinateAxis;
+import ucar.nc2.dataset.NetcdfDataset;
 
 /**
  * A CF 1.8 compliant Polygon
@@ -138,6 +147,77 @@ public class CFPolygon implements Polygon  {
 	}
 	
 	/**
+	 * Given a dataset, variable and index, automatically sets up a previously constructed polygon.
+	 * If the specified polygon is not found in the dataset, returns null
+	 * 
+	 * @param dataset which the variable is a part of
+	 * @param polyvar the variable which has a geometry attribute
+	 * @param index of the polygon within the variable
+	 * 
+	 */
+	public Polygon setupPolygon(NetcdfDataset dataset, Variable polyvar, int index)
+	{
+		this.points = new ArrayList<CFPoint>();
+		Array xPts = null;
+		Array yPts = null;
+
+		List<CoordinateAxis> axes = dataset.getCoordinateAxes();
+		CoordinateAxis x = null; CoordinateAxis y = null;
+		
+		// Look for x and y
+		
+		for(CoordinateAxis ax : axes){
+			
+			if(ax.getAxisType() == AxisType.GeoX) x = ax;
+			if(ax.getAxisType() == AxisType.GeoY) y = ax;
+		}
+		
+		SimpleGeometryKitten kitty = new SimpleGeometryKitten(polyvar);
+		
+		try {
+			xPts = x.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
+			yPts = y.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
+		
+		} catch (IOException e) {
+
+				return null;
+			
+		} catch (InvalidRangeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// This will be revised to get a single polygon
+		IndexIterator itr_x = xPts.getIndexIterator();
+		IndexIterator itr_y = yPts.getIndexIterator();
+		
+		// x and y should have the same shape, will add some handling on this
+		while(itr_x.hasNext())
+		{
+			this.addPoint(itr_x.getDoubleNext(), itr_y.getDoubleNext());
+		}
+		
+		
+		// Now set the Data
+		try {
+			this.setData(polyvar.read());
+			
+		} catch (IOException e) {
+
+			return null;
+			
+		}
+		
+		// still things to set
+		this.next = null;
+		this.prev = null;
+		this.interior_ring = null;
+		
+		return this;
+	}
+	
+	
+	/**
 	 * Constructs an empty polygon with nothing in it using an Array List.
 	 */
 	public CFPolygon() {
@@ -150,6 +230,8 @@ public class CFPolygon implements Polygon  {
 	
 	/**
 	 * Constructs a new polygon whose points constitute the points passed in.
+	 * 
+	 * @param points which make up the Polygon
 	 */
 	public CFPolygon(List<CFPoint> points) {
 		this.points = points;

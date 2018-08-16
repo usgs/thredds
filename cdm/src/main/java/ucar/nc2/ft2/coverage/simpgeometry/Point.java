@@ -1,6 +1,8 @@
 package ucar.nc2.ft2.coverage.simpgeometry;
 
 import ucar.ma2.Array;
+import ucar.nc2.Variable;
+import ucar.nc2.dataset.NetcdfDataset;
 
 /**
  * Generic interface for a Simple Geometry Point.
@@ -44,4 +46,15 @@ public interface Point extends SimpleGeometry {
 	 */
 	public CFPoint getPrev();
 
+	/**
+	 * Given a dataset, construct a point from the variable which holds points
+	 * and the index as given.
+	 * 
+	 * @param dataset Where the point variable resides
+	 * @param variable Which holds point information
+	 * @param index for Indexing within the polygon variable
+	 * 
+	 * @return the constructed Point with associated data
+	 */
+	public Point setupPoint(NetcdfDataset dataset, Variable variable, int index);
 }

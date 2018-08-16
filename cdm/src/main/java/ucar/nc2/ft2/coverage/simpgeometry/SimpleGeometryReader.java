@@ -6,7 +6,7 @@ import ucar.nc2.dataset.NetcdfDataset;
 /**
  * A class which given a dataset, will read from the dataset one of the simple geometry types. Those being polygon, line, or point.
  * 
- * @author wchen
+ * @author wchen@usgs.gov
  *
  */
 public class SimpleGeometryReader {
@@ -25,10 +25,13 @@ public class SimpleGeometryReader {
 	public Polygon readPolygon(String name, int index) {
 		
 		Variable polyvar = ds.findVariable(name);
-		
 		if(polyvar == null) return null;
 		
-		return null;
+		// create a blank cf Polygon
+		Polygon poly = new CFPolygon();
+		
+		// Check for convention to see which convention to use, later
+		return poly.setupPolygon(ds, polyvar, index);
 	}
 	
 	/**
@@ -40,6 +43,10 @@ public class SimpleGeometryReader {
 	 * @return a new line with all associated information
 	 */
 	public Line readLine(String name, int index) {
+	
+		Variable linevar = ds.findVariable(name);
+		if(linevar == null) return null;
+		
 		return null;
 	}
 	
@@ -52,6 +59,10 @@ public class SimpleGeometryReader {
 	 * @return a new Point with all associated information
 	 */
 	public Point readPoint(String name, int index) {
+
+		Variable pointvar = ds.findVariable(name);
+		if(pointvar == null) return null;
+		
 		return null;
 	}
 	
@@ -75,4 +86,5 @@ public class SimpleGeometryReader {
 		this.ds = ds;
 		this.conv = convention;
 	}
+	
 }

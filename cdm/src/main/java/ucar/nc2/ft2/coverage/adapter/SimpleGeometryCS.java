@@ -45,10 +45,10 @@ public class SimpleGeometryCS extends DtCoverageCS {
    * Given a Variable name and a geometry index
    * returns a Polygon 
    * 
-   * @param name - the name of the data variable
-   * @param index - the index of the variable
+   * @param name of the data variable
+   * @param index within the variable
    * 
-   * @return poly - the new polygon with all associated data, null if not found
+   * @return polygon with all associated data, null if not found
    */
   public Polygon getPolygon(String name, int index)
   {
@@ -59,14 +59,27 @@ public class SimpleGeometryCS extends DtCoverageCS {
    * Given a Variable name and a geometry index
    * returns a Line 
    * 
-   * @param name - the name of the data variable
-   * @param index - the index of the variable
+   * @param name of the data variable
+   * @param index within the variable
    * 
-   * @return line - the new line with all associated data, null if not found
+   * @return line with all associated data, null if not found
    */
   public Line getLine(String name, int index)
   {
 	 return builder.getLine(name, index);
+  }
+  
+  /**
+   * Given a Variable name and a geometry index
+   * returns a Point
+   * 
+   * @param name of the data variable
+   * @param index within the variable
+   * @return point with all associated data, null if not found
+   */
+  public Point getPoint(String name, int index)
+  {
+	 return builder.getPoint(name,index);
   }
   
   // LOOK another possibility is a scalar runtime and a 1D time offset
