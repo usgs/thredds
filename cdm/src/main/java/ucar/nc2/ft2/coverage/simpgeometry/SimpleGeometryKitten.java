@@ -4,10 +4,12 @@ import ucar.nc2.Variable;
 import ucar.nc2.constants.CF;
 
 /**
- * A cat (the animal) made out of Simple Geometry.
+ * A cat (the animal) trained in finding Simple Geometry.
  * 
  * A Simple Geometry Kitten can go find the beginning and end indicies of
  * a simple geometry X and Y within a variable. But first the Kitten needs a Variable to find it in.
+ * The kitten remembers previous adventures so if the kitten is tasked to find a Simple Geometry close to one before it
+ * will find it faster.
  * 
  * @author wchen
  *
