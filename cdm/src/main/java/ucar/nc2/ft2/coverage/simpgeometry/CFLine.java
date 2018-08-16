@@ -134,4 +134,12 @@ public class CFLine implements Line {
 		this.next = null;
 		this.data = null;
 	}
+	
+	/**
+	 * 
+	 */
+	public Line setupLine(NetcdfDataset dataset, Variable var, int index)
+	{
+		
+	}
 }

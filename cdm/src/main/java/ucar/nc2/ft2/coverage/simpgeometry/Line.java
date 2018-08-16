@@ -2,6 +2,8 @@ package ucar.nc2.ft2.coverage.simpgeometry;
 
 import java.util.List;
 import ucar.ma2.Array;
+import ucar.nc2.Variable;
+import ucar.nc2.dataset.NetcdfDataset;
 
 /**
  * Generic interface for a Simple Geometry line.
@@ -65,5 +67,17 @@ public interface Line {
 	 * Automatically connect the other line to this line as well.
 	 */
 	public void setPrev(CFLine prev);
+	
+	/**
+	 * Given a dataset, construct a line from the variable which holds lines
+	 * and the index as given.
+	 * 
+	 * @param dataset Where the line variable resides
+	 * @param variable Which holds polygon information
+	 * @param index for Indexing within the polygon variable
+	 * 
+	 * @return the constructed Line with associated data
+	 */
+	public Line setupLine(NetcdfDataset dataset, Variable variable, int index);
 	
 }
