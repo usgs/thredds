@@ -259,6 +259,11 @@ public class DtCoverageCSBuilder {
       else
         return FeatureType.CURVILINEAR;
     }
+    
+    if(geometry_reader != null)
+    {
+    	return FeatureType.SIMPLE_GEOMETRY;
+    }
 
     // what makes it a grid?
     // each dimension must have its own coordinate variable
