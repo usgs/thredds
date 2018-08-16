@@ -190,42 +190,55 @@ public class CFPolygon implements Polygon  {
 		
 		try {
 			
+			// No multipolygons just read in the whole thing
 			if(part_node_counts == null) {
 				xPts = x.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
-				yPts = y.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
+				yPts = y.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce(); 
+		
+				IndexIterator itr_x = xPts.getIndexIterator();
+				IndexIterator itr_y = yPts.getIndexIterator();
+		
+				// x and y should have the same shape, will add some handling on this
+				while(itr_x.hasNext()) {
+					this.addPoint(itr_x.getDoubleNext(), itr_y.getDoubleNext());
+				}
+	
+				this.setData(polyvar.read(":," + index).reduce());
 			}
 			
 			else {
 				
-			}
+				// If there are multipolygons then take the upper and lower of it and divy it up
+				
+				CFPolygon tail = this;
+				int i = 0;
+				
+				while(lower < upper) {
 			
-		} catch (IOException e) {
+					xPts = x.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
+					yPts = y.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce(); 
+			
+					IndexIterator itr_x = xPts.getIndexIterator();
+					IndexIterator itr_y = yPts.getIndexIterator();
+					
+					// Set data of each
+					this.setData(polyvar.read(":," + index));
 
-				return null;
-			
+					if(lower < upper) this.setNext(new CFPolygon());
+					tail = this.getNext();
+					i++;
+					
+				}
+			}
+		}
+		
+		catch (IOException e) {
+
+			return null;
+		
 		} catch (InvalidRangeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
-		IndexIterator itr_x = xPts.getIndexIterator();
-		IndexIterator itr_y = yPts.getIndexIterator();
-		
-		// x and y should have the same shape, will add some handling on this
-		while(itr_x.hasNext())
-		{
-			this.addPoint(itr_x.getDoubleNext(), itr_y.getDoubleNext());
-		}
-		
-		
-		// Now set the Data
-		try {
-			this.setData(polyvar.read(":," + index).reduce());
-			
-		} catch (IOException | InvalidRangeException e) {
-
-			return null;
-			
 		}
 		
 		// still things to set
