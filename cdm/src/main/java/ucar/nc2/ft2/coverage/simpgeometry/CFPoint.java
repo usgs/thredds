@@ -1,7 +1,16 @@
 package ucar.nc2.ft2.coverage.simpgeometry;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import ucar.ma2.Array;
+import ucar.ma2.IndexIterator;
+import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Variable;
+import ucar.nc2.constants.AxisType;
+import ucar.nc2.constants.CF;
+import ucar.nc2.dataset.CoordinateAxis;
 import ucar.nc2.dataset.NetcdfDataset;
 import ucar.nc2.ft2.coverage.simpgeometry.Point;
 
@@ -115,7 +124,63 @@ public class CFPoint implements Point{
 	
 	public Point setupPoint(NetcdfDataset set, Variable vari, int index)
 	{
-		return null;
+		// Points are much simpler, node_count is used multigeometries so it's a bit different
+		// No need for the cat here
+		Variable node_counts;
+		Array xPts = null;
+		Array yPts = null;
+		Integer ind = (int)index;
+
+		List<CoordinateAxis> axes = set.getCoordinateAxes();
+		CoordinateAxis x = null; CoordinateAxis y = null;
+		
+		// Look for x and y
+		
+		for(CoordinateAxis ax : axes){
+			
+			if(ax.getAxisType() == AxisType.GeoX) x = ax;
+			if(ax.getAxisType() == AxisType.GeoY) y = ax;
+		}
+		
+		try {
+			xPts = x.read( index ).reduce();
+			yPts = y.read( index ).reduce();
+		
+		} catch (IOException e) {
+
+				return null;
+			
+		} catch (InvalidRangeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		IndexIterator itr_x = xPts.getIndexIterator();
+		IndexIterator itr_y = yPts.getIndexIterator();
+		
+		// x and y should have the same shape, will add some handling on this
+		while(itr_x.hasNext())
+		{
+			this.addPoint(itr_x.getDoubleNext(), itr_y.getDoubleNext());
+		}
+		
+		
+		// Now set the Data
+		try {
+			this.setData(polyvar.read(":," + index).reduce());
+			
+		} catch (IOException | InvalidRangeException e) {
+
+			return null;
+			
+		}
+		
+		// still things to set
+		this.next = null;
+		this.prev = null;
+		this.interior_ring = null;
+		
+		return this;
 	}
 	
 	/**

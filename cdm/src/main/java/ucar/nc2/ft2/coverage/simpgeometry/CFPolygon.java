@@ -188,7 +188,6 @@ public class CFPolygon implements Polygon  {
 			e.printStackTrace();
 		}
 		
-		// This will be revised to get a single polygon
 		IndexIterator itr_x = xPts.getIndexIterator();
 		IndexIterator itr_y = yPts.getIndexIterator();
 		

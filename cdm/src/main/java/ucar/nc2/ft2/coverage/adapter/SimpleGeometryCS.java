@@ -5,6 +5,8 @@
 
 package ucar.nc2.ft2.coverage.adapter;
 
+import java.util.List;
+
 import ucar.nc2.Variable;
 import ucar.nc2.dataset.CoordinateAxis1D;
 import ucar.nc2.dataset.CoordinateAxis1DTime;
