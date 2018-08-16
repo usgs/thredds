@@ -10,6 +10,7 @@ import ucar.ma2.IndexIterator;
 import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Variable;
 import ucar.nc2.constants.AxisType;
+import ucar.nc2.constants.CF;
 import ucar.nc2.dataset.CoordinateAxis;
 import ucar.nc2.dataset.NetcdfDataset;
 
@@ -151,6 +152,7 @@ public class CFPolygon implements Polygon  {
 		this.points = new ArrayList<CFPoint>();
 		Array xPts = null;
 		Array yPts = null;
+		Variable node_counts;
 
 		List<CoordinateAxis> axes = dataset.getCoordinateAxes();
 		CoordinateAxis x = null; CoordinateAxis y = null;
@@ -163,7 +165,15 @@ public class CFPolygon implements Polygon  {
 			if(ax.getAxisType() == AxisType.GeoY) y = ax;
 		}
 		
-		SimpleGeometryKitten kitty = new SimpleGeometryKitten(polyvar);
+		String node_c_str = polyvar.findAttValueIgnoreCase(CF.NODE_COUNT, "");
+		
+		if(!node_c_str.equals("")) {
+			node_counts = dataset.findVariable(node_c_str);
+		}
+		
+		else return null;
+		
+		SimpleGeometryKitten kitty = new SimpleGeometryKitten(node_counts);
 		
 		try {
 			xPts = x.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
