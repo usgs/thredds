@@ -1,5 +1,8 @@
 package ucar.nc2.ft2.coverage.simpgeometry;
 
+import java.io.IOException;
+
+import ucar.ma2.Array;
 import ucar.nc2.Variable;
 import ucar.nc2.constants.CF;
 import ucar.nc2.ft2.coverage.simpgeometry.*;
@@ -17,16 +20,13 @@ import ucar.nc2.ft2.coverage.simpgeometry.*;
  */
 public class SimpleGeometryKitten {
 	
-	private Variable cat_toy = null;
-	private Variable node_count = null;
-	private Variable part_node_count = null;
-	private String geometry_type;
+	private Array node_count = null;
 	private int past_index;
-	private int previous_end, new_end;
-	private int previous_begin, new_begin;
+	private int previous_end;
+	private int previous_begin;
 	
 	private int getNodeCount(int index) {
-		
+		return node_count.getInt(index);
 	}
 	
 	public int getBeginning(int index) {
@@ -69,16 +69,22 @@ public class SimpleGeometryKitten {
 	}
 	
 	/**
-	 * Call up a new Kitten, the Kitten must be given a few variables to look through though.
+	 * Call up a new Kitten, the Kitten must be given a variable to look through though.
 	 * 
-	 * @param variable Variable with all information concerning polygon point data
 	 * @param node_count Amount of nodes per geometry
-	 * @param variable part_node_count
 	 */
-	public SimpleGeometryKitten(Variable variable, Variable node_count, Variable part_node_count) {
+	public SimpleGeometryKitten(Variable node_count) {
+		
+		try {
+			this.node_count = node_count.read();
+		} catch (IOException e) {
+
+			this.node_count = null;
+			e.printStackTrace();
+		}
 		
 		past_index = -1;
-		previous_end = -1; new_end = -1;
-		previous_begin = -1; new_begin = -1;
+		previous_end = -1;
+		previous_begin = -1;
 	}
 }
