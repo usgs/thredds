@@ -326,9 +326,15 @@ public class DtCoverageCSBuilder {
    * @param index_end
    * @return
    */
-  public List<Point> getPoint(String name, int index_begin, int index_end)
-  {
+  public List<Point> getPoints(String name, int index_begin, int index_end) {
+	  List<Point> pt_list = new ArrayList<Point>();
 	  
+	  for(int i = index_begin; i <= index_end; i++)
+	  {
+		  pt_list.add(geometry_reader.readPoint(name, i));
+	  }
+	  
+	  return pt_list;
   }
 
   public DtCoverageCS makeCoordSys() {
