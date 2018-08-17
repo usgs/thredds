@@ -64,7 +64,7 @@ public class SimpleGeometryKitten {
 		
 		past_index = index;
 		previous_end = new_end;
-		return new_end;
+		return new_end - 1;
 	}
 	
 	/**
