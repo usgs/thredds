@@ -250,7 +250,7 @@ public class CFPolygon implements Polygon  {
 				
 				//Clean up
 				tail = tail.getPrev();
-				tail.setNext(null);
+				if(tail != null) tail.setNext(null);
 			}
 		}
 		
