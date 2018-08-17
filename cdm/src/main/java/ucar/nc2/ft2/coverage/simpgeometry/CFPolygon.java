@@ -187,14 +187,14 @@ public class CFPolygon implements Polygon  {
 		SimpleGeometryKitten kitty = new SimpleGeometryKitten(node_counts);
 		
 		//Get beginning and ending indicies for this polygon
-		int upper = kitty.getBeginning(index);
-		int lower = kitty.getEnd(index);
+		int lower = kitty.getBeginning(index);
+		int upper = kitty.getEnd(index);
 
 		
 		try {
 			
-			xPts = x.read( upper + ":" + lower ).reduce();
-			yPts = y.read( upper + ":" + lower ).reduce(); 
+			xPts = x.read( lower + ":" + upper ).reduce();
+			yPts = y.read( lower + ":" + upper ).reduce(); 
 
 			IndexIterator itr_x = xPts.getIndexIterator();
 			IndexIterator itr_y = yPts.getIndexIterator();
@@ -250,7 +250,7 @@ public class CFPolygon implements Polygon  {
 				
 				//Clean up
 				tail = tail.getPrev();
-				if(tail != null) tail.setNext(null);
+				tail.setNext(null);
 			}
 		}
 		
