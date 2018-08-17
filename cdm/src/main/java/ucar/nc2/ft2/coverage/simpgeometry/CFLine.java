@@ -141,12 +141,14 @@ public class CFLine implements Line {
 		List<CoordinateAxis> axes = dataset.getCoordinateAxes();
 		CoordinateAxis x = null; CoordinateAxis y = null;
 		
+		String[] node_coords = var.findAttributeIgnoreCase(CF.NODE_COORDINATES).getStringValue().split(" ");
+		
 		// Look for x and y
 		
 		for(CoordinateAxis ax : axes){
 			
-			if(ax.getAxisType() == AxisType.GeoX) x = ax;
-			if(ax.getAxisType() == AxisType.GeoY) y = ax;
+			if(ax.getFullName().equals(node_coords[0])) x = ax;
+			if(ax.getFullName().equals(node_coords[1])) y = ax;
 		}
 		
 		// Affirm node counts

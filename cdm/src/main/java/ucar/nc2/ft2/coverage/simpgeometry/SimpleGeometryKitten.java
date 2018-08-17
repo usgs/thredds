@@ -37,6 +37,8 @@ public class SimpleGeometryKitten {
 			return previous_end + 1;
 		}
 		
+		else if(past_index == index) return previous_begin;
+		
 		// Otherwise, find it!
 		int new_beginning = 0;
 		for(int i = 0; i < index; i++) {
@@ -44,6 +46,7 @@ public class SimpleGeometryKitten {
 		}
 		
 		past_index = index;
+		previous_begin = new_beginning;
 		return new_beginning;
 	}
 	
@@ -55,14 +58,16 @@ public class SimpleGeometryKitten {
 			return previous_begin - 1;
 		}
 		
+		else if(past_index == index) return previous_end;
+		
 		// Otherwise find it!
 		int new_end = 0;
 		for(int i = 0; i < index + 1; i++) {
 			new_end += getNodeCount(i);
 		}
 		
-		new_end -= 1;
-		
+		past_index = index;
+		previous_end = new_end;
 		return new_end;
 	}
 	
