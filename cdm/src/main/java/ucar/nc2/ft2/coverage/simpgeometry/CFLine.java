@@ -92,11 +92,11 @@ public class CFLine implements Line {
 	 * Sets the next line which make up the multiline which this line is a part of.
 	 * Automatically connects the other line to this line as well.
 	 */
-	public void setNext(Line next) {
-		this.next = (CFLine) next;
+	public void setNext(CFLine next) {
+		this.next = next;
 		
-		if(this.next != null) {
-			this.next.setPrevOnce(this);
+		if(next != null) {
+			next.setPrevOnce(this);
 		}
 	}
 	
@@ -109,11 +109,11 @@ public class CFLine implements Line {
 	 * Sets the previous line which makes up the multiline which this line is a part of.
 	 * Automatically connect the other line to this line as well.
 	 */
-	public void setPrev(Line prev) {
-		this.prev = (CFLine) prev;
+	public void setPrev(CFLine prev) {
+		this.prev = prev;
 		
 		if(prev != null) {
-			this.prev.setNextOnce(this);
+			prev.setNextOnce(this);
 		}
 	}
 	
