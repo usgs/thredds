@@ -43,7 +43,7 @@ release {
     git {
     requireBranch = '5.0.0-usgs'
     }
-    updateVersion.dependsOn 'publish'
+    publish.dependsOn 'updateVersion'
  }
 
 allprojects {
