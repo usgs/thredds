@@ -35,9 +35,11 @@ buildscript {
 plugins {
     id 'net.researchgate.release' version '2.6.0'
  }
+apply from: "$rootDir/gradle/any/publishing.gradle"
  
+
 release {
-	apply from: "$rootDir/gradle/any/publishing.gradle"
+	
     git {
     requireBranch = '5.0.0-usgs'
     }
