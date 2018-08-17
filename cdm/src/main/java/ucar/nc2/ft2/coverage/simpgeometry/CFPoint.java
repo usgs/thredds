@@ -196,6 +196,7 @@ public class CFPoint implements Point{
 				}
 				
 				// Clean up the last point since it will be invalid
+				point = point.getPrev();
 				point.next = null;
 			}
 		

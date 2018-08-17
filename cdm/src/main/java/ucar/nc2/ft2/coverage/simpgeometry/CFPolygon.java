@@ -216,15 +216,29 @@ public class CFPolygon implements Polygon  {
 			else {
 				
 				CFPolygon tail = this;
+				Array pnc = part_node_counts.read();
+				IndexIterator pnc_itr = pnc.getIndexIterator();
+				
+				// In part node count search for the right index to begin looking for "part node counts"
+				int pnc_ind = 0;
+				while(pnc_ind < lower)
+				{
+					pnc_ind++;
+				}
 				
 				while(lower < upper) {
 					
 					// Set data of each
-					this.setData(polyvar.read(":," + index));
-					if(lower < upper) tail.setNext(new CFPolygon());
-					tail = tail.getNext();
+					tail.setData(polyvar.read(":," + index));
 					
+					lower += tail.getPoints().size();
+					tail.setNext(new CFPolygon());
+					tail = tail.getNext();
 				}
+				
+				//Clean up
+				tail = tail.getPrev();
+				tail.setNext(null);
 			}
 		}
 		
