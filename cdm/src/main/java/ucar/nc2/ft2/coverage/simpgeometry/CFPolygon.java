@@ -24,7 +24,7 @@ import ucar.nc2.dataset.NetcdfDataset;
  */
 public class CFPolygon implements Polygon  {
 
-	private List<Point> points;	// a list of the constitutent points of the Polygon, connected in ascending order as in the CF convention
+	private List<CFPoint> points;	// a list of the constitutent points of the Polygon, connected in ascending order as in the CF convention
 	private CFPolygon next;	// if non-null, next refers to the next line part of a multi-polygon
 	private CFPolygon prev;	// if non-null, prev refers to the previous line part of a multi-polygon
 	private CFPolygon interior_ring; // the polygon that makes up an interior ring, if any
@@ -35,7 +35,7 @@ public class CFPolygon implements Polygon  {
 	 * 
 	 * @return points
 	 */
-	public List<Point> getPoints() {
+	public List<CFPoint> getPoints() {
 		return points;
 	}
 

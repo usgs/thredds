@@ -38,7 +38,7 @@ public class CFLine implements Line {
 			pt_prev = points.get(points.size() - 1);
 		}
 		
-		this.points.add(new CFPoint(x, y, pt_prev, null));
+		this.points.add(new CFPoint(x, y, (CFPoint) pt_prev, null));
 	}
 	
 	/**
