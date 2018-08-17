@@ -294,6 +294,26 @@ public class DtCoverageCSBuilder {
   }
   
   /**
+   * Given a certain Polygon variable name and geometry begin and end indicies, returns a list of Simple Geometry Polygon
+   * 
+   * @param name
+   * @param index_begin
+   * @param index_end
+   * @return
+   */
+  public List<Polygon> getPolygons(String name, int index_begin, int index_end) {
+	  List<Polygon> poly_list = new ArrayList<Polygon>();
+	  
+	  for(int i = index_begin; i <= index_end; i++)
+	  {
+		  poly_list.add(geometry_reader.readPolygon(name, i));
+	  }
+	  
+	  return poly_list;
+  }
+
+  
+  /**
    * Given a certain variable name and geometry index, returns a Simple Geometry Line.
    * 
    * @param name
@@ -304,6 +324,26 @@ public class DtCoverageCSBuilder {
   {
 	  return geometry_reader.readLine(name, index);
   }
+  
+  /**
+   * Given a certain line variable name and geometry begin and end indicies, returns a list of Simple Geometry Line
+   * 
+   * @param name
+   * @param index_begin
+   * @param index_end
+   * @return
+   */
+  public List<Line> getLines(String name, int index_begin, int index_end) {
+	  List<Line> line_list = new ArrayList<Line>();
+	  
+	  for(int i = index_begin; i <= index_end; i++)
+	  {
+		  line_list.add(geometry_reader.readLine(name, i));
+	  }
+	  
+	  return line_list;
+  }
+
   
   /**
    * Given a certain variable name and geometry index, returns a Simple Geometry Point

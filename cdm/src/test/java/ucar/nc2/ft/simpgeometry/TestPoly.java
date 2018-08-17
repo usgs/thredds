@@ -12,8 +12,19 @@ import ucar.nc2.dataset.NetcdfDataset;
 import ucar.nc2.ft2.coverage.simpgeometry.*;
 import ucar.unidata.util.test.TestDir;
 
+/**
+ * Polygon construction tests at the dataset level.
+ * 
+ * @author wchen@usgs.gov
+ *
+ */
 public class TestPoly {
 
+	/**
+	 * Tests ability to read and construct Polygons and Multipolygons.
+	 * 
+	 *
+	 */
 	@Test
 	public void testMultiPolygonsPolygons() {
 
@@ -43,6 +54,10 @@ public class TestPoly {
 		Assert.assertEquals(1.36, poly_3.getData().getDouble(0), err);
 	}
 	
+	/**
+	 * Tests ability to read and construct Polygons with holes (and perhaps Multipolygons with holes)!
+	 * 
+	 */
 	@Test
 	public void testInteriorRingPolygons() {
 		// Interior Polygons don't work yet.

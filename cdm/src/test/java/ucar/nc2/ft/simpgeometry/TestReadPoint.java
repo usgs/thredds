@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Tests the simple geometry reader's capability to read a point and a multipoint.
+ * Point construction tests at the dataset level.
  * 
  * @author wchen@usgs.gov
  *
@@ -28,7 +28,6 @@ public class TestReadPoint {
 		try {
 		
 			dataset = NetcdfDataset.openDataset(filepath);
-			dataset.enhance();
 		
 		}
 		
@@ -38,5 +37,11 @@ public class TestReadPoint {
 		}
 		
 		return new SimpleGeometryReader(dataset);
+	} // Will be expanded on
+	
+	@Test
+	public void testReadPoint()
+	{
+		SimpleGeometryReader rdr = newReader();
 	}
 }
