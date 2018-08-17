@@ -234,9 +234,13 @@ public class DtCoverageCSBuilder {
         ensAxis = (CoordinateAxis1D) eAxis;
     }
 
-    // Make a Geometry Reader for Simple Geometries
-    if(ucar.nc2.dataset.conv.CF1Convention.getVersion(ds.getConventionUsed()) >= 8) geometry_reader = new SimpleGeometryReader(ds);
+
+    if(ucar.nc2.dataset.conv.CF1Convention.getVersion(ds.getConventionUsed()) >= 8) {
+    	geometry_reader = new SimpleGeometryReader(ds);    // Make a Geometry Reader for Simple Geometries
+ 
+    }
     
+    else geometry_reader = null;
     
     this.type = classify();
     this.coordTransforms = new ArrayList<>(cs.getCoordinateTransforms());
