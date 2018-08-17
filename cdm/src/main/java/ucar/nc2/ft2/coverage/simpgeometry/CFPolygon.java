@@ -187,17 +187,23 @@ public class CFPolygon implements Polygon  {
 		//Get beginning and ending indicies for this polygon
 		int upper = kitty.getBeginning(index);
 		int lower = kitty.getEnd(index);
+
 		
 		try {
 			
+			xPts = x.read( upper + ":" + lower ).reduce();
+			yPts = y.read( upper + ":" + lower ).reduce(); 
+
+			IndexIterator itr_x = xPts.getIndexIterator();
+			IndexIterator itr_y = yPts.getIndexIterator();
+			
 			// No multipolygons just read in the whole thing
 			if(part_node_counts == null) {
-				xPts = x.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
-				yPts = y.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce(); 
-		
-				IndexIterator itr_x = xPts.getIndexIterator();
-				IndexIterator itr_y = yPts.getIndexIterator();
-		
+				
+				this.next = null;
+				this.prev = null;
+				this.interior_ring = null;
+				
 				// x and y should have the same shape, will add some handling on this
 				while(itr_x.hasNext()) {
 					this.addPoint(itr_x.getDoubleNext(), itr_y.getDoubleNext());
@@ -206,28 +212,17 @@ public class CFPolygon implements Polygon  {
 				this.setData(polyvar.read(":," + index).reduce());
 			}
 			
+			// If there are multipolygons then take the upper and lower of it and divy it up
 			else {
 				
-				// If there are multipolygons then take the upper and lower of it and divy it up
-				
 				CFPolygon tail = this;
-				int i = 0;
 				
 				while(lower < upper) {
-			
-					xPts = x.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
-					yPts = y.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce(); 
-			
-					IndexIterator itr_x = xPts.getIndexIterator();
-					IndexIterator itr_y = yPts.getIndexIterator();
 					
 					// Set data of each
 					this.setData(polyvar.read(":," + index));
-
-					
 					if(lower < upper) tail.setNext(new CFPolygon());
 					tail = tail.getNext();
-					i++;
 					
 				}
 			}
@@ -243,9 +238,6 @@ public class CFPolygon implements Polygon  {
 		}
 		
 		// still things to set
-		this.next = null;
-		this.prev = null;
-		this.interior_ring = null;
 		
 		return this;
 	}

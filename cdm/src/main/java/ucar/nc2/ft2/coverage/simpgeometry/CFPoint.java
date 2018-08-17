@@ -181,6 +181,8 @@ public class CFPoint implements Point{
 			else {
 				IndexIterator itr_x = xPts.getIndexIterator();
 				IndexIterator itr_y = yPts.getIndexIterator();
+				this.next = null;
+				this.prev = null;
 				
 				CFPoint point = this;
 		
@@ -189,9 +191,12 @@ public class CFPoint implements Point{
 					point.x = itr_x.getDoubleNext();
 					point.y = itr_y.getDoubleNext();
 					point.data = vari.read(":," + index).reduce();
-					point = new CFPoint(-1, -1, this, null, null);
-					this.next = point;
+					point.next = new CFPoint(-1, -1, point, null, null); // -1 is a default value, it gets assigned eventually
+					point = point.getNext();
 				}
+				
+				// Clean up the last point since it will be invalid
+				point.next = null;
 			}
 		
 		} catch (IOException e) {
@@ -202,9 +207,6 @@ public class CFPoint implements Point{
 			
 			e.printStackTrace();
 		}
-
-		this.next = null;
-		this.prev = null;
 		
 		return this;
 	}
