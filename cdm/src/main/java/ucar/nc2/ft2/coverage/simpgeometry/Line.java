@@ -23,7 +23,7 @@ public interface Line {
 	 * 
 	 * @return points - the collection of points that make up this line
 	 */
-	public List<Point> getPoints();
+	public List<CFPoint> getPoints();
 	
 	/**
 	 * Get the data associated with this line
@@ -38,7 +38,7 @@ public interface Line {
 	 * 
 	 * @return next line if present, null if not
 	 */
-	public Line getNext();
+	public CFLine getNext();
 	
 	/**
 	 * If part of a multiline, returns the previous line within that line
@@ -46,7 +46,7 @@ public interface Line {
 	 * 
 	 * @return previous line if present, null if not
 	 */
-	public Line getPrev();
+	public CFLine getPrev();
 	
 	/**
 	 * Set the data associated with this Line
@@ -59,14 +59,14 @@ public interface Line {
 	 * Sets the next line which make up the multiline which this line is a part of.
 	 * Automatically connects the other line to this line as well.
 	 */
-	public void setNext(Line next);
+	public void setNext(CFLine next);
 	
 
 	/**
 	 * Sets the previous line which makes up the multiline which this line is a part of.
 	 * Automatically connect the other line to this line as well.
 	 */
-	public void setPrev(Line prev);
+	public void setPrev(CFLine prev);
 	
 	/**
 	 * Given a dataset, construct a line from the variable which holds lines

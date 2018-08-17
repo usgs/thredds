@@ -37,14 +37,14 @@ public interface Point {
 	 * 
 	 * @return next point if it exists, null if not
 	 */
-	public Point getNext();
+	public CFPoint getNext();
 	
 	/**
 	 * Retrieves the previous point within a multipoint if any
 	 * 
 	 * @return previous point if it exists null if not
 	 */
-	public Point getPrev();
+	public CFPoint getPrev();
 
 	/**
 	 * Given a dataset, construct a point from the variable which holds points

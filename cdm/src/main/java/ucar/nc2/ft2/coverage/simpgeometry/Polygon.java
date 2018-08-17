@@ -19,7 +19,7 @@ public interface Polygon {
 	 * 
 	 * @return points Points which constitute the polygon
 	 */
-	public List<Point> getPoints();
+	public List<CFPoint> getPoints();
 
 	/**
 	 * Get the data associated with this Polygon
@@ -33,21 +33,21 @@ public interface Polygon {
 	 * 
 	 * @return Next polygon in the same multipolygon if any, otherwise null
 	 */
-	public Polygon getNext();
+	public CFPolygon getNext();
 	
 	/**
 	 * Get the previous polygon in the sequence of multi-polygons
 	 * 
 	 * @return Previous polygon in the same multipolygon if any, otherwise null
 	 */
-	public Polygon getPrev();
+	public CFPolygon getPrev();
 	
 	/**
 	 * Get this polygon's interior ring.
 	 * 
 	 * @return Previous interior ring as a polygon if any, otherwise null
 	 */
-	public Polygon getInteriorRing();
+	public CFPolygon getInteriorRing();
 	
 	/**
 	 * Add a point to this polygon's points list
@@ -68,7 +68,7 @@ public interface Polygon {
 	 * 
 	 * @param next Polygon to set
 	 */
-	public void setNext(Polygon next);
+	public void setNext(CFPolygon next);
 	
 	/**
 	 * Sets the previous polygon which makes up the multipolygon which this polygon is a part of.
@@ -76,14 +76,14 @@ public interface Polygon {
 	 * 
 	 * @param prev Polygon to set
 	 */
-	public void setPrev(Polygon prev);
+	public void setPrev(CFPolygon prev);
 	
 	/**
 	 *  Simply sets the interior ring of the polygon.
 	 * 
 	 * @param interior Ring which is a polygon itself
 	 */
-	public void setInteriorRing(Polygon interior);
+	public void setInteriorRing(CFPolygon interior);
 	
 	/**
 	 * Given a dataset, construct a polygon from the variable which holds polygons
