@@ -37,8 +37,6 @@ public class SimpleGeometryKitten {
 			return previous_end + 1;
 		}
 		
-		else if(past_index == index) return previous_begin;
-		
 		// Otherwise, find it!
 		int new_beginning = 0;
 		for(int i = 0; i < index; i++) {
@@ -57,8 +55,6 @@ public class SimpleGeometryKitten {
 		{
 			return previous_begin - 1;
 		}
-		
-		else if(past_index == index) return previous_end;
 		
 		// Otherwise find it!
 		int new_end = 0;
@@ -86,8 +82,8 @@ public class SimpleGeometryKitten {
 			e.printStackTrace();
 		}
 		
-		past_index = -1;
-		previous_end = -1;
-		previous_begin = -1;
+		past_index = -10;
+		previous_end = -10;
+		previous_begin = -10;
 	}
 }
