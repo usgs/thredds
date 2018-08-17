@@ -15,7 +15,7 @@ import ucar.unidata.util.test.TestDir;
 public class TestPoly {
 
 	@Test
-	public void testMultiPolygons() {
+	public void testMultiPolygonsPolygons() {
 
 		double err = 0.01;
 		
@@ -43,4 +43,8 @@ public class TestPoly {
 		Assert.assertEquals(1.36, poly_3.getData().getDouble(0), err);
 	}
 	
+	@Test
+	public void testInteriorRingPolygons() {
+		// Interior Polygons don't work yet.
+	}
 }
