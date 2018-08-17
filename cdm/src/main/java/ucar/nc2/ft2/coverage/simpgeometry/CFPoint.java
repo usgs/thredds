@@ -96,7 +96,7 @@ public class CFPoint implements Point{
 	public Point setupPoint(NetcdfDataset set, Variable vari, int index)
 	{
 		// Points are much simpler, node_count is used multigeometries so it's a bit different
-		// No need for the cat here, unless there its a multipoint
+		// No need for the cat here, unless there is a multipoint
 		Array xPts = null;
 		Array yPts = null;
 		Integer ind = (int)index;
@@ -107,12 +107,14 @@ public class CFPoint implements Point{
 		List<CoordinateAxis> axes = set.getCoordinateAxes();
 		CoordinateAxis x = null; CoordinateAxis y = null;
 		
+		String[] node_coords = vari.findAttributeIgnoreCase(CF.NODE_COORDINATES).getStringValue().split(" ");
+		
 		// Look for x and y
 		
 		for(CoordinateAxis ax : axes){
 			
-			if(ax.getAxisType() == AxisType.GeoX) x = ax;
-			if(ax.getAxisType() == AxisType.GeoY) y = ax;
+			if(ax.getFullName().equals(node_coords[0])) x = ax;
+			if(ax.getFullName().equals(node_coords[1])) y = ax;
 		}
 		
 		// Node count is used very differently in points
