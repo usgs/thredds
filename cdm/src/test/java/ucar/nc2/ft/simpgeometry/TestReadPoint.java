@@ -39,29 +39,4 @@ public class TestReadPoint {
 		
 		return new SimpleGeometryReader(dataset);
 	}
-	
-	@Test
-	public void testReadPoint() {
-		SimpleGeometryReader rdr = newReader();
-		Array data = null;
-		Point test_point = null;
-		double err = 0.001;
-		
-		// Read the first point
-		test_point = rdr.readPoint("Average Temperature", 0);
-		
-		// Check the coordinates
-		Assert.assertEquals(-91.277, test_point.getX(), err);
-		Assert.assertEquals(40.753, test_point.getY(), err);
-		
-		data = test_point.getData();
-		
-		// Check the data
-		Assert.assertEquals(0.688, data.getDouble(2), err);
-	}
-	
-	@Test
-	public void testReadMultiPoint() {
-		
-	}
 }

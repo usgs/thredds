@@ -17,7 +17,7 @@ public class TestPoly {
 	@Test
 	public void testMultiPolygons() {
 
-		double err = 0.0;
+		double err = 0.01;
 		
 		NetcdfDataset data = null ;
 		try {
@@ -39,6 +39,8 @@ public class TestPoly {
 		
 		// Test data retrieval
 		Assert.assertEquals(1.28, poly.getData().getDouble(2), err);
+		Assert.assertEquals(1.52, poly_2.getData().getDouble(3), err);
+		Assert.assertEquals(1.36, poly_3.getData().getDouble(0), err);
 	}
 	
 }
