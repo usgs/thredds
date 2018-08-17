@@ -221,17 +221,23 @@ public class CFPolygon implements Polygon  {
 				
 				// In part node count search for the right index to begin looking for "part node counts"
 				int pnc_ind = 0;
-				while(pnc_ind < lower)
+				int pnc_end = 0;
+				while(pnc_end < lower)
 				{
+					pnc_end += pnc_itr.getIntNext();
 					pnc_ind++;
 				}
 				
+				// Now the index is found, use part node count and the index to find each part node count of each individual part
 				while(lower < upper) {
+					
+					int smaller = pnc.getInt(pnc_ind);
+					
 					
 					// Set data of each
 					tail.setData(polyvar.read(":," + index));
-					
-					lower += tail.getPoints().size();
+					lower += smaller;
+					pnc_ind++;
 					tail.setNext(new CFPolygon());
 					tail = tail.getNext();
 				}
