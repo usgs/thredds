@@ -236,7 +236,7 @@ public class CFPolygon implements Polygon  {
 					int smaller = pnc.getInt(pnc_ind);
 					
 					while(smaller > 0) {
-						this.addPoint(itr_x.getDoubleNext(), itr_y.getDoubleNext());
+						tail.addPoint(itr_x.getDoubleNext(), itr_y.getDoubleNext());
 						smaller--;
 					}
 					
@@ -250,7 +250,7 @@ public class CFPolygon implements Polygon  {
 				
 				//Clean up
 				tail = tail.getPrev();
-				tail.setNext(null);
+				if(tail != null) tail.setNext(null);
 			}
 		}
 		
