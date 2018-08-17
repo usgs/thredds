@@ -265,7 +265,7 @@ libraries["gwt-user"] =  "com.google.gwt:gwt-user:${versions["gwt"]}"
 
 libraries["gwt-dev"] = "com.google.gwt:gwt-dev:${versions["gwt"]}"
 
-libraries["threddsIso"] = "EDS:threddsIso:2.3.0-SNAPSHOT"
+libraries["threddsIso"] = "EDS:threddsIso:2.3.0"
 
 libraries["Saxon-HE"] = "net.sf.saxon:Saxon-HE:9.7.0-8"
 
