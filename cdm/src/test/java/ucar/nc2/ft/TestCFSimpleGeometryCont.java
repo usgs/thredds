@@ -1,10 +1,9 @@
-package ucar.nc2.ft.simpgeometry;
+package ucar.nc2.ft2.coverage.simpgeometry;
 
 import org.junit.Assert;
 import org.junit.Test;
 import java.util.Random;
 import java.util.List;
-import ucar.nc2.ft2.coverage.simpgeometry.*;
 
 /**
  * Very simple tests for Simple Geometry container objects.
@@ -252,7 +251,7 @@ public class TestCFSimpleGeometryCont {
 		/* Test
 		 * forwards and backwards
 		 */
-		Polygon cpoly = poly[0];
+		CFPolygon cpoly = poly[0];
 		int k = 0;
 		while(cpoly != null) {
 			Assert.assertEquals(ref_poly[k], cpoly);
