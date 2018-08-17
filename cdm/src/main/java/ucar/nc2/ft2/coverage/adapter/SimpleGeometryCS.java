@@ -90,7 +90,7 @@ public class SimpleGeometryCS extends DtCoverageCS {
    * 
    * @param name of the data variable
    * @param index_begin within the variable
-   * @param index_end within the varible
+   * @param index_end within the variable
    * @return a list of points with associated data
    */
   public List<Point> getPoints(String name, int index_begin, int index_end)

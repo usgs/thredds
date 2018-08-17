@@ -16,13 +16,13 @@ public class TestCFSimpleGeometryCont {
 	private static final double delt = 0.00;
 	private static final int testsize = 100000;
 	private Random rnd = new Random();
-	private CFPoint pt[] = new CFPoint[testsize];
+	private Point pt[] = new CFPoint[testsize];
 	private double ref_x[] = new double[testsize];
 	private double ref_y[] = new double[testsize];
-	private CFLine line[] = new CFLine[testsize];
-	private CFLine ref_line[] = new CFLine[testsize];
-	private CFPolygon poly[] = new CFPolygon[testsize];
-	private CFPolygon ref_poly[] = new CFPolygon[testsize];
+	private Line line[] = new CFLine[testsize];
+	private Line ref_line[] = new CFLine[testsize];
+	private Polygon poly[] = new CFPolygon[testsize];
+	private Polygon ref_poly[] = new CFPolygon[testsize];
 	
 	@Test
 	public void testPtBckwd() {		
@@ -73,7 +73,7 @@ public class TestCFSimpleGeometryCont {
 	public void testPtFwd() {
 	
 		// Make some more points test backwards setting
-		CFPoint pt[] = new CFPoint[testsize];
+		Point pt[] = new CFPoint[testsize];
 		double ref_x[] = new double[testsize];
 		double ref_y[] = new double[testsize];
 		
@@ -306,9 +306,9 @@ public class TestCFSimpleGeometryCont {
 	@Test
 	public void testPolyAddt() {
 		// Test interior ring
-		CFPolygon test_out = new CFPolygon();
+		Polygon test_out = new CFPolygon();
 		test_out.addPoint(5.0, 3.0);
-		CFPolygon test_inner = new CFPolygon();
+		Polygon test_inner = new CFPolygon();
 		test_inner.addPoint(2.0, 4.0);
 		test_out.setInteriorRing(test_inner);
 		Assert.assertEquals(test_inner, test_out.getInteriorRing());

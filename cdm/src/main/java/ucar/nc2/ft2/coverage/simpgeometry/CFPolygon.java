@@ -149,7 +149,7 @@ public class CFPolygon implements Polygon  {
 	 */
 	public Polygon setupPolygon(NetcdfDataset dataset, Variable polyvar, int index)
 	{
-		this.points = new ArrayList<CFPoint>();
+		this.points.clear();
 		Array xPts = null;
 		Array yPts = null;
 		Variable node_counts = null;
@@ -233,10 +233,14 @@ public class CFPolygon implements Polygon  {
 					
 					int smaller = pnc.getInt(pnc_ind);
 					
+					while(smaller > 0) {
+						this.addPoint(itr_x.getDoubleNext(), itr_y.getDoubleNext());
+						smaller--;
+					}
 					
 					// Set data of each
 					tail.setData(polyvar.read(":," + index));
-					lower += smaller;
+					lower += tail.getPoints().size();
 					pnc_ind++;
 					tail.setNext(new CFPolygon());
 					tail = tail.getNext();
@@ -256,8 +260,6 @@ public class CFPolygon implements Polygon  {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		// still things to set
 		
 		return this;
 	}
