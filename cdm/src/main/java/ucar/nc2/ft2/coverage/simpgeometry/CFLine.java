@@ -22,7 +22,7 @@ import ucar.nc2.dataset.NetcdfDataset;
  */
 public class CFLine implements Line {
 
-	private List<CFPoint> points;	// a list of the constitutent points of the Line, connected in ascending order as in the CF convention
+	private List<Point> points;	// a list of the constitutent points of the Line, connected in ascending order as in the CF convention
 	private CFLine next;	// if non-null, next refers to the next line part of a multi-line
 	private CFLine prev;	// if non-null, prev refers to the previous line part of a multi-line	
 	private Array data;		// data associated with the line
@@ -32,7 +32,7 @@ public class CFLine implements Line {
 	 *
 	 */
 	public void addPoint(double x, double y) {
-		CFPoint pt_prev = null;
+		Point pt_prev = null;
 		
 		if(points.size() > 0) {
 			pt_prev = points.get(points.size() - 1);
@@ -46,7 +46,7 @@ public class CFLine implements Line {
 	 * 
 	 * @return points - the collection of points that make up this line
 	 */
-	public List<CFPoint> getPoints() {
+	public List<Point> getPoints() {
 		return points;
 	}
 	
@@ -251,7 +251,7 @@ public class CFLine implements Line {
 	 * 
 	 */
 	public CFLine() {
-		this.points = new ArrayList<CFPoint>();
+		this.points = new ArrayList<Point>();
 		this.next = null;
 		this.prev = null;
 		this.data = null;
@@ -262,7 +262,7 @@ public class CFLine implements Line {
 	 * 
 	 * @param new_pt The list of points which will constitute the new line
 	 */
-	public CFLine(List<CFPoint> new_pt) {
+	public CFLine(List<Point> new_pt) {
 		this.points = new_pt;
 		this.next = null;
 		this.data = null;
