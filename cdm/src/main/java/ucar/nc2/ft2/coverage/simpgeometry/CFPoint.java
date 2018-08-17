@@ -125,11 +125,13 @@ public class CFPoint implements Point{
 	public Point setupPoint(NetcdfDataset set, Variable vari, int index)
 	{
 		// Points are much simpler, node_count is used multigeometries so it's a bit different
-		// No need for the cat here
+		// No need for the cat here, unless there its a multipoint
 		Array xPts = null;
 		Array yPts = null;
 		Integer ind = (int)index;
 		Variable node_counts = null;
+		boolean multi = false;
+		SimpleGeometryKitten kitty = null;
 
 		List<CoordinateAxis> axes = set.getCoordinateAxes();
 		CoordinateAxis x = null; CoordinateAxis y = null;
@@ -148,34 +150,59 @@ public class CFPoint implements Point{
 		
 		if(!node_c_str.equals("")) {
 			node_counts = set.findVariable(node_c_str);
+			kitty = new SimpleGeometryKitten(node_counts);
+			multi = true;
 		}
 		
 		try {
-			xPts = x.read( ind.toString() ).reduce();
-			yPts = y.read( ind.toString() ).reduce();
+			
+			//
+			if(multi)
+			{
+				xPts = x.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
+				yPts = y.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
+			}
+			
+			else
+			{
+				xPts = x.read( ind.toString() ).reduce();
+				yPts = y.read( ind.toString() ).reduce();
+				this.x = xPts.getDouble(0);
+				this.y = yPts.getDouble(0);
+			}
+		
+			// Set points
+			if(!multi) {
+				this.x = xPts.getDouble(0);
+				this.y = yPts.getDouble(0);
+				this.data = vari.read(":," + index).reduce();
+			}
+		
+			else {
+				IndexIterator itr_x = xPts.getIndexIterator();
+				IndexIterator itr_y = yPts.getIndexIterator();
+				
+				CFPoint point = this;
+		
+				// x and y should have the same shape (size), will add some handling on this
+				while(itr_x.hasNext()) {
+					point.x = itr_x.getDoubleNext();
+					point.y = itr_y.getDoubleNext();
+					point.data = vari.read(":," + index).reduce();
+					point = new CFPoint(-1, -1, this, null, null);
+					this.next = point;
+				}
+			}
 		
 		} catch (IOException e) {
 
-				return null;
-			
+			return null;
+		
 		} catch (InvalidRangeException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
-		
-		// Now set the Data
-		try {
-			this.data = vari.read(":," + index).reduce();
-			
-		} catch (IOException | InvalidRangeException e) {
 
-			return null;
-			
-		}
-		
-		// still things to set
-		this.x = xPts.getDouble(0);
-		this.y = yPts.getDouble(0);
 		this.next = null;
 		this.prev = null;
 		
