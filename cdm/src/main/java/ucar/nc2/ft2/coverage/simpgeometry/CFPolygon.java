@@ -22,9 +22,9 @@ import ucar.nc2.dataset.NetcdfDataset;
  * @author wchen@usgs.gov
  *
  */
-public class CFPolygon implements Polygon  {
+public class CFPolygon implements Polygon{
 
-	private List<CFPoint> points;	// a list of the constitutent points of the Polygon, connected in ascending order as in the CF convention
+	private List<Point> points;	// a list of the constitutent points of the Polygon, connected in ascending order as in the CF convention
 	private CFPolygon next;	// if non-null, next refers to the next line part of a multi-polygon
 	private CFPolygon prev;	// if non-null, prev refers to the previous line part of a multi-polygon
 	private CFPolygon interior_ring; // the polygon that makes up an interior ring, if any
@@ -83,7 +83,7 @@ public class CFPolygon implements Polygon  {
 		CFPoint pt_prev = null;
 		
 		if(points.size() > 0) {
-			pt_prev = points.get(points.size() - 1);
+			pt_prev = (CFPoint) points.get(points.size() - 1);
 		}
 		
 		this.points.add(new CFPoint(x, y, pt_prev, null));
@@ -102,11 +102,11 @@ public class CFPolygon implements Polygon  {
 	 * Sets the next polygon which make up the multipolygon which this polygon is a part of.
 	 * Automatically connects the other polygon to this polygon as well.
 	 */
-	public void setNext(CFPolygon next) {
-		this.next = next;
+	public void setNext(Polygon next) {
+		this.next = (CFPolygon)next;
 		
 		if(next != null) {
-			next.setPrevOnce(this);
+			this.next.setPrevOnce(this);
 		}
 	}
 	
@@ -118,11 +118,11 @@ public class CFPolygon implements Polygon  {
 	 * Sets the previous polygon which makes up the multipolygon which this polygon is a part of.
 	 * Automatically connect the other polygon to this polygon as well.
 	 */
-	public void setPrev(CFPolygon prev) {
-		this.prev = prev;
+	public void setPrev(Polygon prev) {
+		this.prev = (CFPolygon)prev;
 		
 		if(prev != null) {
-			prev.setNextOnce(this);
+			this.prev.setNextOnce(this);
 		}
 	}
 	
@@ -135,7 +135,7 @@ public class CFPolygon implements Polygon  {
 	 * 
 	 */
 	public void setInteriorRing(CFPolygon interior) {
-		this.interior_ring = interior;
+		this.interior_ring =  interior;
 	}
 	
 	/**
@@ -269,7 +269,7 @@ public class CFPolygon implements Polygon  {
 	 * Constructs an empty polygon with nothing in it using an Array List.
 	 */
 	public CFPolygon() {
-		this.points = new ArrayList<CFPoint>();
+		this.points = new ArrayList<Point>();
 		this.next = null;
 		this.prev = null;
 		this.interior_ring = null;
@@ -281,7 +281,7 @@ public class CFPolygon implements Polygon  {
 	 * 
 	 * @param points which make up the Polygon
 	 */
-	public CFPolygon(List<CFPoint> points) {
+	public CFPolygon(List<Point> points) {
 		this.points = points;
 		this.next = null;
 		this.prev = null;
