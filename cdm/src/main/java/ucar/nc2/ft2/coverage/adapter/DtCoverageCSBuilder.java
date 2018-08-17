@@ -235,7 +235,7 @@ public class DtCoverageCSBuilder {
     }
 
     // Make a Geometry Reader for Simple Geometries
-    geometry_reader = new SimpleGeometryReader(ds);
+    if(ucar.nc2.dataset.conv.CF1Convention.getVersion(ds.getConventionUsed()) >= 8) geometry_reader = new SimpleGeometryReader(ds);
     
     
     this.type = classify();
@@ -260,8 +260,7 @@ public class DtCoverageCSBuilder {
         return FeatureType.CURVILINEAR;
     }
     
-    if(geometry_reader != null)
-    {
+    if(geometry_reader != null) {
     	return FeatureType.SIMPLE_GEOMETRY;
     }
 
@@ -359,7 +358,7 @@ public class DtCoverageCSBuilder {
   }
   
   /**
-   * Given a certain variable name and geometry begin and end indicies, returns a list of Simple Geometry Points
+   * Given a certain Point variable name and geometry begin and end indicies, returns a list of Simple Geometry Points
    * 
    * @param name
    * @param index_begin

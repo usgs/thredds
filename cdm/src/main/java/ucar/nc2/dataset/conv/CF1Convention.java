@@ -212,13 +212,13 @@ public class CF1Convention extends CSMConvention {
       				Attribute axis = temp.findAttribute(CF.AXIS);
       				if (axis != null) {
       					if ("x".equalsIgnoreCase(axis.getStringValue())) {
-      						temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoX.toString()));
+      						temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.SimpleGeometryX.toString()));
       					}
       					if ("y".equalsIgnoreCase(axis.getStringValue())) {
-      						temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoY.toString()));
+      						temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.SimpleGeometryY.toString()));
       					}
       					if ("z".equalsIgnoreCase(axis.getStringValue())) {
-      						temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoZ.toString()));
+      						temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.SimpleGeometryZ.toString()));
       					}
       				
       					cds += coords[i] + " ";
