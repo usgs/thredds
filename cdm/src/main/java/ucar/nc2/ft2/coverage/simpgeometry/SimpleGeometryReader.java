@@ -29,8 +29,6 @@ public class SimpleGeometryReader {
 		
 		// create a blank cf Polygon
 		Polygon poly = new CFPolygon();
-		
-		// Check for convention to see which convention to use, later
 		return poly.setupPolygon(ds, polyvar, index);
 	}
 	
@@ -47,7 +45,8 @@ public class SimpleGeometryReader {
 		Variable linevar = ds.findVariable(name);
 		if(linevar == null) return null;
 		
-		return null;
+		Line line = new CFLine();
+		return line.setupLine(ds, linevar, index);
 	}
 	
 	/**
@@ -63,7 +62,8 @@ public class SimpleGeometryReader {
 		Variable pointvar = ds.findVariable(name);
 		if(pointvar == null) return null;
 		
-		return null;
+		Point pt = new CFPoint(-1, -1, null, null, null);
+		return pt.setupPoint(ds, pointvar, index);
 	}
 	
 	/**

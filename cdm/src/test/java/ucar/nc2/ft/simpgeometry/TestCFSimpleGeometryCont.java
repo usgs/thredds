@@ -1,7 +1,10 @@
-package ucar.nc2.ft2.coverage.simpgeometry;
+package ucar.nc2.ft.simpgeometry;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import ucar.nc2.ft2.coverage.simpgeometry.*;
+
 import java.util.Random;
 import java.util.List;
 

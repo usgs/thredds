@@ -1,6 +1,17 @@
 package ucar.nc2.ft2.coverage.simpgeometry;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import ucar.ma2.Array;
+import ucar.ma2.IndexIterator;
+import ucar.ma2.InvalidRangeException;
+import ucar.nc2.Variable;
+import ucar.nc2.constants.AxisType;
+import ucar.nc2.constants.CF;
+import ucar.nc2.dataset.CoordinateAxis;
+import ucar.nc2.dataset.NetcdfDataset;
 import ucar.nc2.ft2.coverage.simpgeometry.Point;
 
 /**
@@ -89,6 +100,98 @@ public class CFPoint implements Point{
 	 */
 	protected void setPrev(CFPoint prev) {
 		this.prev = prev;
+	}
+	
+	public Point setupPoint(NetcdfDataset set, Variable vari, int index)
+	{
+		// Points are much simpler, node_count is used multigeometries so it's a bit different
+		// No need for the cat here, unless there is a multipoint
+		Array xPts = null;
+		Array yPts = null;
+		Integer ind = (int)index;
+		Variable node_counts = null;
+		boolean multi = false;
+		SimpleGeometryKitten kitty = null;
+
+		List<CoordinateAxis> axes = set.getCoordinateAxes();
+		CoordinateAxis x = null; CoordinateAxis y = null;
+		
+		String[] node_coords = vari.findAttributeIgnoreCase(CF.NODE_COORDINATES).getStringValue().split(" ");
+		
+		// Look for x and y
+		
+		for(CoordinateAxis ax : axes){
+			
+			if(ax.getFullName().equals(node_coords[0])) x = ax;
+			if(ax.getFullName().equals(node_coords[1])) y = ax;
+		}
+		
+		// Node count is used very differently in points
+		// Similar use to part_node_count in other geometries
+		String node_c_str = vari.findAttValueIgnoreCase(CF.NODE_COUNT, "");
+		
+		if(!node_c_str.equals("")) {
+			node_counts = set.findVariable(node_c_str);
+			kitty = new SimpleGeometryKitten(node_counts);
+			multi = true;
+		}
+		
+		try {
+			
+			//
+			if(multi)
+			{
+				xPts = x.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
+				yPts = y.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
+			}
+			
+			else
+			{
+				xPts = x.read( ind.toString() ).reduce();
+				yPts = y.read( ind.toString() ).reduce();
+				this.x = xPts.getDouble(0);
+				this.y = yPts.getDouble(0);
+			}
+		
+			// Set points
+			if(!multi) {
+				this.x = xPts.getDouble(0);
+				this.y = yPts.getDouble(0);
+				this.data = vari.read(":," + index).reduce();
+			}
+		
+			else {
+				IndexIterator itr_x = xPts.getIndexIterator();
+				IndexIterator itr_y = yPts.getIndexIterator();
+				this.next = null;
+				this.prev = null;
+				
+				CFPoint point = this;
+		
+				// x and y should have the same shape (size), will add some handling on this
+				while(itr_x.hasNext()) {
+					point.x = itr_x.getDoubleNext();
+					point.y = itr_y.getDoubleNext();
+					point.data = vari.read(":," + index).reduce();
+					point.next = new CFPoint(-1, -1, point, null, null); // -1 is a default value, it gets assigned eventually
+					point = point.getNext();
+				}
+				
+				// Clean up the last point since it will be invalid
+				point = point.getPrev();
+				point.next = null;
+			}
+		
+		} catch (IOException e) {
+
+			return null;
+		
+		} catch (InvalidRangeException e) {
+			
+			e.printStackTrace();
+		}
+		
+		return this;
 	}
 	
 	/**

@@ -158,22 +158,26 @@ public class CFPolygon implements Polygon  {
 	 */
 	public Polygon setupPolygon(NetcdfDataset dataset, Variable polyvar, int index)
 	{
-		this.points = new ArrayList<CFPoint>();
+		this.points.clear();
 		Array xPts = null;
 		Array yPts = null;
-		Variable node_counts;
+		Variable node_counts = null;
+		Variable part_node_counts = null;
 
 		List<CoordinateAxis> axes = dataset.getCoordinateAxes();
 		CoordinateAxis x = null; CoordinateAxis y = null;
+		
+		String[] node_coords = polyvar.findAttributeIgnoreCase(CF.NODE_COORDINATES).getStringValue().split(" ");
 		
 		// Look for x and y
 		
 		for(CoordinateAxis ax : axes){
 			
-			if(ax.getAxisType() == AxisType.GeoX) x = ax;
-			if(ax.getAxisType() == AxisType.GeoY) y = ax;
+			if(ax.getFullName().equals(node_coords[0])) x = ax;
+			if(ax.getFullName().equals(node_coords[1])) y = ax;
 		}
 		
+		// Affirm node counts
 		String node_c_str = polyvar.findAttValueIgnoreCase(CF.NODE_COUNT, "");
 		
 		if(!node_c_str.equals("")) {
@@ -182,46 +186,91 @@ public class CFPolygon implements Polygon  {
 		
 		else return null;
 		
+		// Affirm part node counts
+		String p_node_c_str = polyvar.findAttValueIgnoreCase(CF.PART_NODE_COUNT, "");
+		
+		if(!p_node_c_str.equals("")) {
+			part_node_counts = dataset.findVariable(p_node_c_str);
+		}
+		
 		SimpleGeometryKitten kitty = new SimpleGeometryKitten(node_counts);
 		
-		try {
-			xPts = x.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
-			yPts = y.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
-		
-		} catch (IOException e) {
+		//Get beginning and ending indicies for this polygon
+		int lower = kitty.getBeginning(index);
+		int upper = kitty.getEnd(index);
 
-				return null;
+		
+		try {
 			
+			xPts = x.read( lower + ":" + upper ).reduce();
+			yPts = y.read( lower + ":" + upper ).reduce(); 
+
+			IndexIterator itr_x = xPts.getIndexIterator();
+			IndexIterator itr_y = yPts.getIndexIterator();
+			
+			// No multipolygons just read in the whole thing
+			if(part_node_counts == null) {
+				
+				this.next = null;
+				this.prev = null;
+				this.interior_ring = null;
+				
+				// x and y should have the same shape, will add some handling on this
+				while(itr_x.hasNext()) {
+					this.addPoint(itr_x.getDoubleNext(), itr_y.getDoubleNext());
+				}
+	
+				this.setData(polyvar.read(":," + index).reduce());
+			}
+			
+			// If there are multipolygons then take the upper and lower of it and divy it up
+			else {
+				
+				CFPolygon tail = this;
+				Array pnc = part_node_counts.read();
+				IndexIterator pnc_itr = pnc.getIndexIterator();
+				
+				// In part node count search for the right index to begin looking for "part node counts"
+				int pnc_ind = 0;
+				int pnc_end = 0;
+				while(pnc_end < lower)
+				{
+					pnc_end += pnc_itr.getIntNext();
+					pnc_ind++;
+				}
+				
+				// Now the index is found, use part node count and the index to find each part node count of each individual part
+				while(lower < upper) {
+					
+					int smaller = pnc.getInt(pnc_ind);
+					
+					while(smaller > 0) {
+						tail.addPoint(itr_x.getDoubleNext(), itr_y.getDoubleNext());
+						smaller--;
+					}
+					
+					// Set data of each
+					tail.setData(polyvar.read(":," + index));
+					lower += tail.getPoints().size();
+					pnc_ind++;
+					tail.setNext(new CFPolygon());
+					tail = tail.getNext();
+				}
+				
+				//Clean up
+				tail = tail.getPrev();
+				if(tail != null) tail.setNext(null);
+			}
+		}
+		
+		catch (IOException e) {
+
+			return null;
+		
 		} catch (InvalidRangeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		// This will be revised to get a single polygon
-		IndexIterator itr_x = xPts.getIndexIterator();
-		IndexIterator itr_y = yPts.getIndexIterator();
-		
-		// x and y should have the same shape, will add some handling on this
-		while(itr_x.hasNext())
-		{
-			this.addPoint(itr_x.getDoubleNext(), itr_y.getDoubleNext());
-		}
-		
-		
-		// Now set the Data
-		try {
-			this.setData(polyvar.read());
-			
-		} catch (IOException e) {
-
-			return null;
-			
-		}
-		
-		// still things to set
-		this.next = null;
-		this.prev = null;
-		this.interior_ring = null;
 		
 		return this;
 	}
