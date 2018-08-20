@@ -123,7 +123,7 @@ public class CFLine implements Line {
 	
 	/**
 	 * Given a dataset, variable, and index, automatically populates this Line and
-	 * returns it.
+	 * returns it. If not found, returns null.
 	 * 
 	 * @param dataset which the variable is a part of
 	 * @param var the variable which has a geometry attribute
@@ -237,12 +237,12 @@ public class CFLine implements Line {
 		}
 		
 		catch (IOException e) {
-
+			e.printStackTrace();
 			return null;
 		
 		} catch (InvalidRangeException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
 		
 		return this;

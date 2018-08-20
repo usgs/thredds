@@ -93,10 +93,19 @@ public class CFPoint implements Point{
 		this.prev = prev;
 	}
 	
+	/**
+	 * Given a dataset, variable, and index, automatically populates this Point and
+	 * returns it. If not found, returns null.
+	 * 
+	 * @param dataset which the variable is a part of
+	 * @param vari the variable which has a geometry attribute
+	 * @param index of the point within the variable
+	 * @return return a point
+	 */
 	public Point setupPoint(NetcdfDataset set, Variable vari, int index)
 	{
 		// Points are much simpler, node_count is used multigeometries so it's a bit different
-		// No need for the cat here, unless there is a multipoint
+		// No need for the index finder here, unless there is a multipoint
 		Array xPts = null;
 		Array yPts = null;
 		Integer ind = (int)index;
@@ -175,11 +184,13 @@ public class CFPoint implements Point{
 		
 		} catch (IOException e) {
 
+			e.printStackTrace();
 			return null;
 		
 		} catch (InvalidRangeException e) {
 			
 			e.printStackTrace();
+			return null;
 		}
 		
 		return this;

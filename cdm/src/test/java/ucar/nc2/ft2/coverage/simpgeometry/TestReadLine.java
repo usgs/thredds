@@ -1,4 +1,4 @@
-package ucar.nc2.ft.simpgeometry;
+package ucar.nc2.ft2.coverage.simpgeometry;
 
 import java.io.IOException;
 

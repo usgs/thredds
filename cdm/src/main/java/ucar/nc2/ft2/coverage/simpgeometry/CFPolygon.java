@@ -286,12 +286,12 @@ public class CFPolygon implements Polygon  {
 		}
 		
 		catch (IOException e) {
-
+			e.printStackTrace();
 			return null;
 		
 		} catch (InvalidRangeException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
 		
 		return this;
