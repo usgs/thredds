@@ -236,9 +236,17 @@ public class DtCoverageCSBuilder {
 
 
     if(ucar.nc2.dataset.conv.CF1Convention.getVersion(ds.getConventionUsed()) >= 8) {
+<<<<<<< HEAD
     	geometryReader = new SimpleGeometryReader(ds);    // Make a Geometry Reader for Simple Geometries
  
     } else geometryReader = null;
+=======
+    	geometry_reader = new SimpleGeometryReader(ds);    // Make a Geometry Reader for Simple Geometries
+ 
+    }
+    
+    else geometry_reader = null;
+>>>>>>> b9c616469a84a2989b2660d1914a01cf095c755c
     
     this.type = classify();
     this.coordTransforms = new ArrayList<>(cs.getCoordinateTransforms());
