@@ -305,15 +305,14 @@ public class TestCFSimpleGeometryCont {
 		}
 	}
 
-	
+	/**
+	 * Eventfully tests whether or not polygon interior ring was set correctly.
+	 */
 	@Test
-	public void testPolyAddt() {
+	public void testPolyInteriorRing() {
 		// Test interior ring
 		CFPolygon test_out = new CFPolygon();
-		test_out.addPoint(5.0, 3.0);
-		CFPolygon test_inner = new CFPolygon();
-		test_inner.addPoint(2.0, 4.0);
-		test_out.setInteriorRing(test_inner);
-		Assert.assertEquals(test_inner, test_out.getInteriorRing());
+		test_out.setInteriorRing(true);
+		Assert.assertEquals(test_out.getInteriorRing(), true);
 	}
 }

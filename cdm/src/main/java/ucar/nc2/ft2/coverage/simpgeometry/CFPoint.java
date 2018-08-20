@@ -102,7 +102,7 @@ public class CFPoint implements Point{
 		Integer ind = (int)index;
 		Variable node_counts = null;
 		boolean multi = false;
-		SimpleGeometryKitten kitty = null;
+		SimpleGeometryIndexFinder indexFinder = null;
 
 		List<CoordinateAxis> axes = set.getCoordinateAxes();
 		CoordinateAxis x = null; CoordinateAxis y = null;
@@ -123,7 +123,7 @@ public class CFPoint implements Point{
 		
 		if(!node_c_str.equals("")) {
 			node_counts = set.findVariable(node_c_str);
-			kitty = new SimpleGeometryKitten(node_counts);
+			indexFinder = new SimpleGeometryIndexFinder(node_counts);
 			multi = true;
 		}
 		
@@ -132,8 +132,8 @@ public class CFPoint implements Point{
 			//
 			if(multi)
 			{
-				xPts = x.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
-				yPts = y.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
+				xPts = x.read( indexFinder.getBeginning(index) + ":" + indexFinder.getEnd(index) ).reduce();
+				yPts = y.read( indexFinder.getBeginning(index) + ":" + indexFinder.getEnd(index) ).reduce();
 			}
 			
 			else

@@ -8,17 +8,14 @@ import ucar.nc2.constants.CF;
 import ucar.nc2.ft2.coverage.simpgeometry.*;
 
 /**
- * A cat (the animal) trained in finding Simple Geometry.
- * 
- * A Simple Geometry Kitten can go find the beginning and end indicies of
- * a simple geometry X and Y within a variable. But first the Kitten needs a few variables to find it in.
- * The kitten remembers previous adventures so if the kitten is tasked to find a Simple Geometry close to one before it
- * will find it faster.
+ * A Simple Geometry Index Finder can go find the beginning and end indicies of
+ * a simple geometry X and Y within a variable. But first the Index Finder needs a few variables to find it in.
+ * If the indexer is tasked to find a Simple Geometry close to one before, it will find it faster.
  * 
  * @author wchen@usgs.gov
  *
  */
-public class SimpleGeometryKitten {
+public class SimpleGeometryIndexFinder {
 	
 	private Array node_count = null;
 	private int past_index;
@@ -68,11 +65,11 @@ public class SimpleGeometryKitten {
 	}
 	
 	/**
-	 * Call up a new Kitten, the Kitten must be given a variable to look through though.
+	 * Create a new indexer, the indexer must be given a variable to look through.
 	 * 
 	 * @param node_count Amount of nodes per geometry
 	 */
-	public SimpleGeometryKitten(Variable node_count) {
+	public SimpleGeometryIndexFinder(Variable node_count) {
 		
 		try {
 			this.node_count = node_count.read();

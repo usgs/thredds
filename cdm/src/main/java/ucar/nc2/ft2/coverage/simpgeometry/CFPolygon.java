@@ -27,7 +27,7 @@ public class CFPolygon implements Polygon  {
 	private List<CFPoint> points;	// a list of the constitutent points of the Polygon, connected in ascending order as in the CF convention
 	private CFPolygon next;	// if non-null, next refers to the next line part of a multi-polygon
 	private CFPolygon prev;	// if non-null, prev refers to the previous line part of a multi-polygon
-	private CFPolygon interior_ring; // the polygon that makes up an interior ring, if any
+	private boolean isInteriorRing; // true is an interior ring polygon otherwise false
 	private Array data;	// data array associated with the polygon
 	
 	/**
@@ -67,12 +67,12 @@ public class CFPolygon implements Polygon  {
 	}
 	
 	/**
-	 * Get this polygon's interior ring.
+	 * Get whether or not this polygon is an interior ring
 	 * 
-	 * @return previous interior ring as a polygon if any, otherwise null
+	 * @return true if an interior ring, false if not
 	 */
-	public CFPolygon getInteriorRing() {
-		return interior_ring;
+	public boolean getInteriorRing() {
+		return isInteriorRing;
 	}
 	
 	/**
@@ -131,11 +131,11 @@ public class CFPolygon implements Polygon  {
 	}
 	
 	/**
-	 *  Simply sets the interior ring of the polygon.
+	 *  Sets whether or not this polygon is an interior ring.
 	 * 
 	 */
-	public void setInteriorRing(CFPolygon interior) {
-		this.interior_ring = interior;
+	public void setInteriorRing(boolean interior) {
+		this.isInteriorRing = interior;
 	}
 	
 	/**
@@ -154,6 +154,7 @@ public class CFPolygon implements Polygon  {
 		Array yPts = null;
 		Variable node_counts = null;
 		Variable part_node_counts = null;
+		Variable interior_rings = null;
 
 		List<CoordinateAxis> axes = dataset.getCoordinateAxes();
 		CoordinateAxis x = null; CoordinateAxis y = null;
@@ -184,11 +185,18 @@ public class CFPolygon implements Polygon  {
 			part_node_counts = dataset.findVariable(p_node_c_str);
 		}
 		
-		SimpleGeometryKitten kitty = new SimpleGeometryKitten(node_counts);
+		// Affirm interior rings
+		String interior_rings_str = polyvar.findAttValueIgnoreCase(CF.PART_NODE_COUNT, "");
+				
+		if(!interior_rings_str.equals("")) {
+				interior_rings = dataset.findVariable(interior_rings_str);
+		}
+		
+		SimpleGeometryIndexFinder indexFinder = new SimpleGeometryIndexFinder(node_counts);
 		
 		//Get beginning and ending indicies for this polygon
-		int lower = kitty.getBeginning(index);
-		int upper = kitty.getEnd(index);
+		int lower = indexFinder.getBeginning(index);
+		int upper = indexFinder.getEnd(index);
 
 		
 		try {
@@ -204,7 +212,7 @@ public class CFPolygon implements Polygon  {
 				
 				this.next = null;
 				this.prev = null;
-				this.interior_ring = null;
+				this.isInteriorRing = false;
 				
 				// x and y should have the same shape, will add some handling on this
 				while(itr_x.hasNext()) {
@@ -219,7 +227,10 @@ public class CFPolygon implements Polygon  {
 				
 				CFPolygon tail = this;
 				Array pnc = part_node_counts.read();
+				Array ir = null;
 				IndexIterator pnc_itr = pnc.getIndexIterator();
+				
+				if(interior_rings != null) ir = interior_rings.read();
 				
 				// In part node count search for the right index to begin looking for "part node counts"
 				int pnc_ind = 0;
@@ -234,6 +245,26 @@ public class CFPolygon implements Polygon  {
 				while(lower < upper) {
 					
 					int smaller = pnc.getInt(pnc_ind);
+					
+					// Set interior ring if needed
+					if(interior_rings != null)
+					{
+						int interior_ring_value = ir.getInt(pnc_ind);
+						
+						switch(interior_ring_value) {
+						
+							case 0:
+								this.setInteriorRing(false);
+								break;
+								
+							case 1:
+								this.setInteriorRing(true);
+								break;
+								
+							// will handle default case
+						}
+						
+					} else this.isInteriorRing = false;
 					
 					while(smaller > 0) {
 						tail.addPoint(itr_x.getDoubleNext(), itr_y.getDoubleNext());
@@ -274,7 +305,7 @@ public class CFPolygon implements Polygon  {
 		this.points = new ArrayList<CFPoint>();
 		this.next = null;
 		this.prev = null;
-		this.interior_ring = null;
+		this.isInteriorRing = false;
 		this.data = null;
 	}
 	
@@ -287,7 +318,7 @@ public class CFPolygon implements Polygon  {
 		this.points = points;
 		this.next = null;
 		this.prev = null;
-		this.interior_ring = null;
+		this.isInteriorRing = false;
 		this.data = null;
 	}
 }

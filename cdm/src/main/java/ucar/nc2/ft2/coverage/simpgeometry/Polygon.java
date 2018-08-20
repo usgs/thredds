@@ -43,11 +43,11 @@ public interface Polygon {
 	public CFPolygon getPrev();
 	
 	/**
-	 * Get this polygon's interior ring.
+	 * Get whether or not this polygon is an interior ring
 	 * 
-	 * @return Previous interior ring as a polygon if any, otherwise null
+	 * @return true if an interior ring, false if not
 	 */
-	public CFPolygon getInteriorRing();
+	public boolean getInteriorRing();
 	
 	/**
 	 * Add a point to this polygon's points list
@@ -79,11 +79,11 @@ public interface Polygon {
 	public void setPrev(CFPolygon prev);
 	
 	/**
-	 *  Simply sets the interior ring of the polygon.
+	 *  Simply sets whether or not this polygon is an interior ring
 	 * 
-	 * @param interior Ring which is a polygon itself
+	 * @param interior ring or not
 	 */
-	public void setInteriorRing(CFPolygon interior);
+	public void setInteriorRing(boolean interior);
 	
 	/**
 	 * Given a dataset, construct a polygon from the variable which holds polygons

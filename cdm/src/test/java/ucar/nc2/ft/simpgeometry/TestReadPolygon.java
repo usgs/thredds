@@ -18,12 +18,11 @@ import ucar.unidata.util.test.TestDir;
  * @author wchen@usgs.gov
  *
  */
-public class TestPoly {
+public class TestReadPolygon {
 
 	/**
 	 * Tests ability to read and construct Polygons and Multipolygons.
 	 * 
-	 *
 	 */
 	@Test
 	public void testMultiPolygonsPolygons() {
@@ -55,7 +54,7 @@ public class TestPoly {
 	}
 	
 	/**
-	 * Tests ability to read and construct Polygons with holes (and perhaps Multipolygons with holes)!
+	 * Tests ability to read and construct Polygons with holes (and perhaps Multipolygons with holes).
 	 * 
 	 */
 	@Test

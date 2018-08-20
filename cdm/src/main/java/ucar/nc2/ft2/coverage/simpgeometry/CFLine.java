@@ -167,11 +167,11 @@ public class CFLine implements Line {
 			part_node_counts = dataset.findVariable(p_node_c_str);
 		}
 		
-		SimpleGeometryKitten kitty = new SimpleGeometryKitten(node_counts);
+		SimpleGeometryIndexFinder indexFinder = new SimpleGeometryIndexFinder(node_counts);
 		
 		//Get beginning and ending indicies for this polygon
-		int lower = kitty.getBeginning(index);
-		int upper = kitty.getEnd(index);
+		int lower = indexFinder.getBeginning(index);
+		int upper = indexFinder.getEnd(index);
 
 		
 		try {

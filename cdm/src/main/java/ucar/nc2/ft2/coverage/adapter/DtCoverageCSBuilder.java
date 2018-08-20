@@ -68,7 +68,7 @@ public class DtCoverageCSBuilder {
   List<CoordinateAxis> otherAxes;
   List<CoordinateAxis> allAxes;
   List<CoordinateTransform> coordTransforms;
-  SimpleGeometryReader geometry_reader;
+  SimpleGeometryReader geometryReader;
   ProjectionImpl orgProj;
 
   DtCoverageCSBuilder(NetcdfDataset ds, CoordinateSystem cs, Formatter errlog) {
@@ -236,11 +236,9 @@ public class DtCoverageCSBuilder {
 
 
     if(ucar.nc2.dataset.conv.CF1Convention.getVersion(ds.getConventionUsed()) >= 8) {
-    	geometry_reader = new SimpleGeometryReader(ds);    // Make a Geometry Reader for Simple Geometries
+    	geometryReader = new SimpleGeometryReader(ds);    // Make a Geometry Reader for Simple Geometries
  
-    }
-    
-    else geometry_reader = null;
+    } else geometryReader = null;
     
     this.type = classify();
     this.coordTransforms = new ArrayList<>(cs.getCoordinateTransforms());
@@ -264,7 +262,7 @@ public class DtCoverageCSBuilder {
         return FeatureType.CURVILINEAR;
     }
     
-    if(geometry_reader != null) {
+    if(geometryReader != null) {
     	return FeatureType.SIMPLE_GEOMETRY;
     }
 
@@ -293,7 +291,7 @@ public class DtCoverageCSBuilder {
    */
   public Polygon getPolygon(String name, int index)
   {
-	  return geometry_reader.readPolygon(name, index);
+	  return geometryReader.readPolygon(name, index);
   }
   
   /**
@@ -305,14 +303,14 @@ public class DtCoverageCSBuilder {
    * @return
    */
   public List<Polygon> getPolygons(String name, int index_begin, int index_end) {
-	  List<Polygon> poly_list = new ArrayList<Polygon>();
+	  List<Polygon> polyList = new ArrayList<Polygon>();
 	  
 	  for(int i = index_begin; i <= index_end; i++)
 	  {
-		  poly_list.add(geometry_reader.readPolygon(name, i));
+		  polyList.add(geometryReader.readPolygon(name, i));
 	  }
 	  
-	  return poly_list;
+	  return polyList;
   }
 
   
@@ -325,7 +323,7 @@ public class DtCoverageCSBuilder {
    */
   public Line getLine(String name, int index)
   {
-	  return geometry_reader.readLine(name, index);
+	  return geometryReader.readLine(name, index);
   }
   
   /**
@@ -337,14 +335,14 @@ public class DtCoverageCSBuilder {
    * @return
    */
   public List<Line> getLines(String name, int index_begin, int index_end) {
-	  List<Line> line_list = new ArrayList<Line>();
+	  List<Line> lineList = new ArrayList<Line>();
 	  
 	  for(int i = index_begin; i <= index_end; i++)
 	  {
-		  line_list.add(geometry_reader.readLine(name, i));
+		  lineList.add(geometryReader.readLine(name, i));
 	  }
 	  
-	  return line_list;
+	  return lineList;
   }
 
   
@@ -358,7 +356,7 @@ public class DtCoverageCSBuilder {
    */
   public Point getPoint(String name, int index)
   {
-	  return geometry_reader.readPoint(name, index);
+	  return geometryReader.readPoint(name, index);
   }
   
   /**
@@ -370,14 +368,14 @@ public class DtCoverageCSBuilder {
    * @return
    */
   public List<Point> getPoints(String name, int index_begin, int index_end) {
-	  List<Point> pt_list = new ArrayList<Point>();
+	  List<Point> ptList = new ArrayList<Point>();
 	  
 	  for(int i = index_begin; i <= index_end; i++)
 	  {
-		  pt_list.add(geometry_reader.readPoint(name, i));
+		  ptList.add(geometryReader.readPoint(name, i));
 	  }
 	  
-	  return pt_list;
+	  return ptList;
   }
 
   public DtCoverageCS makeCoordSys() {

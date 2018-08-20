@@ -5,9 +5,12 @@
 
 package ucar.nc2.ft2.coverage.adapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ucar.nc2.Variable;
+import ucar.nc2.constants.AxisType;
+import ucar.nc2.dataset.CoordinateAxis;
 import ucar.nc2.dataset.CoordinateAxis1D;
 import ucar.nc2.dataset.CoordinateAxis1DTime;
 import ucar.nc2.dataset.NetcdfDataset;
@@ -24,23 +27,60 @@ import ucar.nc2.ft2.coverage.simpgeometry.*;
  */
 public class SimpleGeometryCS extends DtCoverageCS {
 
-  SimpleGeometryCS(DtCoverageCSBuilder builder) {
+  private List<CoordinateAxis> simpleGeometryX, simpleGeometryY, simpleGeometryZ, simpleGeometryID;
+	
+  public SimpleGeometryCS(DtCoverageCSBuilder builder) {
     super(builder);
-  }
+    
+    simpleGeometryX = new ArrayList<CoordinateAxis>(); simpleGeometryY = new ArrayList<CoordinateAxis>();
+    simpleGeometryZ = new ArrayList<CoordinateAxis>(); simpleGeometryID = new ArrayList<CoordinateAxis>();
+    
+    for(CoordinateAxis axis : builder.otherAxes) {
+    	
+    	// Look for simple geometry axes and add them
+    	if(axis.getAxisType().equals(AxisType.SimpleGeometryX)) simpleGeometryX.add(axis);
+    	else if (axis.getAxisType().equals(AxisType.SimpleGeometryY)) simpleGeometryY.add(axis);
+    	else if(axis.getAxisType().equals(AxisType.SimpleGeometryZ)) simpleGeometryZ.add(axis);
+    	else if(axis.getAxisType().equals(AxisType.SimpleGeometryID)) simpleGeometryID.add(axis);
 
-  @Override
-  public boolean isRegularSpatial() {
-    return getXHorizAxis().isRegular() && getYHorizAxis().isRegular();
+    }
   }
-
-  @Override
-  public CoordinateAxis1D getXHorizAxis() {
-    return (CoordinateAxis1D) super.getXHorizAxis();
+  
+  /**
+   * Get a list of all simple geometry X axes.
+   * 
+   * @return list of simple geometry X axes
+   */
+  public List<CoordinateAxis> getSimpleGeometryX() {
+	return this.simpleGeometryX;  
   }
-
-  @Override
-  public CoordinateAxis1D getYHorizAxis() {
-    return (CoordinateAxis1D) super.getYHorizAxis();
+  
+  /**
+   * Get a list of all simple geometry Y axes
+   * 
+   * @return list of simple geometry Y axes
+   */
+  public List<CoordinateAxis> getSimpleGeometryY() {
+	return this.simpleGeometryY;  
+  }
+  
+  /**
+   * Get a list of all simple geometry Z axes.
+   * 
+   * @return list of simple geometry Z axes.
+   */
+  public List<CoordinateAxis> getSimpleGeometryZ() {
+	return this.simpleGeometryZ;  
+  }
+  
+  /**
+   * Get a list of all simple geometry ID axes.
+   * Simple Geometry ID axes are used for indexing into simple geometry variables.
+   * 
+   * @return list of simple geometry ID axes
+   */
+  public List<CoordinateAxis> getSimpleGeometryID() {
+	return this.simpleGeometryID;  
   }
   
   /**
@@ -52,9 +92,21 @@ public class SimpleGeometryCS extends DtCoverageCS {
    * 
    * @return polygon with all associated data, null if not found
    */
-  public Polygon getPolygon(String name, int index)
-  {
+  public Polygon getPolygon(String name, int index) {
 	 return builder.getPolygon(name, index);
+  }
+  
+  /**
+   * Given a Variable name and a beginning index and end index, returns a list of
+   * polygon (inclusive on both sides)
+   * 
+   * @param name
+   * @param index_begin
+   * @param index_end
+   * @return
+   */
+  public List<Polygon> getPolygons(String name, int index_begin, int index_end) {
+	  return builder.getPolygons(name, index_begin, index_end);
   }
   
   /**
@@ -66,9 +118,21 @@ public class SimpleGeometryCS extends DtCoverageCS {
    * 
    * @return line with all associated data, null if not found
    */
-  public Line getLine(String name, int index)
-  {
+  public Line getLine(String name, int index) {
 	 return builder.getLine(name, index);
+  }
+  
+  /**
+   * Given a Variable name and a beginning index and end index, returns a list of
+   * lines (inclusive on both sides)
+   * 
+   * @param name
+   * @param index_begin
+   * @param index_end
+   * @return
+   */
+  public List<Line> getLines(String name, int index_begin, int index_end) {
+	  return builder.getLines(name, index_begin, index_end);
   }
   
   /**
@@ -79,8 +143,7 @@ public class SimpleGeometryCS extends DtCoverageCS {
    * @param index within the variable
    * @return point with all associated data, null if not found
    */
-  public Point getPoint(String name, int index)
-  {
+  public Point getPoint(String name, int index) {
 	 return builder.getPoint(name,index);
   }
   
@@ -93,28 +156,8 @@ public class SimpleGeometryCS extends DtCoverageCS {
    * @param index_end within the variable
    * @return a list of points with associated data
    */
-  public List<Point> getPoints(String name, int index_begin, int index_end)
-  {
+  public List<Point> getPoints(String name, int index_begin, int index_end) {
 	  return builder.getPoints(name, index_begin, index_end);
-  }
-  
-  // LOOK another possibility is a scalar runtime and a 1D time offset
-  
-  @Override
-  public CoordinateAxis1DTime getTimeAxis() {
-    return (CoordinateAxis1DTime) super.getTimeAxis();
-  }
-
-  @Override
-  public CalendarDateRange getCalendarDateRange() {
-    if (getTimeAxis() != null)
-      return getTimeAxis().getCalendarDateRange();
-
-    else if (getRunTimeAxis() != null)
-      return getRunTimeAxis().getCalendarDateRange();
-
-    else
-      return null;
   }
 
 

@@ -11,8 +11,8 @@ import ucar.nc2.dataset.NetcdfDataset;
  */
 public class SimpleGeometryReader {
 	
-	NetcdfDataset ds;
-	String conv;
+	private NetcdfDataset ds;
+	private String conv;
 	
 	/**
 	 * Returns a Polygon given a variable name and the geometric index. If the Polygon is not found it will return null. If the Polygon is a part of the Multi-Polygon, it will return the head
