@@ -25,13 +25,13 @@ import ucar.nc2.ft2.coverage.simpgeometry.*;
  * @author wchen@usgs.gov
  * @since 8/9/2018
  */
-public class SimpleGeometryCS extends DtCoverageCS {
+public class SimpleGeometryCS {
 
   private List<CoordinateAxis> simpleGeometryX, simpleGeometryY, simpleGeometryZ, simpleGeometryID;
-	
-  public SimpleGeometryCS(DtCoverageCSBuilder builder) {
-    super(builder);
-    
+  SimpleGeometryCSBuilder builder;
+  
+  public SimpleGeometryCS(SimpleGeometryCSBuilder builder) {
+    this.builder = builder;
     simpleGeometryX = new ArrayList<CoordinateAxis>(); simpleGeometryY = new ArrayList<CoordinateAxis>();
     simpleGeometryZ = new ArrayList<CoordinateAxis>(); simpleGeometryID = new ArrayList<CoordinateAxis>();
     
