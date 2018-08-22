@@ -15,7 +15,7 @@ import org.junit.Test;
 public class TestCFPolygon {
 
 	private static final double delt = 0.00;
-	private static final int testsize = 100000;
+	private static final int testsize = 8;
 	private Random rnd = new Random();
 	
 	@Test
