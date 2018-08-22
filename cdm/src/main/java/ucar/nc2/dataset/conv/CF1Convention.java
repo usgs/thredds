@@ -177,7 +177,9 @@ public class CF1Convention extends CSMConvention {
       
     	  
       //simple geometry
-      
+
+      if(ds.findGlobalAttribute(CF.CONVENTIONS) != null)
+      if(getVersion(ds.findGlobalAttribute(CF.CONVENTIONS).getStringValue()) >= 8) // only acknowledge simple geometry standard extension if CF-1.8 or higher
       if (v.findAttribute(CF.GEOMETRY) != null) {
     	  
     	Attribute container = v.findAttribute(CF.GEOMETRY);

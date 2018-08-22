@@ -1,14 +1,12 @@
 package ucar.nc2.ft2.coverage.simpgeometry;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Variable;
-import ucar.nc2.constants.AxisType;
 import ucar.nc2.constants.CF;
 import ucar.nc2.dataset.CoordinateAxis;
 import ucar.nc2.dataset.NetcdfDataset;
@@ -109,21 +107,21 @@ public class CFPoint implements Point{
 		Array xPts = null;
 		Array yPts = null;
 		Integer ind = (int)index;
-		Variable node_counts = null;
+		Variable nodeCounts = null;
 		boolean multi = false;
 		SimpleGeometryIndexFinder indexFinder = null;
 
 		List<CoordinateAxis> axes = set.getCoordinateAxes();
 		CoordinateAxis x = null; CoordinateAxis y = null;
 		
-		String[] node_coords = vari.findAttributeIgnoreCase(CF.NODE_COORDINATES).getStringValue().split(" ");
+		String[] nodeCoords = vari.findAttributeIgnoreCase(CF.NODE_COORDINATES).getStringValue().split(" ");
 		
 		// Look for x and y
 		
 		for(CoordinateAxis ax : axes){
 			
-			if(ax.getFullName().equals(node_coords[0])) x = ax;
-			if(ax.getFullName().equals(node_coords[1])) y = ax;
+			if(ax.getFullName().equals(nodeCoords[0])) x = ax;
+			if(ax.getFullName().equals(nodeCoords[1])) y = ax;
 		}
 		
 		// Node count is used very differently in points
@@ -131,8 +129,8 @@ public class CFPoint implements Point{
 		String node_c_str = vari.findAttValueIgnoreCase(CF.NODE_COUNT, "");
 		
 		if(!node_c_str.equals("")) {
-			node_counts = set.findVariable(node_c_str);
-			indexFinder = new SimpleGeometryIndexFinder(node_counts);
+			nodeCounts = set.findVariable(node_c_str);
+			indexFinder = new SimpleGeometryIndexFinder(nodeCounts);
 			multi = true;
 		}
 		
@@ -161,17 +159,17 @@ public class CFPoint implements Point{
 			}
 		
 			else {
-				IndexIterator itr_x = xPts.getIndexIterator();
-				IndexIterator itr_y = yPts.getIndexIterator();
+				IndexIterator itrX = xPts.getIndexIterator();
+				IndexIterator itrY = yPts.getIndexIterator();
 				this.next = null;
 				this.prev = null;
 				
 				CFPoint point = this;
 		
 				// x and y should have the same shape (size), will add some handling on this
-				while(itr_x.hasNext()) {
-					point.x = itr_x.getDoubleNext();
-					point.y = itr_y.getDoubleNext();
+				while(itrX.hasNext()) {
+					point.x = itrX.getDoubleNext();
+					point.y = itrY.getDoubleNext();
 					point.data = vari.read(":," + index).reduce();
 					point.next = new CFPoint(-1, -1, point, null, null); // -1 is a default value, it gets assigned eventually
 					point = point.getNext();

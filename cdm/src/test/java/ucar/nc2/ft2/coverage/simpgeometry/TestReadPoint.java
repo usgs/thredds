@@ -43,5 +43,6 @@ public class TestReadPoint {
 	public void testReadPoint()
 	{
 		SimpleGeometryReader rdr = newReader();
+		Assert.assertNotNull(rdr);
 	}
 }

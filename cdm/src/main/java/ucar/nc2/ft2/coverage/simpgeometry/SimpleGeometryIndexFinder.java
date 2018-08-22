@@ -17,40 +17,40 @@ import ucar.nc2.ft2.coverage.simpgeometry.*;
  */
 public class SimpleGeometryIndexFinder {
 	
-	private Array node_count = null;
-	private int past_index;
-	private int previous_end;
-	private int previous_begin;
+	private Array nodeCount = null;
+	private int pastIndex;
+	private int previousEnd;
+	private int previousBegin;
 	
 	private int getNodeCount(int index) {
-		return node_count.getInt(index);
+		return nodeCount.getInt(index);
 	}
 	
 	public int getBeginning(int index) {
 		
 		//Test if the last end is the new beginning
-		if(index == (past_index + 1 ))
+		if(index == (pastIndex + 1 ))
 		{
-			return previous_end + 1;
+			return previousEnd + 1;
 		}
 		
 		// Otherwise, find it!
-		int new_beginning = 0;
+		int newBeginning = 0;
 		for(int i = 0; i < index; i++) {
-			new_beginning += getNodeCount(i);
+			newBeginning += getNodeCount(i);
 		}
 		
-		past_index = index;
-		previous_begin = new_beginning;
-		return new_beginning;
+		pastIndex = index;
+		previousBegin = newBeginning;
+		return newBeginning;
 	}
 	
 	public int getEnd(int index) {
 
 		// Test if the last beginning is the new end
-		if(index == (past_index - 1))
+		if(index == (pastIndex - 1))
 		{
-			return previous_begin - 1;
+			return previousBegin - 1;
 		}
 		
 		// Otherwise find it!
@@ -59,8 +59,8 @@ public class SimpleGeometryIndexFinder {
 			new_end += getNodeCount(i);
 		}
 		
-		past_index = index;
-		previous_end = new_end;
+		pastIndex = index;
+		previousEnd = new_end;
 		return new_end - 1;
 	}
 	
@@ -72,15 +72,15 @@ public class SimpleGeometryIndexFinder {
 	public SimpleGeometryIndexFinder(Variable node_count) {
 		
 		try {
-			this.node_count = node_count.read();
+			this.nodeCount = node_count.read();
 		} catch (IOException e) {
 
-			this.node_count = null;
+			this.nodeCount = null;
 			e.printStackTrace();
 		}
 		
-		past_index = -10;
-		previous_end = -10;
-		previous_begin = -10;
+		pastIndex = -10;
+		previousEnd = -10;
+		previousBegin = -10;
 	}
 }

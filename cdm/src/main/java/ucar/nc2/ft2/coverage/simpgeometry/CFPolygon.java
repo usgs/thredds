@@ -3,13 +3,11 @@ package ucar.nc2.ft2.coverage.simpgeometry;
 import java.util.List;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Variable;
-import ucar.nc2.constants.AxisType;
 import ucar.nc2.constants.CF;
 import ucar.nc2.dataset.CoordinateAxis;
 import ucar.nc2.dataset.NetcdfDataset;
@@ -80,13 +78,13 @@ public class CFPolygon implements Polygon  {
 	 * 
 	 */
 	public void addPoint(double x, double y) {
-		CFPoint pt_prev = null;
+		CFPoint ptPrev = null;
 		
 		if(points.size() > 0) {
-			pt_prev = points.get(points.size() - 1);
+			ptPrev = points.get(points.size() - 1);
 		}
 		
-		this.points.add(new CFPoint(x, y, pt_prev, null));
+		this.points.add(new CFPoint(x, y, ptPrev, null));
 	}
 	
 	/**
@@ -152,47 +150,47 @@ public class CFPolygon implements Polygon  {
 		this.points.clear();
 		Array xPts = null;
 		Array yPts = null;
-		Variable node_counts = null;
-		Variable part_node_counts = null;
-		Variable interior_rings = null;
+		Variable nodeCounts = null;
+		Variable partNodeCounts = null;
+		Variable interiorRings = null;
 
 		List<CoordinateAxis> axes = dataset.getCoordinateAxes();
 		CoordinateAxis x = null; CoordinateAxis y = null;
 		
-		String[] node_coords = polyvar.findAttributeIgnoreCase(CF.NODE_COORDINATES).getStringValue().split(" ");
+		String[] nodeCoords = polyvar.findAttributeIgnoreCase(CF.NODE_COORDINATES).getStringValue().split(" ");
 		
 		// Look for x and y
 		
 		for(CoordinateAxis ax : axes){
 			
-			if(ax.getFullName().equals(node_coords[0])) x = ax;
-			if(ax.getFullName().equals(node_coords[1])) y = ax;
+			if(ax.getFullName().equals(nodeCoords[0])) x = ax;
+			if(ax.getFullName().equals(nodeCoords[1])) y = ax;
 		}
 		
 		// Affirm node counts
-		String node_c_str = polyvar.findAttValueIgnoreCase(CF.NODE_COUNT, "");
+		String nodeCoStr = polyvar.findAttValueIgnoreCase(CF.NODE_COUNT, "");
 		
-		if(!node_c_str.equals("")) {
-			node_counts = dataset.findVariable(node_c_str);
+		if(!nodeCoStr.equals("")) {
+			nodeCounts = dataset.findVariable(nodeCoStr);
 		}
 		
 		else return null;
 		
 		// Affirm part node counts
-		String p_node_c_str = polyvar.findAttValueIgnoreCase(CF.PART_NODE_COUNT, "");
+		String pNodeCoStr = polyvar.findAttValueIgnoreCase(CF.PART_NODE_COUNT, "");
 		
-		if(!p_node_c_str.equals("")) {
-			part_node_counts = dataset.findVariable(p_node_c_str);
+		if(!pNodeCoStr.equals("")) {
+			partNodeCounts = dataset.findVariable(pNodeCoStr);
 		}
 		
 		// Affirm interior rings
-		String interior_rings_str = polyvar.findAttValueIgnoreCase(CF.PART_NODE_COUNT, "");
+		String interiorRingsStr = polyvar.findAttValueIgnoreCase(CF.PART_NODE_COUNT, "");
 				
-		if(!interior_rings_str.equals("")) {
-				interior_rings = dataset.findVariable(interior_rings_str);
+		if(!interiorRingsStr.equals("")) {
+				interiorRings = dataset.findVariable(interiorRingsStr);
 		}
 		
-		SimpleGeometryIndexFinder indexFinder = new SimpleGeometryIndexFinder(node_counts);
+		SimpleGeometryIndexFinder indexFinder = new SimpleGeometryIndexFinder(nodeCounts);
 		
 		//Get beginning and ending indicies for this polygon
 		int lower = indexFinder.getBeginning(index);
@@ -204,19 +202,19 @@ public class CFPolygon implements Polygon  {
 			xPts = x.read( lower + ":" + upper ).reduce();
 			yPts = y.read( lower + ":" + upper ).reduce(); 
 
-			IndexIterator itr_x = xPts.getIndexIterator();
-			IndexIterator itr_y = yPts.getIndexIterator();
+			IndexIterator itrX = xPts.getIndexIterator();
+			IndexIterator itrY = yPts.getIndexIterator();
 			
 			// No multipolygons just read in the whole thing
-			if(part_node_counts == null) {
+			if(partNodeCounts == null) {
 				
 				this.next = null;
 				this.prev = null;
 				this.isInteriorRing = false;
 				
 				// x and y should have the same shape, will add some handling on this
-				while(itr_x.hasNext()) {
-					this.addPoint(itr_x.getDoubleNext(), itr_y.getDoubleNext());
+				while(itrX.hasNext()) {
+					this.addPoint(itrX.getDoubleNext(), itrY.getDoubleNext());
 				}
 	
 				this.setData(polyvar.read(":," + index).reduce());
@@ -226,32 +224,32 @@ public class CFPolygon implements Polygon  {
 			else {
 				
 				CFPolygon tail = this;
-				Array pnc = part_node_counts.read();
+				Array pnc = partNodeCounts.read();
 				Array ir = null;
-				IndexIterator pnc_itr = pnc.getIndexIterator();
+				IndexIterator pncItr = pnc.getIndexIterator();
 				
-				if(interior_rings != null) ir = interior_rings.read();
+				if(interiorRings != null) ir = interiorRings.read();
 				
 				// In part node count search for the right index to begin looking for "part node counts"
-				int pnc_ind = 0;
-				int pnc_end = 0;
-				while(pnc_end < lower)
+				int pncInd = 0;
+				int pncEnd = 0;
+				while(pncEnd < lower)
 				{
-					pnc_end += pnc_itr.getIntNext();
-					pnc_ind++;
+					pncEnd += pncItr.getIntNext();
+					pncInd++;
 				}
 				
 				// Now the index is found, use part node count and the index to find each part node count of each individual part
 				while(lower < upper) {
 					
-					int smaller = pnc.getInt(pnc_ind);
+					int smaller = pnc.getInt(pncInd);
 					
 					// Set interior ring if needed
-					if(interior_rings != null)
+					if(interiorRings != null)
 					{
-						int interior_ring_value = ir.getInt(pnc_ind);
+						int interiorRingValue = ir.getInt(pncInd);
 						
-						switch(interior_ring_value) {
+						switch(interiorRingValue) {
 						
 							case 0:
 								this.setInteriorRing(false);
@@ -267,14 +265,14 @@ public class CFPolygon implements Polygon  {
 					} else this.isInteriorRing = false;
 					
 					while(smaller > 0) {
-						tail.addPoint(itr_x.getDoubleNext(), itr_y.getDoubleNext());
+						tail.addPoint(itrX.getDoubleNext(), itrY.getDoubleNext());
 						smaller--;
 					}
 					
 					// Set data of each
 					tail.setData(polyvar.read(":," + index));
 					lower += tail.getPoints().size();
-					pnc_ind++;
+					pncInd++;
 					tail.setNext(new CFPolygon());
 					tail = tail.getNext();
 				}

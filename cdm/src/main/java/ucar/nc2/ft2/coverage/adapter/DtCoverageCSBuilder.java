@@ -121,7 +121,7 @@ public class DtCoverageCSBuilder {
       if (errlog != null) errlog.format("%s: X and Y axis rank must be <= 2%n", cs.getName());
       return;
     }
-    
+
     // check x,y with size 1
     if ((xaxis.getSize() < 2) || (yaxis.getSize() < 2)) {
       if (errlog != null) errlog.format("%s: X and Y axis size must be >= 2%n", cs.getName());
@@ -234,9 +234,14 @@ public class DtCoverageCSBuilder {
         ensAxis = (CoordinateAxis1D) eAxis;
     }
 
-
-    if(ucar.nc2.dataset.conv.CF1Convention.getVersion(ds.getConventionUsed()) >= 8) {
-    	geometryReader = new SimpleGeometryReader(ds);    // Make a Geometry Reader for Simple Geometries
+    //Create Simple Geometry Reader if there are any Axes with type SimpleGeometryID
+    boolean sgtype = false;
+    for(CoordinateAxis axis : allAxes) {
+    	if(axis.getAxisType().equals(AxisType.SimpleGeometryID)) sgtype = true;
+    }
+    
+    if(sgtype) {
+    	geometryReader = new SimpleGeometryReader(ds);
  
     } else geometryReader = null;
     

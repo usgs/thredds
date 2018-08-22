@@ -399,6 +399,10 @@ public class FeatureDatasetFactoryManager {
       return facType.isCoverageFeatureType();
     }
 
+    if (want == FeatureType.SIMPLE_GEOMETRY) {
+        return facType.isCoverageFeatureType();
+    }
+    
     if (want == FeatureType.UGRID) {
       return facType.isUnstructuredGridFeatureType();
     }

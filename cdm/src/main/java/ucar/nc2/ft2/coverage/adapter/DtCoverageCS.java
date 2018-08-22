@@ -36,7 +36,7 @@ public class DtCoverageCS {
   /**
    * Create a GeoGridCoordSys from an existing Coordinate System.
    * This will choose which axes are the XHoriz, YHoriz, Vertical, Time, RunTIme, Ensemble.
-   * If theres a Projection, it will set its map area
+   * If there's a Projection, it will set its map area
    *
    * @param builder create from this
    */

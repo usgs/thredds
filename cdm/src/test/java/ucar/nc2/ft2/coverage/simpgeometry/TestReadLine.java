@@ -41,5 +41,6 @@ public class TestReadLine {
 	public void testLinePoint()
 	{
 		SimpleGeometryReader rdr = newReader();
+		Assert.assertNotNull(rdr);
 	}
 }
