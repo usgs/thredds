@@ -18,28 +18,15 @@ import ucar.unidata.util.test.TestDir;
  */
 public class TestReadLine {
 
-	private SimpleGeometryReader newReader()
-	{
+	private SimpleGeometryReader newReader() throws IOException{
 		String filepath = TestDir.cdmLocalTestDataDir + "dataset/SimpleGeos/outflow_3seg_5timesteps.nc";
 		NetcdfDataset dataset = null;
-		
-		try {
-		
-			dataset = NetcdfDataset.openDataset(filepath);
-		
-		}
-		
-		 catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		dataset = NetcdfDataset.openDataset(filepath);
 		return new SimpleGeometryReader(dataset);
 	} // Will be expanded on
 	
 	@Test
-	public void testReadLine()
-	{
+	public void testReadLine() throws IOException {
 		SimpleGeometryReader rdr = newReader();
 		Assert.assertNotNull(rdr);
 		

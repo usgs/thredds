@@ -25,17 +25,12 @@ public class TestReadPolygon {
 	 * 
 	 */
 	@Test
-	public void testMultiPolygonsPolygons() {
+	public void testMultiPolygonsPolygons() throws IOException {
 
 		double err = 0.01;
 		
 		NetcdfDataset data = null ;
-		try {
-			data = NetcdfDataset.openDataset(TestDir.cdmLocalTestDataDir + "dataset/SimpleGeos/hru_soil_moist_3hru_5timestep.nc");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		data = NetcdfDataset.openDataset(TestDir.cdmLocalTestDataDir + "dataset/SimpleGeos/hru_soil_moist_3hru_5timestep.nc");
 			
 		SimpleGeometryReader rdr = new SimpleGeometryReader(data);
 		Polygon poly = rdr.readPolygon("hru_soil_moist", 0);

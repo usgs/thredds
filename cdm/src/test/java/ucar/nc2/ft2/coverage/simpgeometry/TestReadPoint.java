@@ -20,28 +20,16 @@ import java.util.List;
  */
 public class TestReadPoint {
 
-	private SimpleGeometryReader newReader()
-	{
+	private SimpleGeometryReader newReader() throws IOException {
 		String filepath = TestDir.cdmLocalTestDataDir + "dataset/SimpleGeos/avg_temp_3gage_5timesteps.nc";
 		NetcdfDataset dataset = null;
-		
-		try {
-		
-			dataset = NetcdfDataset.openDataset(filepath);
-		
-		}
-		
-		 catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		dataset = NetcdfDataset.openDataset(filepath);
+	
 		return new SimpleGeometryReader(dataset);
 	} // Will be expanded on
 	
 	@Test
-	public void testReadPoint()
-	{
+	public void testReadPoint() throws IOException {
 		SimpleGeometryReader rdr = newReader();
 		Assert.assertNotNull(rdr);
 		Point point0 = rdr.readPoint("gage_avg_temp", 0);
