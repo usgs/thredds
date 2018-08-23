@@ -536,10 +536,6 @@ public abstract class InvDatasetFeatureCollection implements Closeable {
     return null;
   }
 
-  public SimpleGeometryCoverageCollection getSimpleGeometryCoverage(string matchPath) throws IOException {
-    return null;
-  }
-
   ///////////////////////////////////////////////////////////////////////////////
   // handle individual files
 
