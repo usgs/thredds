@@ -177,7 +177,9 @@ public class CF1Convention extends CSMConvention {
       
     	  
       //simple geometry
-      
+
+      if(ds.findGlobalAttribute(CF.CONVENTIONS) != null)
+      if(getVersion(ds.findGlobalAttribute(CF.CONVENTIONS).getStringValue()) >= 8) // only acknowledge simple geometry standard extension if CF-1.8 or higher
       if (v.findAttribute(CF.GEOMETRY) != null) {
     	  
     	Attribute container = v.findAttribute(CF.GEOMETRY);
@@ -198,7 +200,10 @@ public class CF1Convention extends CSMConvention {
       	v.addAttribute(new Attribute(CF.NODE_COORDINATES, ds.findAttValueIgnoreCase(coordsvar, CF.NODE_COORDINATES, "")));
       	v.addAttribute(new Attribute(CF.PART_NODE_COUNT, ds.findAttValueIgnoreCase(coordsvar, CF.PART_NODE_COUNT, "")));
       	if (CF.POLYGON.equalsIgnoreCase(ds.findAttValueIgnoreCase(coordsvar, CF.GEOMETRY_TYPE, ""))) {
-      		v.addAttribute(new Attribute(CF.INTERIOR_RING, ds.findAttValueIgnoreCase(coordsvar, CF.INTERIOR_RING, "")));
+
+      		// Again, interior ring is not always required, but add it if it is present
+      		if(ds.findAttValueIgnoreCase(coordsvar, CF.INTERIOR_RING, "").equals("") == false)
+      			v.addAttribute(new Attribute(CF.INTERIOR_RING, ds.findAttValueIgnoreCase(coordsvar, CF.INTERIOR_RING, "")));
       	}
       	
       	if (v.findAttribute(CF.NODE_COORDINATES) != null) {
@@ -212,13 +217,13 @@ public class CF1Convention extends CSMConvention {
       				Attribute axis = temp.findAttribute(CF.AXIS);
       				if (axis != null) {
       					if ("x".equalsIgnoreCase(axis.getStringValue())) {
-      						temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoX.toString()));
+      						temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.SimpleGeometryX.toString()));
       					}
       					if ("y".equalsIgnoreCase(axis.getStringValue())) {
-      						temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoY.toString()));
+      						temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.SimpleGeometryY.toString()));
       					}
       					if ("z".equalsIgnoreCase(axis.getStringValue())) {
-      						temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.GeoZ.toString()));
+      						temp.addAttribute(new Attribute(_Coordinate.AxisType, AxisType.SimpleGeometryZ.toString()));
       					}
       				
       					cds += coords[i] + " ";
@@ -226,15 +231,19 @@ public class CF1Convention extends CSMConvention {
       				}
       			}
       		}
+  
+      		List<Dimension> dims = v.getDimensions();
       		
       		// Append any geometry dimensions as axis
       		String pre = "";
       		
-      		List<Dimension> dims = v.getDimensions();
-      		
-      		for(Dimension di: dims)
-      		{
-      			if(di != null) pre = di.getShortName() + " " + pre;
+      		for(Dimension di: dims) {
+      			
+      			if(!di.getShortName().equals("time")) {
+      				ds.findVariable(di.getFullNameEscaped()).addAttribute(new Attribute(_Coordinate.AxisType, AxisType.SimpleGeometryID.toString()));
+      			}
+      			
+      			pre = di.getShortName() + " " + pre;
       		}
       		
       		v.addAttribute(new Attribute(_Coordinate.Axes, pre + cds.trim()));
