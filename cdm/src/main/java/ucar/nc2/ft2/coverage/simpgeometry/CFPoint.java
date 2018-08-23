@@ -1,14 +1,12 @@
 package ucar.nc2.ft2.coverage.simpgeometry;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Variable;
-import ucar.nc2.constants.AxisType;
 import ucar.nc2.constants.CF;
 import ucar.nc2.dataset.CoordinateAxis;
 import ucar.nc2.dataset.NetcdfDataset;
@@ -102,28 +100,37 @@ public class CFPoint implements Point{
 		this.prev = prev;
 	}
 	
+	/**
+	 * Given a dataset, variable, and index, automatically populates this Point and
+	 * returns it. If not found, returns null.
+	 * 
+	 * @param dataset which the variable is a part of
+	 * @param vari the variable which has a geometry attribute
+	 * @param index of the point within the variable
+	 * @return return a point
+	 */
 	public Point setupPoint(NetcdfDataset set, Variable vari, int index)
 	{
 		// Points are much simpler, node_count is used multigeometries so it's a bit different
-		// No need for the cat here, unless there is a multipoint
+		// No need for the index finder here, unless there is a multipoint
 		Array xPts = null;
 		Array yPts = null;
 		Integer ind = (int)index;
-		Variable node_counts = null;
+		Variable nodeCounts = null;
 		boolean multi = false;
-		SimpleGeometryKitten kitty = null;
+		SimpleGeometryIndexFinder indexFinder = null;
 
 		List<CoordinateAxis> axes = set.getCoordinateAxes();
 		CoordinateAxis x = null; CoordinateAxis y = null;
 		
-		String[] node_coords = vari.findAttributeIgnoreCase(CF.NODE_COORDINATES).getStringValue().split(" ");
+		String[] nodeCoords = vari.findAttributeIgnoreCase(CF.NODE_COORDINATES).getStringValue().split(" ");
 		
 		// Look for x and y
 		
 		for(CoordinateAxis ax : axes){
 			
-			if(ax.getFullName().equals(node_coords[0])) x = ax;
-			if(ax.getFullName().equals(node_coords[1])) y = ax;
+			if(ax.getFullName().equals(nodeCoords[0])) x = ax;
+			if(ax.getFullName().equals(nodeCoords[1])) y = ax;
 		}
 		
 		// Node count is used very differently in points
@@ -131,8 +138,8 @@ public class CFPoint implements Point{
 		String node_c_str = vari.findAttValueIgnoreCase(CF.NODE_COUNT, "");
 		
 		if(!node_c_str.equals("")) {
-			node_counts = set.findVariable(node_c_str);
-			kitty = new SimpleGeometryKitten(node_counts);
+			nodeCounts = set.findVariable(node_c_str);
+			indexFinder = new SimpleGeometryIndexFinder(nodeCounts);
 			multi = true;
 		}
 		
@@ -141,8 +148,8 @@ public class CFPoint implements Point{
 			//
 			if(multi)
 			{
-				xPts = x.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
-				yPts = y.read( kitty.getBeginning(index) + ":" + kitty.getEnd(index) ).reduce();
+				xPts = x.read( indexFinder.getBeginning(index) + ":" + indexFinder.getEnd(index) ).reduce();
+				yPts = y.read( indexFinder.getBeginning(index) + ":" + indexFinder.getEnd(index) ).reduce();
 			}
 			
 			else
@@ -161,17 +168,17 @@ public class CFPoint implements Point{
 			}
 		
 			else {
-				IndexIterator itr_x = xPts.getIndexIterator();
-				IndexIterator itr_y = yPts.getIndexIterator();
+				IndexIterator itrX = xPts.getIndexIterator();
+				IndexIterator itrY = yPts.getIndexIterator();
 				this.next = null;
 				this.prev = null;
 				
 				CFPoint point = this;
 		
 				// x and y should have the same shape (size), will add some handling on this
-				while(itr_x.hasNext()) {
-					point.x = itr_x.getDoubleNext();
-					point.y = itr_y.getDoubleNext();
+				while(itrX.hasNext()) {
+					point.x = itrX.getDoubleNext();
+					point.y = itrY.getDoubleNext();
 					point.data = vari.read(":," + index).reduce();
 					point.next = new CFPoint(-1, -1, point, null, null); // -1 is a default value, it gets assigned eventually
 					point = point.getNext();
@@ -184,43 +191,16 @@ public class CFPoint implements Point{
 		
 		} catch (IOException e) {
 
+			e.printStackTrace();
 			return null;
 		
 		} catch (InvalidRangeException e) {
 			
 			e.printStackTrace();
+			return null;
 		}
 		
 		return this;
-	}
-	
-	/**
-	 * Construct a new IMMUTABLE point from specified parameters
-	 * The construction will automatically connect in related parts of a Multipoint - just specify any constituents
-	 * of a multipoint as next or prev.
-	 * 
-	 * Assumes that data is null.
-	 * 
-	 * @param x - the x coordinate of the point
-	 * @param y - the y coordinate of the point
-	 * @param prev - previous point if part of a multipoint
-	 * @param next - next point if part of a multipoint
-	 */
-	public CFPoint(double x, double y, CFPoint prev, CFPoint next) {
-		this.next = next;
-		this.prev = prev;
-		
-		// Create links automatically
-		if(next != null) {
-			next.setPrev(this);
-		}
-		
-		if(prev != null) {
-			prev.setNext(this);
-		}
-		
-		this.x = x;
-		this.y = y;
 	}
 	
 	/**

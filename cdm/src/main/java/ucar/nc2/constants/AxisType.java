@@ -31,7 +31,8 @@ public enum AxisType {
   Dimension(99,"Dim"),      // used for dimension axis (experimental);
   SimpleGeometryX(100, "SgX"),	// Simple Geometry X
   SimpleGeometryY(101, "SgY"),	// Simple Geometry Y
-  SimpleGeometryZ(102, "SgZ");	// Simple Geometry Z
+  SimpleGeometryZ(102, "SgZ"),	// Simple Geometry Z
+  SimpleGeometryID(103, "SgID"); // Simple Geometry ID Axis, used for indexing simple geometry variables
   
   private final int order; // canonical ordering runTime - ensemble - time - z - y - x  or elev - azimuth - distance
   private final String cfAxisName; // X, Y, Z, T from http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.6/cf-conventions.html#coordinate-types

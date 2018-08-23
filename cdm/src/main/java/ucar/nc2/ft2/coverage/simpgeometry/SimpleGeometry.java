@@ -1,4 +1,4 @@
-package ucar.nc2.ft2.SimpleGeoms;
+package ucar.nc2.ft2.coverage.simpgeometry;
 
 import ucar.ma2.Array;
 

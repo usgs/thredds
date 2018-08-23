@@ -6,15 +6,9 @@ package ucar.nc2.ft2.coverage.adapter;
 
 import com.beust.jcommander.internal.Lists;
 import ucar.nc2.Dimension;
-import ucar.nc2.Group;
-import ucar.nc2.Variable;
 import ucar.nc2.constants.AxisType;
 import ucar.nc2.constants.FeatureType;
 import ucar.nc2.dataset.*;
-import ucar.nc2.ft2.coverage.simpgeometry.Line;
-import ucar.nc2.ft2.coverage.simpgeometry.Point;
-import ucar.nc2.ft2.coverage.simpgeometry.Polygon;
-import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometryReader;
 import ucar.nc2.units.SimpleUnit;
 import ucar.unidata.geoloc.ProjectionImpl;
 import ucar.unidata.geoloc.projection.RotatedPole;
@@ -68,7 +62,6 @@ public class DtCoverageCSBuilder {
   List<CoordinateAxis> otherAxes;
   List<CoordinateAxis> allAxes;
   List<CoordinateTransform> coordTransforms;
-  SimpleGeometryReader geometry_reader;
   ProjectionImpl orgProj;
 
   DtCoverageCSBuilder(NetcdfDataset ds, CoordinateSystem cs, Formatter errlog) {
@@ -121,7 +114,7 @@ public class DtCoverageCSBuilder {
       if (errlog != null) errlog.format("%s: X and Y axis rank must be <= 2%n", cs.getName());
       return;
     }
-    
+
     // check x,y with size 1
     if ((xaxis.getSize() < 2) || (yaxis.getSize() < 2)) {
       if (errlog != null) errlog.format("%s: X and Y axis size must be >= 2%n", cs.getName());
@@ -234,14 +227,6 @@ public class DtCoverageCSBuilder {
         ensAxis = (CoordinateAxis1D) eAxis;
     }
 
-
-    if(ucar.nc2.dataset.conv.CF1Convention.getVersion(ds.getConventionUsed()) >= 8) {
-    	geometry_reader = new SimpleGeometryReader(ds);    // Make a Geometry Reader for Simple Geometries
- 
-    }
-    
-    else geometry_reader = null;
-    
     this.type = classify();
     this.coordTransforms = new ArrayList<>(cs.getCoordinateTransforms());
     this.orgProj = cs.getProjection();
@@ -263,10 +248,6 @@ public class DtCoverageCSBuilder {
       else
         return FeatureType.CURVILINEAR;
     }
-    
-    if(geometry_reader != null) {
-    	return FeatureType.SIMPLE_GEOMETRY;
-    }
 
     // what makes it a grid?
     // each dimension must have its own coordinate variable
@@ -283,102 +264,6 @@ public class DtCoverageCSBuilder {
   public FeatureType getCoverageType() {
     return type;
   }
-  
-  /**
-   * Given a certain variable name and geometry index, returns a Simple Geometry Polygon.
-   * 
-   * @param name
-   * @param index
-   * @return polygon
-   */
-  public Polygon getPolygon(String name, int index)
-  {
-	  return geometry_reader.readPolygon(name, index);
-  }
-  
-  /**
-   * Given a certain Polygon variable name and geometry begin and end indicies, returns a list of Simple Geometry Polygon
-   * 
-   * @param name
-   * @param index_begin
-   * @param index_end
-   * @return
-   */
-  public List<Polygon> getPolygons(String name, int index_begin, int index_end) {
-	  List<Polygon> poly_list = new ArrayList<Polygon>();
-	  
-	  for(int i = index_begin; i <= index_end; i++)
-	  {
-		  poly_list.add(geometry_reader.readPolygon(name, i));
-	  }
-	  
-	  return poly_list;
-  }
-
-  
-  /**
-   * Given a certain variable name and geometry index, returns a Simple Geometry Line.
-   * 
-   * @param name
-   * @param index
-   * @return line
-   */
-  public Line getLine(String name, int index)
-  {
-	  return geometry_reader.readLine(name, index);
-  }
-  
-  /**
-   * Given a certain line variable name and geometry begin and end indicies, returns a list of Simple Geometry Line
-   * 
-   * @param name
-   * @param index_begin
-   * @param index_end
-   * @return
-   */
-  public List<Line> getLines(String name, int index_begin, int index_end) {
-	  List<Line> line_list = new ArrayList<Line>();
-	  
-	  for(int i = index_begin; i <= index_end; i++)
-	  {
-		  line_list.add(geometry_reader.readLine(name, i));
-	  }
-	  
-	  return line_list;
-  }
-
-  
-  /**
-   * Given a certain variable name and geometry index, returns a Simple Geometry Point
-   * 
-   * 
-   * @param name
-   * @param index
-   * @return
-   */
-  public Point getPoint(String name, int index)
-  {
-	  return geometry_reader.readPoint(name, index);
-  }
-  
-  /**
-   * Given a certain Point variable name and geometry begin and end indicies, returns a list of Simple Geometry Points
-   * 
-   * @param name
-   * @param index_begin
-   * @param index_end
-   * @return
-   */
-  public List<Point> getPoints(String name, int index_begin, int index_end) {
-	  List<Point> pt_list = new ArrayList<Point>();
-	  
-	  for(int i = index_begin; i <= index_end; i++)
-	  {
-		  pt_list.add(geometry_reader.readPoint(name, i));
-	  }
-	  
-	  return pt_list;
-  }
 
   public DtCoverageCS makeCoordSys() {
     if (type == null) return null;
@@ -392,8 +277,6 @@ public class DtCoverageCSBuilder {
         return new CurvilinearCS(this);
       case SWATH:
         return new SwathCS(this);
-      case SIMPLE_GEOMETRY:
-    	return new SimpleGeometryCS(this);
     }
     return new DtCoverageCS(this);
   }
