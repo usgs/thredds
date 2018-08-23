@@ -12,7 +12,7 @@ import ucar.nc2.dataset.NetcdfDataset;
  * @author wchen@usgs.gov
  *
  */
-public interface Polygon extends SimpleGeometry{
+public interface Polygon extends SimpleGeometry {
 
 	/**
 	 * Get the list of points which constitute the polygon.

@@ -13,12 +13,11 @@ import ucar.nc2.AttributeContainerHelper;
 import ucar.nc2.Dimension;
 import ucar.nc2.VariableSimpleIF;
 import ucar.nc2.util.Indent;
-import ucar.nc2.ft2.SimpleGeoms.CFGEOMETRY;
 import ucar.nc2.ft2.coverage.CoverageReader;
 import ucar.nc2.ft2.coverage.SubsetParams;
 import ucar.nc2.ft2.coverage.adapter.SimpleGeometryCS;
 
-import javax.annotation.Nonnull;
+//import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Formatter;
