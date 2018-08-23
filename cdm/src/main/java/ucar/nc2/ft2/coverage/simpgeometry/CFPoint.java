@@ -199,35 +199,6 @@ public class CFPoint implements Point{
 	 * The construction will automatically connect in related parts of a Multipoint - just specify any constituents
 	 * of a multipoint as next or prev.
 	 * 
-	 * Assumes that data is null.
-	 * 
-	 * @param x - the x coordinate of the point
-	 * @param y - the y coordinate of the point
-	 * @param prev - previous point if part of a multipoint
-	 * @param next - next point if part of a multipoint
-	 */
-	public CFPoint(double x, double y, CFPoint prev, CFPoint next) {
-		this.next = next;
-		this.prev = prev;
-		
-		// Create links automatically
-		if(next != null) {
-			next.setPrev(this);
-		}
-		
-		if(prev != null) {
-			prev.setNext(this);
-		}
-		
-		this.x = x;
-		this.y = y;
-	}
-	
-	/**
-	 * Construct a new IMMUTABLE point from specified parameters
-	 * The construction will automatically connect in related parts of a Multipoint - just specify any constituents
-	 * of a multipoint as next or prev.
-	 * 
 	 * @param x - the x coordinate of the point
 	 * @param y - the y coordinate of the point
 	 * @param prev - previous point if part of a multipoint

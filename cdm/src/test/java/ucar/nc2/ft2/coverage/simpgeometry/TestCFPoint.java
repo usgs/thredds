@@ -20,7 +20,7 @@ public class TestCFPoint {
 	
 	@Test
 	public void testPointSingle() {
-		CFPoint pt = new CFPoint(0.1, 0.3, null, null);
+		CFPoint pt = new CFPoint(0.1, 0.3, null, null, null);
 		Assert.assertEquals(0.1, pt.getX(), delt);
 		Assert.assertEquals(0.3, pt.getY(), delt);
 		Assert.assertEquals(null, pt.getNext());
@@ -40,11 +40,11 @@ public class TestCFPoint {
 			double y = rnd.nextDouble();
 			
 			if(i == 0) {
-				pt[i] = new CFPoint(x, y, null, null);
+				pt[i] = new CFPoint(x, y, null, null, null);
 			}
 			
 			else {
-				pt[i] = new CFPoint(x, y, pt[i-1], null);
+				pt[i] = new CFPoint(x, y, pt[i-1], null, null);
 			}
 			
 			ref_x[i] = x;
@@ -90,11 +90,11 @@ public class TestCFPoint {
 			double y = rnd.nextDouble();
 				
 			if(i == 0) {
-				pt[i] = new CFPoint(x, y, null, null);
+				pt[i] = new CFPoint(x, y, null, null, null);
 			}
 				
 			else {
-				pt[i] = new CFPoint(x, y, pt[i - 1], null);
+				pt[i] = new CFPoint(x, y, pt[i - 1], null, null);
 			}
 				
 			ref_x[i] = x;

@@ -45,6 +45,7 @@ public class SimpleGeometryCSBuilder {
       builder = new SimpleGeometryCSBuilder(ds, cs, errlog);
       if (builder.type != null) break;
     }
+    
     if (builder == null) return null;
     if (errlog != null) errlog.format("coverage = %s%n", builder.type);
     return builder;
@@ -85,7 +86,7 @@ public class SimpleGeometryCSBuilder {
     //////////////////////////////////////////////////////////////
     // horiz
     // must be lat/lon or have x,y and projection
-    if (!cs.isLatLon()) {
+  /*  if (!cs.isLatLon()) {
       // do check for GeoXY
       if ((cs.getXaxis() == null) || (cs.getYaxis() == null)) {
         if (errlog != null) errlog.format("%s: NO Lat,Lon or X,Y axis%n", cs.getName());
@@ -236,10 +237,10 @@ public class SimpleGeometryCSBuilder {
       if (eAxis instanceof CoordinateAxis1D)
         ensAxis = (CoordinateAxis1D) eAxis;
     }
-
+*/
     //Create Simple Geometry Reader if there are any Axes with type SimpleGeometryID
     boolean sgtype = false;
-    for(CoordinateAxis axis : allAxes) {
+    for(CoordinateAxis axis : cs.getCoordinateAxes()) {
     	if(axis.getAxisType().equals(AxisType.SimpleGeometryID)) sgtype = true;
     }
     
@@ -256,19 +257,6 @@ public class SimpleGeometryCSBuilder {
   private FeatureType classify () {
 
     // now to classify
-    boolean is2Dtime = (rtAxis != null) && (timeOffsetAxis != null || (timeAxis != null && timeAxis.getRank() == 2));
-    if (is2Dtime) {
-      return FeatureType.FMRC;   // LOOK this would allow 2d horiz
-    }
-
-    boolean is2Dhoriz = isLatLon && (xaxis.getRank() == 2) && (yaxis.getRank() == 2);
-    if (is2Dhoriz) {
-      Set<Dimension> xyDomain = CoordinateSystem.makeDomain(Lists.newArrayList(xaxis, yaxis));
-      if (timeAxis != null && CoordinateSystem.isSubset(timeAxis.getDimensionsAll(), xyDomain))
-        return FeatureType.SWATH;   // LOOK prob not exactly right
-      else
-        return FeatureType.CURVILINEAR;
-    }
     
     if(geometryReader != null) {
     	return FeatureType.SIMPLE_GEOMETRY;

@@ -84,7 +84,7 @@ public class CFPolygon implements Polygon  {
 			ptPrev = points.get(points.size() - 1);
 		}
 		
-		this.points.add(new CFPoint(x, y, ptPrev, null));
+		this.points.add(new CFPoint(x, y, ptPrev, null, null));
 	}
 	
 	/**

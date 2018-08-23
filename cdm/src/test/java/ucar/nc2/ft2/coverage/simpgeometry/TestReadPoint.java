@@ -44,5 +44,18 @@ public class TestReadPoint {
 	{
 		SimpleGeometryReader rdr = newReader();
 		Assert.assertNotNull(rdr);
+		Point point_0 = rdr.readPoint("gage_avg_temp", 0);
+		Point point_1 = rdr.readPoint("gage_avg_temp", 1);
+		Point point_2 = rdr.readPoint("gage_avg_temp", 2);
+		
+		// Test point data
+		Assert.assertEquals(-91.277, point_0.getX(), 0.0001); Assert.assertEquals(40.75365, point_0.getY(), 0.000001);
+		Assert.assertEquals(-91.674, point_1.getX(), 0.0003); Assert.assertEquals(40.9253, point_1.getY(), 0.00001);
+		Assert.assertEquals(-91.5515, point_2.getX(), 0.00006); Assert.assertEquals(41, point_2.getY(), 0.1);
+		
+		//Test data
+		Assert.assertEquals(0.623, point_0.getData().getDouble(0), 0.001);
+		Assert.assertEquals(9.02, point_1.getData().getDouble(3), 0.001);
+		Assert.assertEquals(3.14, point_2.getData().getDouble(1), 0.001);
 	}
 }

@@ -18,7 +18,7 @@ import ucar.nc2.time.CalendarDateRange;
 import ucar.nc2.ft2.coverage.simpgeometry.*;
 
 /**
- * Simple Geometry Coordinate System Implementation
+ * Simple Geometry Coordinate System / Enhanced Dataset Implementation
  * Forked from ucar.nc2.ft2.coverage.adapter.GridCS
  *
  * @author John
