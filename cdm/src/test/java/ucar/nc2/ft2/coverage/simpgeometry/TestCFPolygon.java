@@ -34,9 +34,9 @@ public class TestCFPolygon {
 	public void testPolygonBckwd() {
 		
 		CFPolygon poly[] = new CFPolygon[testsize];
-		CFPolygon ref_poly[] = new CFPolygon[testsize];
-		double ref_x[] = new double[testsize];
-		double ref_y[] = new double[testsize];
+		CFPolygon refPoly[] = new CFPolygon[testsize];
+		double refX[] = new double[testsize];
+		double refY[] = new double[testsize];
 		
 		/* Test adding a point to
 		 * the polygon
@@ -45,16 +45,16 @@ public class TestCFPolygon {
 		poly[0] = new CFPolygon();
 		
 		for(int i = 0; i < testsize; i++) {
-			ref_x[i] = rnd.nextDouble();
-			ref_y[i] = rnd.nextDouble();
-			poly[0].addPoint(ref_x[i], ref_y[i]);
+			refX[i] = rnd.nextDouble();
+			refY[i] = rnd.nextDouble();
+			poly[0].addPoint(refX[i], refY[i]);
 		}
 		
 		List<CFPoint> pts = poly[0].getPoints();
 		
 		for(int i = 0; i < testsize; i++) {
-			Assert.assertEquals(ref_x[i], pts.get(i).getX(), delt);
-			Assert.assertEquals(ref_y[i], pts.get(i).getY(), delt);
+			Assert.assertEquals(refX[i], pts.get(i).getX(), delt);
+			Assert.assertEquals(refY[i], pts.get(i).getY(), delt);
 		}
 		
 		/* Test multipoly
@@ -69,7 +69,7 @@ public class TestCFPolygon {
 				poly[i].setPrev(poly[i - 1]);
 			}
 			
-			ref_poly[i] = poly[i];
+			refPoly[i] = poly[i];
 		}
 		
 		
@@ -79,7 +79,7 @@ public class TestCFPolygon {
 		CFPolygon cpoly = poly[0];
 		int k = 0;
 		while(cpoly != null) {
-			Assert.assertEquals(ref_poly[k], cpoly);
+			Assert.assertEquals(refPoly[k], cpoly);
 			cpoly = cpoly.getNext();
 			k++;
 		}
@@ -87,7 +87,7 @@ public class TestCFPolygon {
 		cpoly = poly[testsize - 1];
 		k = testsize - 1;
 		while(cpoly != null) {
-			Assert.assertEquals(ref_poly[k], cpoly);
+			Assert.assertEquals(refPoly[k], cpoly);
 			cpoly = cpoly.getPrev();
 			k--;
 		}
@@ -97,9 +97,9 @@ public class TestCFPolygon {
 	public void testPolygonFwd() {
 		
 		CFPolygon poly[] = new CFPolygon[testsize];
-		CFPolygon ref_poly[] = new CFPolygon[testsize];
-		double ref_x[] = new double[testsize];
-		double ref_y[] = new double[testsize];
+		CFPolygon refPoly[] = new CFPolygon[testsize];
+		double refX[] = new double[testsize];
+		double refY[] = new double[testsize];
 		
 		/* Try with set next
 		 * 
@@ -112,7 +112,7 @@ public class TestCFPolygon {
 				poly[i].setNext(poly[i - 1]);
 			}
 			
-			ref_poly[i] = poly[i];
+			refPoly[i] = poly[i];
 		}
 		
 		/* Test
@@ -121,7 +121,7 @@ public class TestCFPolygon {
 		CFPolygon cpoly = poly[0];
 		int k = 0;
 		while(cpoly != null) {
-			Assert.assertEquals(ref_poly[k], cpoly);
+			Assert.assertEquals(refPoly[k], cpoly);
 			cpoly = cpoly.getPrev();
 			k++;
 		}
@@ -129,7 +129,7 @@ public class TestCFPolygon {
 		cpoly = poly[testsize - 1];
 		k = testsize - 1;
 		while(cpoly != null) {
-			Assert.assertEquals(ref_poly[k], cpoly);
+			Assert.assertEquals(refPoly[k], cpoly);
 			cpoly = cpoly.getNext();
 			k--;
 		}
@@ -138,9 +138,9 @@ public class TestCFPolygon {
 	@Test
 	public void testPolygonInteriorRing() {
 		// Test interior ring
-		CFPolygon test_out = new CFPolygon();
-		test_out.setInteriorRing(true);
-		Assert.assertEquals(test_out.getInteriorRing(), true);
+		CFPolygon testOut = new CFPolygon();
+		testOut.setInteriorRing(true);
+		Assert.assertEquals(testOut.getInteriorRing(), true);
 	}
 	
 	@Test

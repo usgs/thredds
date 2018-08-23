@@ -52,13 +52,4 @@ public class TestReadPolygon {
 		Assert.assertEquals(1.52, poly2.getData().getDouble(3), err);
 		Assert.assertEquals(1.36, poly3.getData().getDouble(0), err);
 	}
-	
-	/**
-	 * Tests ability to read and construct Polygons with holes (and perhaps Multipolygons with holes).
-	 * 
-	 */
-	@Test
-	public void testInteriorRingPolygons() {
-		// Interior Polygons don't work yet.
-	}
 }
