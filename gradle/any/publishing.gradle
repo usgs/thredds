@@ -12,14 +12,14 @@ publishing {
         if (version.endsWith('SNAPSHOT')) {
             maven {
                 name = 'snapshots'
-                url = 'https://artifacts.unidata.ucar.edu/repository/unidata-snapshots/'
-                // Set credentials in root/publishing.gradle.
+                url = 'https://internal.cida.usgs.gov/maven/content/repositories/cida-public-snapshots'
+                // Set credentials in taskGraph.whenReady {}
             }
         } else {
             maven {
                 name = 'releases'
-                url = 'https://artifacts.unidata.ucar.edu/repository/unidata-releases/'
-                // Set credentials in root/publishing.gradle.
+                url = 'https://internal.cida.usgs.gov/maven/content/repositories/cida-public-releases'
+                // Set credentials in taskGraph.whenReady {}
             }
         }
     }
