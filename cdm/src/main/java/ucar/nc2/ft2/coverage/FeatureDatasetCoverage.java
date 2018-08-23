@@ -63,12 +63,14 @@ public class FeatureDatasetCoverage implements FeatureDataset, Closeable {
 
       CalendarDateRange cdrCheck = cc.getCalendarDateRange();
       if (cdr == null) cdr = cdrCheck;
-      else if (cdrCheck != null) cdr = cdr.extend( cdrCheck);
-
+      else if (cdrCheck != null) cdr = cdr.extend(cdrCheck);
     }
+
     this.featureType = ft;
     this.calendarDateRange = cdr;
   }
+
+
 
   public List<CoverageCollection> getCoverageCollections() {
     return covCollections;
