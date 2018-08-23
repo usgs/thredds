@@ -4,10 +4,7 @@
  */
 package ucar.nc2.ft2.coverage.adapter;
 
-import com.beust.jcommander.internal.Lists;
 import ucar.nc2.Dimension;
-import ucar.nc2.Group;
-import ucar.nc2.Variable;
 import ucar.nc2.constants.AxisType;
 import ucar.nc2.constants.FeatureType;
 import ucar.nc2.dataset.*;
@@ -15,9 +12,7 @@ import ucar.nc2.ft2.coverage.simpgeometry.Line;
 import ucar.nc2.ft2.coverage.simpgeometry.Point;
 import ucar.nc2.ft2.coverage.simpgeometry.Polygon;
 import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometryReader;
-import ucar.nc2.units.SimpleUnit;
 import ucar.unidata.geoloc.ProjectionImpl;
-import ucar.unidata.geoloc.projection.RotatedPole;
 
 import java.util.*;
 
@@ -65,9 +60,6 @@ public class SimpleGeometryCSBuilder {
   FeatureType type;
 
   boolean isLatLon;
-  CoordinateAxis xaxis, yaxis, timeAxis;
-  CoordinateAxis1D vertAxis, ensAxis, timeOffsetAxis;
-  CoordinateAxis1DTime rtAxis;
   List<CoordinateAxis> independentAxes;
   List<CoordinateAxis> otherAxes;
   List<CoordinateAxis> allAxes;
@@ -83,161 +75,6 @@ public class SimpleGeometryCSBuilder {
       return;
     }
 
-    //////////////////////////////////////////////////////////////
-    // horiz
-    // must be lat/lon or have x,y and projection
-  /*  if (!cs.isLatLon()) {
-      // do check for GeoXY
-      if ((cs.getXaxis() == null) || (cs.getYaxis() == null)) {
-        if (errlog != null) errlog.format("%s: NO Lat,Lon or X,Y axis%n", cs.getName());
-        return;
-      }
-      if (null == cs.getProjection()) {
-        if (errlog != null) errlog.format("%s: NO projection found%n", cs.getName());
-        return;
-      }
-    }
-
-    // obtain the x,y or lat/lon axes. x,y normally must be convertible to km
-    if (cs.isGeoXY()) {
-      xaxis = cs.getXaxis();
-      yaxis = cs.getYaxis();
-
-      ProjectionImpl p = cs.getProjection();
-      if (!(p instanceof RotatedPole)) {
-        if (!SimpleUnit.kmUnit.isCompatible(xaxis.getUnitsString())) {
-          if (errlog != null) errlog.format("%s: X axis units are not convertible to km%n", cs.getName());
-          //return false;
-        }
-        if (!SimpleUnit.kmUnit.isCompatible(yaxis.getUnitsString())) {
-          if (errlog != null) errlog.format("%s: Y axis units are not convertible to km%n", cs.getName());
-          //return false;
-        }
-      }
-    } else {
-      xaxis = cs.getLonAxis();
-      yaxis = cs.getLatAxis();
-      isLatLon = true;
-    }
-
-    // check x,y rank <= 2
-    if ((xaxis.getRank() > 2) || (yaxis.getRank() > 2)) {
-      if (errlog != null) errlog.format("%s: X and Y axis rank must be <= 2%n", cs.getName());
-      return;
-    }
-
-    // check x,y with size 1
-    if ((xaxis.getSize() < 2) || (yaxis.getSize() < 2)) {
-      if (errlog != null) errlog.format("%s: X and Y axis size must be >= 2%n", cs.getName());
-      return;
-    }
-
-    // check that the x,y have at least 2 dimensions between them ( this eliminates point data)
-    int xyDomainSize = CoordinateSystem.countDomain(new CoordinateAxis[]{xaxis, yaxis});
-    if (xyDomainSize < 2) {
-      if (errlog != null) errlog.format("%s: X and Y axis must have 2 or more dimensions%n", cs.getName());
-      return;
-    }
-
-    allAxes = new ArrayList<>(cs.getCoordinateAxes());
-    Collections.sort(allAxes, new CoordinateAxis.AxisComparator()); // canonical ordering of axes
-
-    independentAxes = new ArrayList<>();
-    otherAxes = new ArrayList<>();
-    for (CoordinateAxis axis : cs.getCoordinateAxes()) {
-      // skip x,y if no projection
-      if ((axis.getAxisType() == AxisType.GeoX || axis.getAxisType() == AxisType.GeoY) && isLatLon) continue;
-      if (axis.isIndependentCoordinate()) independentAxes.add(axis);
-      else otherAxes.add(axis);
-    }
-    Collections.sort(independentAxes, (o1, o2) -> {
-      AxisType t1 = o1.getAxisType();
-      AxisType t2 = o2.getAxisType();
-      if (t1 != null && t2 != null)
-        return t1.axisOrder() - t2.axisOrder();
-      return (t1 == null) ? ((t2 == null) ? 0 : -1) : 1;
-    });
-
-    //////////////////////////////////////////////////////////////
-    // vert
-    CoordinateAxis zAxis = cs.getHeightAxis();
-    if ((zAxis == null) || (zAxis.getRank() > 1)) {
-      if (cs.getPressureAxis() != null) zAxis = cs.getPressureAxis();
-    }
-    if ((zAxis == null) || (zAxis.getRank() > 1)) {
-      if (cs.getZaxis() != null) zAxis = cs.getZaxis();
-    }
-    if (zAxis != null) {
-      if (zAxis instanceof CoordinateAxis1D)
-        vertAxis = (CoordinateAxis1D) zAxis;
-    }
-
-    //////////////////////////////////////////////////////////////
-    // time
-    CoordinateAxis rt = cs.findAxis(AxisType.RunTime);
-    if (rt != null) {
-      if (!rt.isScalar() && !(rt instanceof CoordinateAxis1D)) {   // A runtime axis must be scalar or one-dimensional
-        if (errlog != null) errlog.format("%s: RunTime axis must be 1D or scalar%n", cs.getName());
-        return;
-      }
-      if (!(rt instanceof CoordinateAxis1DTime)) {    // convert to CoordinateAxis1DTime
-        try {
-          rtAxis = CoordinateAxis1DTime.factory(ds, rt, errlog);
-          int index = allAxes.indexOf(rt); // replace
-          allAxes.set(index, rtAxis);
-        } catch (Exception e) {
-          if (errlog != null)
-            errlog.format("%s: Error reading runtime coord= %s err= %s%n", rt.getDatasetLocation(), rt.getFullName(), e.getMessage());
-          return;
-        }
-      } else {
-        rtAxis = (CoordinateAxis1DTime) rt;
-      }
-    }
-
-    CoordinateAxis t = cs.getTaxis();
-    if ((t != null) && t.getRank() > 1) {  // If time axis is two-dimensional...
-      if (rtAxis != null && rtAxis.getRank() == 1) {
-        // time first dimension must agree with runtime
-        if (!rtAxis.getDimension(0).equals(t.getDimension(0))) {
-          if (errlog != null) errlog.format("%s: 2D Time axis first dimension must be runtime%n", cs.getName());
-          return;
-        }
-      }
-    }
-
-    if (t != null) {
-      if (t instanceof CoordinateAxis1D && !(t instanceof CoordinateAxis1DTime)) {  // convert time axis into CoordinateAxis1DTime if possible
-        try {
-          timeAxis = CoordinateAxis1DTime.factory(ds, t, errlog);
-          int index = allAxes.indexOf(t); // replace
-          allAxes.set(index, timeAxis);
-        } catch (Exception e) {
-          if (errlog != null)
-            errlog.format("%s: Error reading time coord= %s err= %s%n", t.getDatasetLocation(), t.getFullName(), e.getMessage());
-          return;
-        }
-      } else {
-        timeAxis = t;
-      }
-    }
-
-    CoordinateAxis toAxis = cs.findAxis(AxisType.TimeOffset);
-    if (toAxis != null) {
-      if (toAxis.getRank() == 1)
-        timeOffsetAxis = (CoordinateAxis1D) toAxis;
-    }
-
-    if (t == null && rtAxis != null && timeOffsetAxis != null) {
-      // LOOK create time coord ??
-    }
-
-    CoordinateAxis eAxis = cs.findAxis(AxisType.Ensemble);
-    if (eAxis != null) {
-      if (eAxis instanceof CoordinateAxis1D)
-        ensAxis = (CoordinateAxis1D) eAxis;
-    }
-*/
     //Create Simple Geometry Reader if there are any Axes with type SimpleGeometryID
     boolean sgtype = false;
     for(CoordinateAxis axis : cs.getCoordinateAxes()) {
@@ -294,14 +131,14 @@ public class SimpleGeometryCSBuilder {
    * Given a certain Polygon variable name and geometry begin and end indicies, returns a list of Simple Geometry Polygon
    * 
    * @param name
-   * @param index_begin
-   * @param index_end
+   * @param indexBegin
+   * @param indexEnd
    * @return
    */
-  public List<Polygon> getPolygons(String name, int index_begin, int index_end) {
+  public List<Polygon> getPolygons(String name, int indexBegin, int indexEnd) {
 	  List<Polygon> polyList = new ArrayList<Polygon>();
 	  
-	  for(int i = index_begin; i <= index_end; i++)
+	  for(int i = indexBegin; i <= indexEnd; i++)
 	  {
 		  polyList.add(geometryReader.readPolygon(name, i));
 	  }
@@ -326,14 +163,14 @@ public class SimpleGeometryCSBuilder {
    * Given a certain line variable name and geometry begin and end indicies, returns a list of Simple Geometry Line
    * 
    * @param name
-   * @param index_begin
-   * @param index_end
+   * @param indexBegin
+   * @param indexEnd
    * @return
    */
-  public List<Line> getLines(String name, int index_begin, int index_end) {
+  public List<Line> getLines(String name, int indexBegin, int indexEnd) {
 	  List<Line> lineList = new ArrayList<Line>();
 	  
-	  for(int i = index_begin; i <= index_end; i++)
+	  for(int i = indexBegin; i <= indexEnd; i++)
 	  {
 		  lineList.add(geometryReader.readLine(name, i));
 	  }
@@ -359,14 +196,14 @@ public class SimpleGeometryCSBuilder {
    * Given a certain Point variable name and geometry begin and end indicies, returns a list of Simple Geometry Points
    * 
    * @param name
-   * @param index_begin
-   * @param index_end
+   * @param indexBegin
+   * @param indexEnd
    * @return
    */
-  public List<Point> getPoints(String name, int index_begin, int index_end) {
+  public List<Point> getPoints(String name, int indexBegin, int indexEnd) {
 	  List<Point> ptList = new ArrayList<Point>();
 	  
-	  for(int i = index_begin; i <= index_end; i++)
+	  for(int i = indexBegin; i <= indexEnd; i++)
 	  {
 		  ptList.add(geometryReader.readPoint(name, i));
 	  }
@@ -388,13 +225,6 @@ public class SimpleGeometryCSBuilder {
   public String toString() {
     Formatter f2 = new Formatter();
     f2.format("%s", type == null ? "" : type.toString());
-    f2.format("%n xAxis=  %s", xaxis == null ? "" : xaxis.getNameAndDimensions());
-    f2.format("%n yAxis=  %s", yaxis == null ? "" : yaxis.getNameAndDimensions());
-    f2.format("%n zAxis=  %s", vertAxis == null ? "" : vertAxis.getNameAndDimensions());
-    f2.format("%n tAxis=  %s", timeAxis == null ? "" : timeAxis.getNameAndDimensions());
-    f2.format("%n rtAxis= %s", rtAxis == null ? "" : rtAxis.getNameAndDimensions());
-    f2.format("%n toAxis= %s", timeOffsetAxis == null ? "" : timeOffsetAxis.getNameAndDimensions());
-    f2.format("%n ensAxis=%s", ensAxis == null ? "" : ensAxis.getNameAndDimensions());
     if (type == null) return f2.toString();
 
     f2.format("%n%n independentAxes=(");

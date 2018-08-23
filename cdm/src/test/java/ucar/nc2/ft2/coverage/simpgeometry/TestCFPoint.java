@@ -31,8 +31,8 @@ public class TestCFPoint {
 	public void testPtBckwd() {		
 		
 		CFPoint pt[] = new CFPoint[testsize];
-		double ref_x[] = new double[testsize];
-		double ref_y[] = new double[testsize];
+		double refX[] = new double[testsize];
+		double refY[] = new double[testsize];
 		
 		// Make the points
 		for(int i = 0; i < testsize; i++) {
@@ -47,29 +47,29 @@ public class TestCFPoint {
 				pt[i] = new CFPoint(x, y, pt[i-1], null, null);
 			}
 			
-			ref_x[i] = x;
-			ref_y[i] = y;
+			refX[i] = x;
+			refY[i] = y;
 		}
 		
 		// Forward
-		CFPoint test_pt = pt[0];
+		CFPoint testPt = pt[0];
 		int k = 0;
 				
-		while(test_pt != null) {
-			Assert.assertEquals(ref_x[k], test_pt.getX(), delt);
-			Assert.assertEquals(ref_y[k], test_pt.getY(), delt);
-			test_pt = test_pt.getNext();
+		while(testPt != null) {
+			Assert.assertEquals(refX[k], testPt.getX(), delt);
+			Assert.assertEquals(refY[k], testPt.getY(), delt);
+			testPt = testPt.getNext();
 			k++;
 		}
 		
 		// Backward
-		test_pt = pt[testsize - 1];
+		testPt = pt[testsize - 1];
 		k = testsize - 1;
 			
-		while(test_pt != null){
-				if(ref_x[k] != test_pt.getX()) Assert.assertEquals(ref_x[k], test_pt.getX(), delt);
-				if(ref_y[k] != test_pt.getY()) Assert.assertEquals(ref_y[k], test_pt.getY(), delt);
-				test_pt = test_pt.getPrev();	
+		while(testPt != null){
+				if(refX[k] != testPt.getX()) Assert.assertEquals(refX[k], testPt.getX(), delt);
+				if(refY[k] != testPt.getY()) Assert.assertEquals(refY[k], testPt.getY(), delt);
+				testPt = testPt.getPrev();	
 				k--;
 		}
 	
@@ -81,8 +81,8 @@ public class TestCFPoint {
 	
 		// Make some more points test backwards setting
 		CFPoint pt[] = new CFPoint[testsize];
-		double ref_x[] = new double[testsize];
-		double ref_y[] = new double[testsize];
+		double refX[] = new double[testsize];
+		double refY[] = new double[testsize];
 		
 		for(int i = 0; i < testsize; i++){
 			
@@ -97,36 +97,36 @@ public class TestCFPoint {
 				pt[i] = new CFPoint(x, y, pt[i - 1], null, null);
 			}
 				
-			ref_x[i] = x;
-			ref_y[i] = y;
+			refX[i] = x;
+			refY[i] = y;
 		}
 		
 		/* Test them out, very similar test
 		 * Except this time, the points are backwards order
 		 */
-		CFPoint test_pt = pt[0];
+		CFPoint testPt = pt[0];
 		int k = 0;
 		
 		// Backward
-		test_pt = pt[0];
+		testPt = pt[0];
 		k = 0;
 						
-		while(test_pt != null) {
-			Assert.assertEquals(ref_x[k], test_pt.getX(), delt);
-			Assert.assertEquals(ref_y[k], test_pt.getY(), delt);
-			test_pt = test_pt.getPrev();
+		while(testPt != null) {
+			Assert.assertEquals(refX[k], testPt.getX(), delt);
+			Assert.assertEquals(refY[k], testPt.getY(), delt);
+			testPt = testPt.getPrev();
 			k++;
 		}
 				
 		// Forward
-		test_pt = pt[testsize - 1];
+		testPt = pt[testsize - 1];
 		k = testsize - 1;
 		
-		while(test_pt != null) {
+		while(testPt != null) {
 			
-			Assert.assertEquals(ref_x[k], test_pt.getX(), delt);
-			Assert.assertEquals(ref_y[k], test_pt.getY(), delt);	
-			test_pt = test_pt.getNext();	
+			Assert.assertEquals(refX[k], testPt.getX(), delt);
+			Assert.assertEquals(refY[k], testPt.getY(), delt);	
+			testPt = testPt.getNext();	
 			k--;
 		}
 		

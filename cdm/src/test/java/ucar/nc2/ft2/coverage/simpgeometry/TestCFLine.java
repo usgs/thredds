@@ -33,9 +33,9 @@ public class TestCFLine {
 	public void testLineBckwd() {
 		
 		CFLine line[] = new CFLine[testsize];
-		CFLine ref_line[] = new CFLine[testsize];
-		double ref_x[] = new double[testsize];
-		double ref_y[] = new double[testsize];
+		CFLine refLine[] = new CFLine[testsize];
+		double refX[] = new double[testsize];
+		double refY[] = new double[testsize];
 		
 		/* Test adding a point to
 		 * the line
@@ -44,16 +44,16 @@ public class TestCFLine {
 		line[0] = new CFLine();
 		
 		for(int i = 0; i < testsize; i++) {
-			ref_x[i] = rnd.nextDouble(); 
-			ref_y[i] = rnd.nextDouble();
-			line[0].addPoint(ref_x[i], ref_y[i]);
+			refX[i] = rnd.nextDouble(); 
+			refY[i] = rnd.nextDouble();
+			line[0].addPoint(refX[i], refY[i]);
 		}
 		
 		List<CFPoint> pts = line[0].getPoints();
 		
 		for(int i = 0; i < testsize; i++) {
-			Assert.assertEquals(ref_x[i], pts.get(i).getX(), delt);
-			Assert.assertEquals(ref_y[i], pts.get(i).getY(), delt);
+			Assert.assertEquals(refX[i], pts.get(i).getX(), delt);
+			Assert.assertEquals(refY[i], pts.get(i).getY(), delt);
 		}
 		
 		/* Test multiline
@@ -67,7 +67,7 @@ public class TestCFLine {
 				line[i].setPrev(line[i - 1]);
 			}
 			
-			ref_line[i] = line[i];
+			refLine[i] = line[i];
 		}
 		
 		
@@ -77,7 +77,7 @@ public class TestCFLine {
 		CFLine cline = line[0];
 		int k = 0;
 		while(cline != null) {
-			Assert.assertEquals(ref_line[k], cline);
+			Assert.assertEquals(refLine[k], cline);
 			cline = cline.getNext();
 			k++;
 		}
@@ -85,7 +85,7 @@ public class TestCFLine {
 		cline = line[testsize - 1];
 		k = testsize - 1;
 		while(cline != null) {
-			Assert.assertEquals(ref_line[k], cline);
+			Assert.assertEquals(refLine[k], cline);
 			cline = cline.getPrev();
 			k--;
 		}
@@ -96,7 +96,7 @@ public class TestCFLine {
 	public void testLineFwd() {
 		
 		CFLine line[] = new CFLine[testsize];
-		CFLine ref_line[] = new CFLine[testsize];
+		CFLine refLine[] = new CFLine[testsize];
 		
 		/* Try with set next
 		 * 
@@ -109,7 +109,7 @@ public class TestCFLine {
 				line[i].setNext(line[i - 1]);
 			}
 			
-			ref_line[i] = line[i];
+			refLine[i] = line[i];
 		}
 		
 		/* Test
@@ -118,7 +118,7 @@ public class TestCFLine {
 		CFLine cline = line[0];
 		int k = 0;
 		while(cline != null) {
-			Assert.assertEquals(ref_line[k], cline);
+			Assert.assertEquals(refLine[k], cline);
 			cline = cline.getPrev();
 			k++;
 		}
@@ -126,7 +126,7 @@ public class TestCFLine {
 		cline = line[testsize - 1];
 		k = testsize - 1;
 		while(cline != null) {
-			Assert.assertEquals(ref_line[k], cline);
+			Assert.assertEquals(refLine[k], cline);
 			cline = cline.getNext();
 			k--;
 		}

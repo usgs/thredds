@@ -261,7 +261,7 @@ public class CFLine implements Line {
 	/**
 	 * From a given list of points, construct a line
 	 * 
-	 * @param new_pt The list of points which will constitute the new line
+	 * @param newPt The list of points which will constitute the new line
 	 */
 	public CFLine(List<CFPoint> newPt) {
 		this.points = newPt;

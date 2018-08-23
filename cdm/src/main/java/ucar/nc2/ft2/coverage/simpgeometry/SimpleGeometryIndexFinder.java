@@ -26,6 +26,12 @@ public class SimpleGeometryIndexFinder {
 		return nodeCount.getInt(index);
 	}
 	
+	/**
+	 * Gets the beginning index of a geometry's points given the index of the geometry within the array. 
+	 * 
+	 * @param index
+	 * @return beginning of the range
+	 */
 	public int getBeginning(int index) {
 		
 		//Test if the last end is the new beginning
@@ -45,6 +51,12 @@ public class SimpleGeometryIndexFinder {
 		return newBeginning;
 	}
 	
+	/**
+	 * Gets the ending index of a geometry's points given the index of the geometry within the array. 
+	 * 
+	 * @param index of the geometry within the array
+	 * @return end of the range
+	 */
 	public int getEnd(int index) {
 
 		// Test if the last beginning is the new end

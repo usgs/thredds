@@ -43,18 +43,18 @@ public class TestReadLine {
 		SimpleGeometryReader rdr = newReader();
 		Assert.assertNotNull(rdr);
 		
-		Line line_0 = rdr.readLine("seg_outflow", 0);
-		Line line_1 = rdr.readLine("seg_outflow", 1);
-		Line line_2 = rdr.readLine("seg_outflow", 2);
+		Line line0 = rdr.readLine("seg_outflow", 0);
+		Line line1 = rdr.readLine("seg_outflow", 1);
+		Line line2 = rdr.readLine("seg_outflow", 2);
 		
 		// Test data
-		Assert.assertEquals(0.462, line_0.getData().getDouble(0), 0.001);
-		Assert.assertEquals(3.61, line_1.getData().getDouble(3), 0.01);
-		Assert.assertEquals(9.49, line_2.getData().getDouble(1), 0.01);
+		Assert.assertEquals(0.462, line0.getData().getDouble(0), 0.001);
+		Assert.assertEquals(3.61, line1.getData().getDouble(3), 0.01);
+		Assert.assertEquals(9.49, line2.getData().getDouble(1), 0.01);
 		
 		// Test point amounts
-		Assert.assertEquals(1125, line_0.getPoints().size());
-		Assert.assertEquals(10, line_1.getPoints().size());
-		Assert.assertEquals(2280, line_2.getPoints().size());
+		Assert.assertEquals(1125, line0.getPoints().size());
+		Assert.assertEquals(10, line1.getPoints().size());
+		Assert.assertEquals(2280, line2.getPoints().size());
 	}
 }

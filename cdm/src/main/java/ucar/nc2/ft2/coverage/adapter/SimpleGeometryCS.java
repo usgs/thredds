@@ -101,12 +101,12 @@ public class SimpleGeometryCS {
    * polygon (inclusive on both sides)
    * 
    * @param name
-   * @param index_begin
-   * @param index_end
+   * @param indexBegin
+   * @param indexEnd
    * @return
    */
-  public List<Polygon> getPolygons(String name, int index_begin, int index_end) {
-	  return builder.getPolygons(name, index_begin, index_end);
+  public List<Polygon> getPolygons(String name, int indexBegin, int indexEnd) {
+	  return builder.getPolygons(name, indexBegin, indexEnd);
   }
   
   /**
@@ -127,12 +127,12 @@ public class SimpleGeometryCS {
    * lines (inclusive on both sides)
    * 
    * @param name
-   * @param index_begin
-   * @param index_end
+   * @param indexBegin
+   * @param indexEnd
    * @return
    */
-  public List<Line> getLines(String name, int index_begin, int index_end) {
-	  return builder.getLines(name, index_begin, index_end);
+  public List<Line> getLines(String name, int indexBegin, int indexEnd) {
+	  return builder.getLines(name, indexBegin, indexEnd);
   }
   
   /**
@@ -152,12 +152,12 @@ public class SimpleGeometryCS {
    * returns a list of points (inclusive on both sides)
    * 
    * @param name of the data variable
-   * @param index_begin within the variable
-   * @param index_end within the variable
+   * @param indexBegin within the variable
+   * @param indexEnd within the variable
    * @return a list of points with associated data
    */
-  public List<Point> getPoints(String name, int index_begin, int index_end) {
-	  return builder.getPoints(name, index_begin, index_end);
+  public List<Point> getPoints(String name, int indexBegin, int indexEnd) {
+	  return builder.getPoints(name, indexBegin, indexEnd);
   }
 
 

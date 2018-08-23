@@ -39,18 +39,18 @@ public class TestReadPolygon {
 			
 		SimpleGeometryReader rdr = new SimpleGeometryReader(data);
 		Polygon poly = rdr.readPolygon("hru_soil_moist", 0);
-		Polygon poly_2 = rdr.readPolygon("hru_soil_moist", 1);
-		Polygon poly_3 = rdr.readPolygon("hru_soil_moist", 2);
+		Polygon poly2 = rdr.readPolygon("hru_soil_moist", 1);
+		Polygon poly3 = rdr.readPolygon("hru_soil_moist", 2);
 		
 		Assert.assertEquals(6233, poly.getPoints().size());
-		Assert.assertEquals(5, poly_2.getPoints().size());
-		Assert.assertEquals(6033, poly_2.getNext().getPoints().size());
-		Assert.assertEquals(5135, poly_3.getPoints().size());
+		Assert.assertEquals(5, poly2.getPoints().size());
+		Assert.assertEquals(6033, poly2.getNext().getPoints().size());
+		Assert.assertEquals(5135, poly3.getPoints().size());
 		
 		// Test data retrieval
 		Assert.assertEquals(1.28, poly.getData().getDouble(2), err);
-		Assert.assertEquals(1.52, poly_2.getData().getDouble(3), err);
-		Assert.assertEquals(1.36, poly_3.getData().getDouble(0), err);
+		Assert.assertEquals(1.52, poly2.getData().getDouble(3), err);
+		Assert.assertEquals(1.36, poly3.getData().getDouble(0), err);
 	}
 	
 	/**
