@@ -13,7 +13,6 @@ import ucar.ma2.Array;
  */
 enum CFGEOMETRY {
 	CFPOINT, CFLINE, CFPOLYGON;
-	
 }
 
 public interface SimpleGeometry{
