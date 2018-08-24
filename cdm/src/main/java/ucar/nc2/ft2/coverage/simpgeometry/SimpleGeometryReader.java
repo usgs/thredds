@@ -1,6 +1,7 @@
 package ucar.nc2.ft2.coverage.simpgeometry;
 
 import ucar.nc2.Variable;
+import ucar.nc2.constants.CF;
 import ucar.nc2.dataset.NetcdfDataset;
 
 /**
@@ -27,9 +28,15 @@ public class SimpleGeometryReader {
 		Variable polyvar = ds.findVariable(name);
 		if(polyvar == null) return null;
 		
-		// create a blank cf Polygon
-		Polygon poly = new CFPolygon();
-		return poly.setupPolygon(ds, polyvar, index);
+		Polygon poly = null;
+		
+		// CFConvention
+		if(ds.findGlobalAttribute(CF.CONVENTIONS) != null)
+			if(ucar.nc2.dataset.conv.CF1Convention.getVersion(ds.findGlobalAttribute(CF.CONVENTIONS).getStringValue()) >= 0)
+				poly = new CFPolygon();
+		
+		if(poly == null) return null;
+		else return poly.setupPolygon(ds, polyvar, index);
 	}
 	
 	/**
@@ -44,9 +51,15 @@ public class SimpleGeometryReader {
 	
 		Variable linevar = ds.findVariable(name);
 		if(linevar == null) return null;
+		Line line = null;
 		
-		Line line = new CFLine();
-		return line.setupLine(ds, linevar, index);
+		// CFConvention
+		if(ds.findGlobalAttribute(CF.CONVENTIONS) != null)
+			if(ucar.nc2.dataset.conv.CF1Convention.getVersion(ds.findGlobalAttribute(CF.CONVENTIONS).getStringValue()) >= 0)
+				line = new CFLine();
+		
+		if(line == null) return null;
+		else return line.setupLine(ds, linevar, index);
 	}
 	
 	/**
@@ -61,9 +74,15 @@ public class SimpleGeometryReader {
 
 		Variable pointvar = ds.findVariable(name);
 		if(pointvar == null) return null;
+		Point pt = null;
 		
-		Point pt = new CFPoint(-1, -1, null, null, null);
-		return pt.setupPoint(ds, pointvar, index);
+		// CFConvention
+		if(ds.findGlobalAttribute(CF.CONVENTIONS) != null)
+			if(ucar.nc2.dataset.conv.CF1Convention.getVersion(ds.findGlobalAttribute(CF.CONVENTIONS).getStringValue()) >= 0)
+				pt = new CFPoint();
+		
+		if(pt == null) return pt;
+		else return pt.setupPoint(ds, pointvar, index);
 	}
 	
 	/**
