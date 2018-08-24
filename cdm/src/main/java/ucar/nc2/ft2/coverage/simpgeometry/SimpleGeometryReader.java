@@ -13,7 +13,6 @@ import ucar.nc2.dataset.NetcdfDataset;
 public class SimpleGeometryReader {
 	
 	private NetcdfDataset ds;
-	private String conv;
 	
 	/**
 	 * Returns a Polygon given a variable name and the geometric index. If the Polygon is not found it will return null. If the Polygon is a part of the Multi-Polygon, it will return the head
@@ -87,23 +86,11 @@ public class SimpleGeometryReader {
 	
 	/**
 	 * Constructs a new Simple Geometry Reader over the specified dataset.
-	 * Assumes the CF Convention.
 	 * 
 	 * @param ds - the specified dataset
 	 */
 	public SimpleGeometryReader(NetcdfDataset ds) {
 		this.ds = ds;
-	}
-	
-	/**
-	 * Constructs a new Simple Geometry Reader over the specified dataset with a specified convention.
-	 * 
-	 * @param ds - the specified dataset
-	 * @param convention - the convention the reader should follow
-	 */
-	public SimpleGeometryReader(NetcdfDataset ds, String convention) {
-		this.ds = ds;
-		this.conv = convention;
 	}
 	
 }
