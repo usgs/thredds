@@ -81,7 +81,7 @@ public class CoverageDatasetFactory {
 
     return Optional.empty("Could not open as Coverage: " + endpoint);
   }
-  
+
 
 
   /**
