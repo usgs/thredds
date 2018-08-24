@@ -81,9 +81,7 @@ public class CoverageDatasetFactory {
 
     return Optional.empty("Could not open as Coverage: " + endpoint);
   }
-
-
-
+  
   /**
    *
    * @param endpoint cdmrFeature:url, local GRIB data or index file, or NetcdfDataset location
