@@ -255,10 +255,6 @@ public class CFPoint implements Point{
 	 * 
 	 */
 	public CFPoint() {
-		this.x = 0;
-		this.y = 0;	// y coordinate
-		this.next = null;	// next element in a multipoint
-		this.prev = null;	// previous element in a multipoint
-		this.data = null;
+		this(0, 0, null, null, null);
 	}
 }

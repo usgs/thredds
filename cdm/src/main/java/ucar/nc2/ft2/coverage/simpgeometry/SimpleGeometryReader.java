@@ -31,7 +31,7 @@ public class SimpleGeometryReader {
 		
 		// CFConvention
 		if(ds.findGlobalAttribute(CF.CONVENTIONS) != null)
-			if(ucar.nc2.dataset.conv.CF1Convention.getVersion(ds.findGlobalAttribute(CF.CONVENTIONS).getStringValue()) >= 0)
+			if(ucar.nc2.dataset.conv.CF1Convention.getVersion(ds.findGlobalAttribute(CF.CONVENTIONS).getStringValue()) >= 8)
 				poly = new CFPolygon();
 		
 		if(poly == null) return null;
@@ -54,7 +54,7 @@ public class SimpleGeometryReader {
 		
 		// CFConvention
 		if(ds.findGlobalAttribute(CF.CONVENTIONS) != null)
-			if(ucar.nc2.dataset.conv.CF1Convention.getVersion(ds.findGlobalAttribute(CF.CONVENTIONS).getStringValue()) >= 0)
+			if(ucar.nc2.dataset.conv.CF1Convention.getVersion(ds.findGlobalAttribute(CF.CONVENTIONS).getStringValue()) >= 8)
 				line = new CFLine();
 		
 		if(line == null) return null;
@@ -77,7 +77,7 @@ public class SimpleGeometryReader {
 		
 		// CFConvention
 		if(ds.findGlobalAttribute(CF.CONVENTIONS) != null)
-			if(ucar.nc2.dataset.conv.CF1Convention.getVersion(ds.findGlobalAttribute(CF.CONVENTIONS).getStringValue()) >= 0)
+			if(ucar.nc2.dataset.conv.CF1Convention.getVersion(ds.findGlobalAttribute(CF.CONVENTIONS).getStringValue()) >= 8)
 				pt = new CFPoint();
 		
 		if(pt == null) return pt;
