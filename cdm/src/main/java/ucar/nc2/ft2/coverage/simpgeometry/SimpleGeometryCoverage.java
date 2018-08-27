@@ -106,17 +106,7 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
 	  return geometry; 
   }
   public String getGeometryDescription() {
-	  switch (geometry) {
-	  
-	  case CFPOINT:
-		  return "Point";
-	  case CFLINE:
-		  return "Line";
-	  case CFPOLYGON:
-		  return "Polygon";
-	  default:
-		  return "";
-	  }
+	  return this.geometry.getDescription();
   }
   @Override
   public String toString() {
@@ -159,12 +149,6 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
-  /**
-  public GeoReferencedArray readData(SubsetParams subset) throws IOException, InvalidRangeException {
-    return reader.readData(this, subset, false);
-  }
-  
- */
   
 	/**
 	 * Get the data associated the index
@@ -211,12 +195,14 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
     return getShape().length;
   }
 
+  //TODO make nonnull once we can access coordinate system builder
   @Override
   public int[] getShape() {
     return null;
   }
 
- // @Override
+  //TODO make actual return once we can
+  @Override
   public List<Dimension> getDimensions() {
     return null;
   }

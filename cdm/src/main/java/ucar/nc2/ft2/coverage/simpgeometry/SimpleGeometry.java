@@ -11,10 +11,14 @@ import ucar.ma2.Array;
  * @author Katie
  *
  */
-enum CFGEOMETRY {
-	CFPOINT, CFLINE, CFPOLYGON;
-}
+
 
 public interface SimpleGeometry {
+
+    public void setData(Array data);
+    public Array getData();
+
+
+
 
 }
