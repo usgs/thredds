@@ -37,15 +37,46 @@ public interface Point {
 	 * 
 	 * @return next point if it exists, null if not
 	 */
-	public CFPoint getNext();
+	public Point getNext();
 	
 	/**
 	 * Retrieves the previous point within a multipoint if any
 	 * 
 	 * @return previous point if it exists null if not
 	 */
-	public CFPoint getPrev();
+	public Point getPrev();
 
+	/**
+	 * Sets the data array of the point.
+	 * 
+	 * @param arr the array which will be the points new data array
+	 */
+	public void setData(Array arr);
+	
+	/**
+	 * Sets the x coordinate of the point.
+	 * 
+	 * @param x coordinate of the point
+	 */
+	public void setX(double x);
+	
+	/**
+	 * Set the y coordinate of the point.
+	 * 
+	 * @param y coordinate of the point
+	 */
+	public void setY(double y);
+	
+	/**
+	 *  Sets the next point in a multipoint
+	 */
+	public void setNext(Point next);
+	
+	/**
+	 *  Set the previous point in a multipoint
+	 */
+	public void setPrev(Point prev);
+	
 	/**
 	 * Given a dataset, construct a point from the variable which holds points
 	 * and the index as given.

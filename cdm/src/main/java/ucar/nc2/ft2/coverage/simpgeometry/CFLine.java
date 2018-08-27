@@ -21,9 +21,9 @@ import ucar.nc2.dataset.NetcdfDataset;
  */
 public class CFLine implements Line {
 
-	private List<CFPoint> points;	// a list of the constitutent points of the Line, connected in ascending order as in the CF convention
-	private CFLine next;	// if non-null, next refers to the next line part of a multi-line
-	private CFLine prev;	// if non-null, prev refers to the previous line part of a multi-line	
+	private List<Point> points;	// a list of the constitutent points of the Line, connected in ascending order as in the CF convention
+	private Line next;	// if non-null, next refers to the next line part of a multi-line
+	private Line prev;	// if non-null, prev refers to the previous line part of a multi-line	
 	private Array data;		// data associated with the line
 
 	/**
@@ -31,13 +31,14 @@ public class CFLine implements Line {
 	 *
 	 */
 	public void addPoint(double x, double y) {
-		CFPoint ptPrev = null;
+		Point ptPrev = null;
 		
 		if(points.size() > 0) {
 			ptPrev = points.get(points.size() - 1);
 		}
 		
-		this.points.add(new CFPoint(x, y, (CFPoint) ptPrev, null, null));
+		this.points.add(new CFPoint(x, y, ptPrev, null, null));
+		
 	}
 	
 	/**
@@ -45,7 +46,7 @@ public class CFLine implements Line {
 	 * 
 	 * @return points - the collection of points that make up this line
 	 */
-	public List<CFPoint> getPoints() {
+	public List<Point> getPoints() {
 		return points;
 	}
 	
@@ -64,7 +65,7 @@ public class CFLine implements Line {
 	 * 
 	 * @return next line if present, null if not
 	 */
-	public CFLine getNext() {
+	public Line getNext() {
 		return next;
 	}
 	
@@ -74,7 +75,7 @@ public class CFLine implements Line {
 	 * 
 	 * @return previous line if present, null if not
 	 */
-	public CFLine getPrev() {
+	public Line getPrev() {
 		return prev;
 	}
 
@@ -88,10 +89,23 @@ public class CFLine implements Line {
 	}
 	
 	/**
-	 * Sets the next line which make up the multiline which this line is a part of.
+	 * Sets the previous line which makes up the multiline which this line is a part of.
+	 * If prev is a CFLine, automatically connect the other line to this line as well.
+	 * 
+	 */
+	public void setNext(Line next) {
+		if(next instanceof CFLine) {
+			setNext((CFLine) next);
+		}
+		
+		else this.next = next;
+	}
+	
+	/**
+	 * Sets the next line which makes up the multiline which this line is a part of.
 	 * Automatically connects the other line to this line as well.
 	 */
-	public void setNext(CFLine next) {
+	protected void setNext(CFLine next) {
 		this.next = next;
 		
 		if(next != null) {
@@ -106,9 +120,22 @@ public class CFLine implements Line {
 
 	/**
 	 * Sets the previous line which makes up the multiline which this line is a part of.
+	 * If prev is a CFLine, automatically connect the other line to this line as well.
+	 */
+	public void setPrev(Line prev) {
+		if(prev instanceof CFLine)
+		{
+			setPrev((CFLine) prev);
+		}
+		
+		else this.prev = prev;
+	}
+	
+	/**
+	 * Sets the previous line which makes up the multiline which this line is a part of.
 	 * Automatically connect the other line to this line as well.
 	 */
-	public void setPrev(CFLine prev) {
+	protected void setPrev(CFLine prev) {
 		this.prev = prev;
 		
 		if(prev != null) {
@@ -198,7 +225,7 @@ public class CFLine implements Line {
 			// If there are multipolygons then take the upper and lower of it and divy it up
 			else {
 				
-				CFLine tail = this;
+				Line tail = this;
 				Array pnc = partNodeCounts.read();
 				IndexIterator pncItr = pnc.getIndexIterator();
 				
@@ -252,7 +279,7 @@ public class CFLine implements Line {
 	 * 
 	 */
 	public CFLine() {
-		this.points = new ArrayList<CFPoint>();
+		this.points = new ArrayList<Point>();
 		this.next = null;
 		this.prev = null;
 		this.data = null;
@@ -263,7 +290,7 @@ public class CFLine implements Line {
 	 * 
 	 * @param newPt The list of points which will constitute the new line
 	 */
-	public CFLine(List<CFPoint> newPt) {
+	public CFLine(List<Point> newPt) {
 		this.points = newPt;
 		this.next = null;
 		this.data = null;

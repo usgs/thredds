@@ -50,7 +50,7 @@ public class TestCFPolygon {
 			poly[0].addPoint(refX[i], refY[i]);
 		}
 		
-		List<CFPoint> pts = poly[0].getPoints();
+		List<Point> pts = poly[0].getPoints();
 		
 		for(int i = 0; i < testsize; i++) {
 			Assert.assertEquals(refX[i], pts.get(i).getX(), delt);
@@ -76,7 +76,7 @@ public class TestCFPolygon {
 		/* Test
 		 * forwards and backwards
 		 */
-		CFPolygon cpoly = poly[0];
+		Polygon cpoly = poly[0];
 		int k = 0;
 		while(cpoly != null) {
 			Assert.assertEquals(refPoly[k], cpoly);
@@ -96,10 +96,8 @@ public class TestCFPolygon {
 	@Test
 	public void testPolygonFwd() {
 		
-		CFPolygon poly[] = new CFPolygon[testsize];
-		CFPolygon refPoly[] = new CFPolygon[testsize];
-		double refX[] = new double[testsize];
-		double refY[] = new double[testsize];
+		Polygon poly[] = new CFPolygon[testsize];
+		Polygon refPoly[] = new CFPolygon[testsize];
 		
 		/* Try with set next
 		 * 
@@ -118,7 +116,7 @@ public class TestCFPolygon {
 		/* Test
 		 * forwards and backwards
 		 */
-		CFPolygon cpoly = poly[0];
+		Polygon cpoly = poly[0];
 		int k = 0;
 		while(cpoly != null) {
 			Assert.assertEquals(refPoly[k], cpoly);

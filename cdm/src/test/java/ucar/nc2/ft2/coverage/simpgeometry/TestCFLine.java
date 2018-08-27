@@ -49,7 +49,7 @@ public class TestCFLine {
 			line[0].addPoint(refX[i], refY[i]);
 		}
 		
-		List<CFPoint> pts = line[0].getPoints();
+		List<Point> pts = line[0].getPoints();
 		
 		for(int i = 0; i < testsize; i++) {
 			Assert.assertEquals(refX[i], pts.get(i).getX(), delt);
@@ -74,7 +74,7 @@ public class TestCFLine {
 		/* Test
 		 * forwards and backwards
 		 */
-		CFLine cline = line[0];
+		Line cline = line[0];
 		int k = 0;
 		while(cline != null) {
 			Assert.assertEquals(refLine[k], cline);
@@ -115,7 +115,7 @@ public class TestCFLine {
 		/* Test
 		 * forwards and backwards
 		 */
-		CFLine cline = line[0];
+		Line cline = line[0];
 		int k = 0;
 		while(cline != null) {
 			Assert.assertEquals(refLine[k], cline);
