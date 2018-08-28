@@ -87,6 +87,8 @@ public class CFPoint implements Point{
 	 *  Sets the next point in a multipoint
 	 * 
 	 */
+	public void setData(Array data) {this.data = data;}
+
 	protected void setNext(CFPoint next) {
 		this.next = next;
 	}

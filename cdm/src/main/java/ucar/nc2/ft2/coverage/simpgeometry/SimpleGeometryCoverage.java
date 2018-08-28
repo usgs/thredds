@@ -61,7 +61,7 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
 
 
   void setCoordSys (SimpleGeometryCS coordSys) {
-    if (this.coordSys != null) throw new RuntimeException("Cant change coordSys once set");
+    if (this.coordSys != null) throw new RuntimeException("Can't change coordSys once set");
     this.coordSys = coordSys;
   }
 
@@ -154,7 +154,7 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
 	 * Get the data associated the index
 	 * @param  index  number associated with the geometry 
 	 */
-  //COME BACK TO: does is make sense for geometry to be a feild in coverage type?
+  //COME BACK TO: does it make sense for geometry to be a field in coverage type?
   public SimpleGeometry readGeometry(int index) throws IOException, InvalidRangeException {
 
 	  SimpleGeometry geom = null;
