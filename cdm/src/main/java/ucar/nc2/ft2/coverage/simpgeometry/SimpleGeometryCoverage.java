@@ -26,7 +26,7 @@ import java.util.List;
  * Immutable after setCoordSys() is called.
  *
  * @author Katie
- * @author Carron
+ * @author Caron
  * @since 8/13/2018
  */
 // @Immutable
@@ -36,21 +36,19 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
   private final AttributeContainerHelper atts;
   private final String units, description;
   private final String coordSysName;
-  protected final CoverageReader reader;
   protected final Object user;
   
-  private final CFGEOMETRY geometry; //use enum?
+  private final CFGEOMETRY geometry; // use enum
 
-  private SimpleGeometryCS coordSys; // almost immutable use coordsys that winor made?
+  private SimpleGeometryCS coordSys; // almost immutable use coordsys
 
-  public SimpleGeometryCoverage(String name, DataType dataType, List<Attribute> atts, String coordSysName, String units, String description, CoverageReader reader, Object user, CFGEOMETRY geometry) {
+  public SimpleGeometryCoverage(String name, DataType dataType, List<Attribute> atts, String coordSysName, String units, String description, Object user, CFGEOMETRY geometry) {
     this.name = name;
     this.dataType = dataType;
     this.atts = new AttributeContainerHelper(name, atts);
     this.coordSysName = coordSysName;
     this.units = units;
     this.description = description;
-    this.reader = reader;
     this.user = user;
     this.geometry = geometry;
   }
