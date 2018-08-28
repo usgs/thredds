@@ -7,21 +7,17 @@ package ucar.nc2.ft2.coverage.simpgeometry;
 import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
 import ucar.ma2.IsMissingEvaluator;
-import ucar.ma2.Section;
 import ucar.nc2.Attribute;
 import ucar.nc2.AttributeContainerHelper;
 import ucar.nc2.Dimension;
 import ucar.nc2.VariableSimpleIF;
 import ucar.nc2.dataset.CoordinateAxis;
 import ucar.nc2.util.Indent;
-import ucar.nc2.ft2.coverage.simpgeometry.CFGEOMETRY;
 import ucar.nc2.ft2.coverage.CoverageReader;
-import ucar.nc2.ft2.coverage.SubsetParams;
 import ucar.nc2.ft2.coverage.adapter.SimpleGeometryCS;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 
@@ -60,7 +56,7 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
   }
 
 
-  void setCoordSys (SimpleGeometryCS coordSys) {
+  public void setCoordSys (SimpleGeometryCS coordSys) {
     if (this.coordSys != null) throw new RuntimeException("Can't change coordSys once set");
     this.coordSys = coordSys;
   }
@@ -172,6 +168,9 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
 			  Polygon poly = coordSys.getPolygon(name, index);
 			  geom = poly;
 			  break;
+          default:
+              break;
+
 		  }
 	  return geom;
   }

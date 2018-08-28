@@ -1,10 +1,8 @@
 package ucar.nc2.ft2.coverage.simpgeometry;
 
-import com.google.errorprone.annotations.DoNotMock;
 import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Attribute;
-import ucar.nc2.dataset.CoordinateSystem;
 import ucar.nc2.ft2.coverage.CoverageReader;
 
 import java.io.IOException;
@@ -23,15 +21,15 @@ import static ucar.nc2.ft2.coverage.simpgeometry.CFGEOMETRY.CFPOLYGON;
 
 public class TestSimpleGeometryCoverage {
 
-    String name = "name";
-    DataType dt;
-    List<Attribute> att = new ArrayList<Attribute>();
-    String coordSysName = "coordsysname";
-    String units = "units";
-    String description = "desc";
-    CoverageReader reader;
-    Object user;
-    CFGEOMETRY geometry;
+    private String name = "name";
+    private DataType dt;
+    private List<Attribute> att = new ArrayList<Attribute>();
+    private String coordSysName = "coordsysname";
+    private String units = "units";
+    private String description = "desc";
+    private CoverageReader reader;
+    private Object user;
+    private CFGEOMETRY geometry;
 
 
 
