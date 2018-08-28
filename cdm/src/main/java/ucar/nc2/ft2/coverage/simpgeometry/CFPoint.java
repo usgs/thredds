@@ -29,6 +29,15 @@ public class CFPoint implements Point{
 	private Array data;	// data of the point
 	
 	/**
+	 * Get the geometry the data is associated with.
+	 * 
+	 */
+	
+	public CFGEOMETRY getGeometryType() {
+		return CFGEOMETRY.CFPOINT;
+	}
+	
+	/**
 	 * Get the data associated with this point
 	 * 
 	 * @return data
@@ -105,6 +114,7 @@ public class CFPoint implements Point{
 	 *  Sets the next point in a multipoint
 	 * 
 	 */
+
 	public void setNext(Point next) {
 		this.next = next;
 	}

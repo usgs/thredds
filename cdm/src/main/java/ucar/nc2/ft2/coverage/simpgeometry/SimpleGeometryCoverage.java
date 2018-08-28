@@ -1,0 +1,213 @@
+/*
+ * Copyright (c) 1998-2018 John Caron and University Corporation for Atmospheric Research/Unidata
+ * See LICENSE for license information.
+ */
+package ucar.nc2.ft2.coverage.simpgeometry;
+
+import ucar.ma2.DataType;
+import ucar.ma2.InvalidRangeException;
+import ucar.ma2.IsMissingEvaluator;
+import ucar.nc2.Attribute;
+import ucar.nc2.AttributeContainerHelper;
+import ucar.nc2.Dimension;
+import ucar.nc2.VariableSimpleIF;
+import ucar.nc2.dataset.CoordinateAxis;
+import ucar.nc2.util.Indent;
+import ucar.nc2.ft2.coverage.CoverageReader;
+import ucar.nc2.ft2.coverage.adapter.SimpleGeometryCS;
+
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.util.Formatter;
+import java.util.List;
+
+/**
+ * SimpleGeometry - forked from Coverage.java
+ * Immutable after setCoordSys() is called.
+ *
+ * @author Katie
+ * @author Carron
+ * @since 8/13/2018
+ */
+// @Immutable
+public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvaluator { //add interface with geometry info? //subsetting data will be diffferent?? is it subset now
+  private final String name;
+  private final DataType dataType;
+  private final AttributeContainerHelper atts;
+  private final String units, description;
+  private final String coordSysName;
+  protected final CoverageReader reader;
+  protected final Object user;
+  
+  private final CFGEOMETRY geometry; //use enum?
+
+  private SimpleGeometryCS coordSys; // almost immutable use coordsys that winor made?
+
+  public SimpleGeometryCoverage(String name, DataType dataType, List<Attribute> atts, String coordSysName, String units, String description, CoverageReader reader, Object user, CFGEOMETRY geometry) {
+    this.name = name;
+    this.dataType = dataType;
+    this.atts = new AttributeContainerHelper(name, atts);
+    this.coordSysName = coordSysName;
+    this.units = units;
+    this.description = description;
+    this.reader = reader;
+    this.user = user;
+    this.geometry = geometry;
+  }
+
+
+  public void setCoordSys (SimpleGeometryCS coordSys) {
+    if (this.coordSys != null) throw new RuntimeException("Can't change coordSys once set");
+    this.coordSys = coordSys;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+
+  @Override
+  public DataType getDataType() {
+    return dataType;
+  }
+
+  @Override
+  public List<Attribute> getAttributes() {
+    return atts.getAttributes();
+  }
+
+  @Override
+  public Attribute findAttributeIgnoreCase(String name) {
+    return atts.findAttributeIgnoreCase(name);
+  }
+
+  @Override
+  public String getUnitsString() {
+    return units;
+  }
+
+  @Override
+  public String getDescription() {
+    return description;
+  }
+
+  public String getCoordSysName() {
+    return coordSysName;
+  }
+
+  public Object getUserObject() {
+    return user;
+  }
+  public CFGEOMETRY getGeometry() {
+	  return geometry; 
+  }
+  public String getGeometryDescription() {
+	  return this.geometry.getDescription();
+  }
+  @Override
+  public String toString() {
+    Formatter f = new Formatter();
+    Indent indent = new Indent(2);
+    toString(f, indent);
+    return f.toString();
+  }
+
+  public void toString(Formatter f, Indent indent) {
+    indent.incr();
+    f.format("%n%s  %s %s(%s) desc='%s' units='%s' geometry='%s'%n", indent, dataType, name, coordSysName, description, units, this.getGeometryDescription());
+    f.format("%s    attributes:%n", indent);
+    for (Attribute att : atts.getAttributes())
+      f.format("%s     %s%n", indent, att);
+    indent.decr();
+  }
+
+  @Nonnull
+  public SimpleGeometryCS getCoordSys() {
+    return coordSys;
+  }
+
+  ///////////////////////////////////////////////////////////////
+
+  // LOOK must conform to whatever grid.readData() returns
+  // LOOK need to deal with runtime(time), runtime(runtime, time)
+  public List<CoordinateAxis> getAxis() {
+        return coordSys.getSimpleGeometryID();
+  }
+
+  @Override
+  public boolean hasMissing() {
+    return true;
+  }
+
+  @Override
+  public boolean isMissing(double val) {
+    return Double.isNaN(val);
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+	/**
+	 * Get the data associated the index
+	 * @param  index  number associated with the geometry 
+	 */
+  //COME BACK TO: does it make sense for geometry to be a field in coverage type?
+  public SimpleGeometry readGeometry(int index) throws IOException, InvalidRangeException {
+
+	  SimpleGeometry geom = null;
+	  switch (geometry) {
+		  
+		  case CFPOINT:
+			  Point point = coordSys.getPoint(name, index);
+			  geom = point;
+			  break;
+		  case CFLINE:
+			  Line line = coordSys.getLine(name, index);
+			  geom = line;
+			  break;
+		  case CFPOLYGON:
+			  Polygon poly = coordSys.getPolygon(name, index);
+			  geom = poly;
+			  break;
+          default:
+              break;
+
+		  }
+	  return geom;
+  }
+
+  
+  ////////////////////////////////////////////////////////////////////////////////////////
+  // implement VariableSimpleIF
+
+  @Override
+  public String getFullName() {
+    return getName();
+  }
+
+  @Override
+  public String getShortName() {
+    return getName();
+  }
+
+  @Override
+  public int getRank() {
+    return getShape().length;
+  }
+
+  //TODO make nonnull once we can access coordinate system builder
+  @Override
+  public int[] getShape() {
+    return null;
+  }
+
+  //TODO make actual return once we can
+  @Override
+  public List<Dimension> getDimensions() {
+    return null;
+  }
+
+  @Override
+  public int compareTo(@Nonnull VariableSimpleIF o) {
+    return getFullName().compareTo(o.getFullName());
+  }
+}

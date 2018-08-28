@@ -25,6 +25,15 @@ public class CFLine implements Line {
 	private Line next;	// if non-null, next refers to the next line part of a multi-line
 	private Line prev;	// if non-null, prev refers to the previous line part of a multi-line	
 	private Array data;		// data associated with the line
+	
+	/**
+	 * Get the geometry the data is associated with.
+	 * 
+	 */
+	
+	public CFGEOMETRY getGeometryType() {
+		return CFGEOMETRY.CFLINE;
+	}
 
 	/**
 	 * Add a point to the end of the line. 

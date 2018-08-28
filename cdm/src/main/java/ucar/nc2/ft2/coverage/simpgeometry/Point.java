@@ -10,7 +10,7 @@ import ucar.nc2.dataset.NetcdfDataset;
  * @author wchen@usgs.gov
  *
  */
-public interface Point {
+public interface Point extends SimpleGeometry {
 
 	/**
 	 * Get the data associated with this point
