@@ -1,6 +1,7 @@
 package ucar.nc2.ft2.coverage.simpgeometry;
 
 import ucar.nc2.Variable;
+import ucar.nc2.constants.CF;
 import ucar.nc2.dataset.NetcdfDataset;
 
 /**
@@ -12,7 +13,6 @@ import ucar.nc2.dataset.NetcdfDataset;
 public class SimpleGeometryReader {
 	
 	private NetcdfDataset ds;
-	private String conv;
 	
 	/**
 	 * Returns a Polygon given a variable name and the geometric index. If the Polygon is not found it will return null. If the Polygon is a part of the Multi-Polygon, it will return the head
@@ -27,9 +27,15 @@ public class SimpleGeometryReader {
 		Variable polyvar = ds.findVariable(name);
 		if(polyvar == null) return null;
 		
-		// create a blank cf Polygon
-		Polygon poly = new CFPolygon();
-		return poly.setupPolygon(ds, polyvar, index);
+		Polygon poly = null;
+		
+		// CFConvention
+		if(ds.findGlobalAttribute(CF.CONVENTIONS) != null)
+			if(ucar.nc2.dataset.conv.CF1Convention.getVersion(ds.findGlobalAttribute(CF.CONVENTIONS).getStringValue()) >= 8)
+				poly = new CFPolygon();
+		
+		if(poly == null) return null;
+		else return poly.setupPolygon(ds, polyvar, index);
 	}
 	
 	/**
@@ -44,9 +50,15 @@ public class SimpleGeometryReader {
 	
 		Variable linevar = ds.findVariable(name);
 		if(linevar == null) return null;
+		Line line = null;
 		
-		Line line = new CFLine();
-		return line.setupLine(ds, linevar, index);
+		// CFConvention
+		if(ds.findGlobalAttribute(CF.CONVENTIONS) != null)
+			if(ucar.nc2.dataset.conv.CF1Convention.getVersion(ds.findGlobalAttribute(CF.CONVENTIONS).getStringValue()) >= 8)
+				line = new CFLine();
+		
+		if(line == null) return null;
+		else return line.setupLine(ds, linevar, index);
 	}
 	
 	/**
@@ -61,30 +73,24 @@ public class SimpleGeometryReader {
 
 		Variable pointvar = ds.findVariable(name);
 		if(pointvar == null) return null;
+		Point pt = null;
 		
-		Point pt = new CFPoint(-1, -1, null, null, null);
-		return pt.setupPoint(ds, pointvar, index);
+		// CFConvention
+		if(ds.findGlobalAttribute(CF.CONVENTIONS) != null)
+			if(ucar.nc2.dataset.conv.CF1Convention.getVersion(ds.findGlobalAttribute(CF.CONVENTIONS).getStringValue()) >= 8)
+				pt = new CFPoint();
+		
+		if(pt == null) return pt;
+		else return pt.setupPoint(ds, pointvar, index);
 	}
 	
 	/**
 	 * Constructs a new Simple Geometry Reader over the specified dataset.
-	 * Assumes the CF Convention.
 	 * 
 	 * @param ds - the specified dataset
 	 */
 	public SimpleGeometryReader(NetcdfDataset ds) {
 		this.ds = ds;
-	}
-	
-	/**
-	 * Constructs a new Simple Geometry Reader over the specified dataset with a specified convention.
-	 * 
-	 * @param ds - the specified dataset
-	 * @param convention - the convention the reader should follow
-	 */
-	public SimpleGeometryReader(NetcdfDataset ds, String convention) {
-		this.ds = ds;
-		this.conv = convention;
 	}
 	
 }

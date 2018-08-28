@@ -24,8 +24,8 @@ public class CFPoint implements Point{
 
 	private double x;	// x coordinate
 	private double y;	// y coordinate
-	private CFPoint next;	// next element in a multipoint
-	private CFPoint prev;	// previous element in a multipoint
+	private Point next;	// next element in a multipoint
+	private Point prev;	// previous element in a multipoint
 	private Array data;	// data of the point
 	
 	/**
@@ -69,7 +69,7 @@ public class CFPoint implements Point{
 	 * 
 	 * @return next point if it exists, null if not
 	 */
-	public CFPoint getNext() {
+	public Point getNext() {
 		return next;
 	}
 	
@@ -78,16 +78,43 @@ public class CFPoint implements Point{
 	 * 
 	 * @return previous point if it exists null if not
 	 */
-	public CFPoint getPrev() {
+	public Point getPrev() {
 		return prev;
 	}
 	
 	
 	/**
+	 * Sets the data array of the point.
+	 * 
+	 * @param arr the array which will be the points new data array
+	 */
+	public void setData(Array arr) {
+		this.data = arr;
+	}
+	
+	/**
+	 * Sets the x coordinate of the point.
+	 * 
+	 * @param x coordinate of the point
+	 */
+	public void setX(double x) {
+		this.x = x;
+	}
+	
+	/**
+	 * Set the y coordinate of the point.
+	 * 
+	 * @param y coordinate of the point
+	 */
+	public void setY(double y) {
+		this.y = y;
+	}
+	
+	/**
 	 *  Sets the next point in a multipoint
 	 * 
 	 */
-	protected void setNext(CFPoint next) {
+	public void setNext(Point next) {
 		this.next = next;
 	}
 	
@@ -96,7 +123,7 @@ public class CFPoint implements Point{
 	 *  Set the previous point in a multipoint
 	 * 
 	 */
-	protected void setPrev(CFPoint prev) {
+	public void setPrev(Point prev) {
 		this.prev = prev;
 	}
 	
@@ -173,20 +200,20 @@ public class CFPoint implements Point{
 				this.next = null;
 				this.prev = null;
 				
-				CFPoint point = this;
+				Point point = this;
 		
 				// x and y should have the same shape (size), will add some handling on this
 				while(itrX.hasNext()) {
-					point.x = itrX.getDoubleNext();
-					point.y = itrY.getDoubleNext();
-					point.data = vari.read(":," + index).reduce();
-					point.next = new CFPoint(-1, -1, point, null, null); // -1 is a default value, it gets assigned eventually
+					point.setX(itrX.getDoubleNext());
+					point.setY(itrY.getDoubleNext());
+					point.setData(vari.read(":," + index).reduce());
+					point.setNext(new CFPoint()); // -1 is a default value, it gets assigned eventually
 					point = point.getNext();
 				}
 				
 				// Clean up the last point since it will be invalid
 				point = point.getPrev();
-				point.next = null;
+				point.setNext(null);
 			}
 		
 		} catch (IOException e) {
@@ -204,7 +231,7 @@ public class CFPoint implements Point{
 	}
 	
 	/**
-	 * Construct a new IMMUTABLE point from specified parameters
+	 * Construct a new point from specified parameters
 	 * The construction will automatically connect in related parts of a Multipoint - just specify any constituents
 	 * of a multipoint as next or prev.
 	 * 
@@ -214,7 +241,7 @@ public class CFPoint implements Point{
 	 * @param next - next point if part of a multipoint
 	 * @param data - data associated with the point
 	 */
-	public CFPoint(double x, double y, CFPoint prev, CFPoint next, Array data) {
+	public CFPoint(double x, double y, Point prev, Point next, Array data) {
 		this.next = next;
 		this.prev = prev;
 		
@@ -230,5 +257,13 @@ public class CFPoint implements Point{
 		this.x = x;
 		this.y = y;
 		this.data = data;
+	}
+	
+	/**
+	 * Constructs a new empty point at (0,0) with no connections.
+	 * 
+	 */
+	public CFPoint() {
+		this(0, 0, null, null, null);
 	}
 }
