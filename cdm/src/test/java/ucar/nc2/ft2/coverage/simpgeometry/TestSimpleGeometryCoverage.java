@@ -44,10 +44,9 @@ public class TestSimpleGeometryCoverage {
     }
 
     @Test
-    public void testReadGeometry() throws IOException, InvalidRangeException {
+    public void testReadPoint() throws IOException, InvalidRangeException {
 
         int index = 1;
-
         SimpleGeometryCS cs = mock(SimpleGeometryCS.class);
 
         Point point = mock(CFPoint.class);
@@ -55,16 +54,31 @@ public class TestSimpleGeometryCoverage {
         SimpleGeometryCoverage cov = new SimpleGeometryCoverage(name, dt, att, coordSysName, units, description, reader, user, CFPOINT);
         cov.setCoordSys(cs);
         Assert.assertEquals(cov.readGeometry(index), cs.getPoint(name, index));
+    }
+
+    @Test
+    public void testReadLine() throws IOException, InvalidRangeException {
+
+        int index = 1;
+        SimpleGeometryCS cs = mock(SimpleGeometryCS.class);
 
         Line line = mock(CFLine.class);
         given(cs.getLine(name, index)).willReturn(line);
-        cov = new SimpleGeometryCoverage(name, dt, att, coordSysName, units, description, reader, user, CFLINE);
+        SimpleGeometryCoverage cov = new SimpleGeometryCoverage(name, dt, att, coordSysName, units, description, reader, user, CFLINE);
         cov.setCoordSys(cs);
         Assert.assertEquals(cov.readGeometry(index), cs.getLine(name, index));
 
+    }
+
+    @Test
+    public void testReadPolygon() throws IOException, InvalidRangeException {
+
+        int index = 1;
+        SimpleGeometryCS cs = mock(SimpleGeometryCS.class);
+
         Polygon polygon = mock(CFPolygon.class);
         given(cs.getPolygon(name, index)).willReturn(polygon);
-        cov = new SimpleGeometryCoverage(name, dt, att, coordSysName, units, description, reader, user, CFPOLYGON);
+        SimpleGeometryCoverage cov = new SimpleGeometryCoverage(name, dt, att, coordSysName, units, description, reader, user, CFPOLYGON);
         cov.setCoordSys(cs);
         Assert.assertEquals(cov.readGeometry(index), cs.getPolygon(name, index));
 
