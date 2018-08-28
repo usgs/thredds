@@ -52,7 +52,7 @@ public class TestCFPoint {
 		}
 		
 		// Forward
-		CFPoint testPt = pt[0];
+		Point testPt = pt[0];
 		int k = 0;
 				
 		while(testPt != null) {
@@ -104,7 +104,7 @@ public class TestCFPoint {
 		/* Test them out, very similar test
 		 * Except this time, the points are backwards order
 		 */
-		CFPoint testPt = pt[0];
+		Point testPt = pt[0];
 		int k = 0;
 		
 		// Backward

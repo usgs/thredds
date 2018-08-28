@@ -22,9 +22,9 @@ import ucar.nc2.dataset.NetcdfDataset;
  */
 public class CFPolygon implements Polygon  {
 
-	private List<CFPoint> points;	// a list of the constitutent points of the Polygon, connected in ascending order as in the CF convention
-	private CFPolygon next;	// if non-null, next refers to the next line part of a multi-polygon
-	private CFPolygon prev;	// if non-null, prev refers to the previous line part of a multi-polygon
+	private List<Point> points;	// a list of the constitutent points of the Polygon, connected in ascending order as in the CF convention
+	private Polygon next;	// if non-null, next refers to the next line part of a multi-polygon
+	private Polygon prev;	// if non-null, prev refers to the previous line part of a multi-polygon
 	private boolean isInteriorRing; // true is an interior ring polygon otherwise false
 	private Array data;	// data array associated with the polygon
 	
@@ -42,7 +42,7 @@ public class CFPolygon implements Polygon  {
 	 * 
 	 * @return points
 	 */
-	public List<CFPoint> getPoints() {
+	public List<Point> getPoints() {
 		return points;
 	}
 
@@ -60,7 +60,7 @@ public class CFPolygon implements Polygon  {
 	 * 
 	 * @return next polygon in the same multipolygon if any, otherwise null
 	 */
-	public CFPolygon getNext() {
+	public Polygon getNext() {
 		return next;
 	}
 	
@@ -69,7 +69,7 @@ public class CFPolygon implements Polygon  {
 	 * 
 	 * @return previous polygon in the same multipolygon if any, otherwise null
 	 */
-	public CFPolygon getPrev() {
+	public Polygon getPrev() {
 		return prev;
 	}
 	
@@ -87,7 +87,7 @@ public class CFPolygon implements Polygon  {
 	 * 
 	 */
 	public void addPoint(double x, double y) {
-		CFPoint ptPrev = null;
+		Point ptPrev = null;
 		
 		if(points.size() > 0) {
 			ptPrev = points.get(points.size() - 1);
@@ -107,9 +107,21 @@ public class CFPolygon implements Polygon  {
 	
 	/**
 	 * Sets the next polygon which make up the multipolygon which this polygon is a part of.
+	 * If next is a CFPolygon, automatically connects the other polygon to this polygon as well.
+	 */
+	public void setNext(Polygon next) {
+		if(next instanceof CFPolygon) {
+			setNext((CFPolygon) next);
+		}
+		
+		else this.next = next;
+	}
+	
+	/**
+	 * Sets the next polygon which make up the multipolygon which this polygon is a part of.
 	 * Automatically connects the other polygon to this polygon as well.
 	 */
-	public void setNext(CFPolygon next) {
+	protected void setNext(CFPolygon next) {
 		this.next = next;
 		
 		if(next != null) {
@@ -121,6 +133,19 @@ public class CFPolygon implements Polygon  {
 		this.next = next;
 	}
 
+	/**
+	 * Sets the previous polygon which makes up the multipolygon which this polygon is a part of.
+	 * If prev is a CFPolygon, automatically connect the other polygon to this polygon as well.
+	 */
+	public void setPrev(Polygon prev) {
+		
+		if(prev instanceof CFPolygon) {
+			setPrev((CFPolygon) prev);
+		}
+		
+		else this.prev = prev;
+	}
+	
 	/**
 	 * Sets the previous polygon which makes up the multipolygon which this polygon is a part of.
 	 * Automatically connect the other polygon to this polygon as well.
@@ -232,7 +257,7 @@ public class CFPolygon implements Polygon  {
 			// If there are multipolygons then take the upper and lower of it and divy it up
 			else {
 				
-				CFPolygon tail = this;
+				Polygon tail = this;
 				Array pnc = partNodeCounts.read();
 				Array ir = null;
 				IndexIterator pncItr = pnc.getIndexIterator();
@@ -309,7 +334,7 @@ public class CFPolygon implements Polygon  {
 	 * Constructs an empty polygon with nothing in it using an Array List.
 	 */
 	public CFPolygon() {
-		this.points = new ArrayList<CFPoint>();
+		this.points = new ArrayList<Point>();
 		this.next = null;
 		this.prev = null;
 		this.isInteriorRing = false;
@@ -321,7 +346,7 @@ public class CFPolygon implements Polygon  {
 	 * 
 	 * @param points which make up the Polygon
 	 */
-	public CFPolygon(List<CFPoint> points) {
+	public CFPolygon(List<Point> points) {
 		this.points = points;
 		this.next = null;
 		this.prev = null;

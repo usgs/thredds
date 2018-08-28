@@ -19,7 +19,7 @@ public interface Polygon extends SimpleGeometry {
 	 * 
 	 * @return points Points which constitute the polygon
 	 */
-	public List<CFPoint> getPoints();
+	public List<Point> getPoints();
 
 	/**
 	 * Get the data associated with this Polygon
@@ -33,14 +33,14 @@ public interface Polygon extends SimpleGeometry {
 	 * 
 	 * @return Next polygon in the same multipolygon if any, otherwise null
 	 */
-	public CFPolygon getNext();
+	public Polygon getNext();
 	
 	/**
 	 * Get the previous polygon in the sequence of multi-polygons
 	 * 
 	 * @return Previous polygon in the same multipolygon if any, otherwise null
 	 */
-	public CFPolygon getPrev();
+	public Polygon getPrev();
 	
 	/**
 	 * Get whether or not this polygon is an interior ring
@@ -64,19 +64,17 @@ public interface Polygon extends SimpleGeometry {
 	
 	/**
 	 * Sets the next polygon which make up the multipolygon which this polygon is a part of.
-	 * Automatically connects the other polygon to this polygon as well.
 	 * 
 	 * @param next Polygon to set
 	 */
-	public void setNext(CFPolygon next);
+	public void setNext(Polygon next);
 	
 	/**
 	 * Sets the previous polygon which makes up the multipolygon which this polygon is a part of.
-	 * Automatically connect the other polygon to this polygon as well.
 	 * 
 	 * @param prev Polygon to set
 	 */
-	public void setPrev(CFPolygon prev);
+	public void setPrev(Polygon prev);
 	
 	/**
 	 *  Simply sets whether or not this polygon is an interior ring

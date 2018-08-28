@@ -67,7 +67,7 @@ public class TestSimpleGeometryCoverage {
         cov = new SimpleGeometryCoverage(name, dt, att, coordSysName, units, description, reader, user, CFPOLYGON);
         cov.setCoordSys(cs);
         Assert.assertEquals(cov.readGeometry(index), cs.getPolygon(name, index));
-        
+
     }
 
 

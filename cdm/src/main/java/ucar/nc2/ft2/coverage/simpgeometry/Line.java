@@ -23,7 +23,7 @@ public interface Line extends SimpleGeometry{
 	 * 
 	 * @return points - the collection of points that make up this line
 	 */
-	public List<CFPoint> getPoints();
+	public List<Point> getPoints();
 	
 	/**
 	 * Get the data associated with this line
@@ -38,7 +38,7 @@ public interface Line extends SimpleGeometry{
 	 * 
 	 * @return next line if present, null if not
 	 */
-	public CFLine getNext();
+	public Line getNext();
 	
 	/**
 	 * If part of a multiline, returns the previous line within that line
@@ -46,7 +46,7 @@ public interface Line extends SimpleGeometry{
 	 * 
 	 * @return previous line if present, null if not
 	 */
-	public CFLine getPrev();
+	public Line getPrev();
 	
 	/**
 	 * Set the data associated with this Line
@@ -57,16 +57,14 @@ public interface Line extends SimpleGeometry{
 	
 	/**
 	 * Sets the next line which make up the multiline which this line is a part of.
-	 * Automatically connects the other line to this line as well.
 	 */
-	public void setNext(CFLine next);
+	public void setNext(Line next);
 	
 
 	/**
 	 * Sets the previous line which makes up the multiline which this line is a part of.
-	 * Automatically connect the other line to this line as well.
 	 */
-	public void setPrev(CFLine prev);
+	public void setPrev(Line prev);
 	
 	/**
 	 * Given a dataset, construct a line from the variable which holds lines
