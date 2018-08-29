@@ -31,7 +31,7 @@ import java.util.List;
  * @since 8/13/2018
  */
 // @Immutable
-public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvaluator {
+public class SimpleGeometryCoverage implements VariableSimpleIF{
   private final String name;
   private final DataType dataType;
   private final AttributeContainerHelper atts;
@@ -227,16 +227,6 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
 	return IDAxis;  
   }
 
-  @Override
-  public boolean hasMissing() {
-    return false;
-  }
-
-  @Override
-  public boolean isMissing(double val) {
-    return Double.isNaN(val);
-  }
-  
 	/**
 	 * Get the data associated with the index
 	 * @param  index  number associated with the geometry 

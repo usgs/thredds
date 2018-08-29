@@ -36,7 +36,7 @@ public class SimpleGeometryCS {
     simpleGeometryX = new ArrayList<CoordinateAxis>(); simpleGeometryY = new ArrayList<CoordinateAxis>();
     simpleGeometryZ = new ArrayList<CoordinateAxis>(); simpleGeometryID = new ArrayList<CoordinateAxis>();
     
-    for(CoordinateAxis axis : builder.sgAxes) {
+    for(CoordinateAxis axis : builder.getSgAxes()) {
     	
     	// Look for simple geometry axes and add them
     	if(axis.getAxisType().equals(AxisType.SimpleGeometryX)) simpleGeometryX.add(axis);
@@ -100,7 +100,7 @@ public class SimpleGeometryCS {
    * @return list of dimensions.
    */
   public List<Dimension> getDimensions(){
-	  return builder.dims;
+	  return builder.getDimensions();
   }
   
   /**

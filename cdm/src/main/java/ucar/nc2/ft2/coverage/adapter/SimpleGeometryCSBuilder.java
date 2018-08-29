@@ -13,6 +13,7 @@ import ucar.nc2.ft2.coverage.simpgeometry.Line;
 import ucar.nc2.ft2.coverage.simpgeometry.Point;
 import ucar.nc2.ft2.coverage.simpgeometry.Polygon;
 import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometryReader;
+import ucar.unidata.geoloc.Projection;
 import ucar.unidata.geoloc.ProjectionImpl;
 
 import java.util.*;
@@ -58,14 +59,14 @@ public class SimpleGeometryCSBuilder {
   }
 
   
-  FeatureType type;
-  boolean isLatLon;
-  List<CoordinateAxis> allAxes;
-  List<CoordinateAxis> sgAxes;
-  List<CoordinateTransform> coordTransforms;
-  List<Dimension> dims;
-  SimpleGeometryReader geometryReader;
-  ProjectionImpl orgProj;
+  private FeatureType type;
+  private boolean isLatLon;
+  private List<CoordinateAxis> allAxes;
+  private List<CoordinateAxis> sgAxes;
+  private List<CoordinateTransform> coordTransforms;
+  private List<Dimension> dims;
+  private SimpleGeometryReader geometryReader;
+  private ProjectionImpl orgProj;
 
   SimpleGeometryCSBuilder(NetcdfDataset ds, CoordinateSystem cs, Formatter errlog) {
 
@@ -108,12 +109,47 @@ public class SimpleGeometryCSBuilder {
     	return FeatureType.SIMPLE_GEOMETRY;
     }
 
-    // Default, station is similar to Simple Geometry
-    return FeatureType.STATION;
+    return null;
   }
 
   public FeatureType getCoverageType() {
     return type;
+  }
+  
+  /**
+   * Returns the list of all axes contained in this coordinate system.
+   *
+   * @return simple geometry axes
+   */
+  public List<CoordinateAxis> getAllAxes(){
+	  return this.allAxes;
+  }
+  
+  /**
+   * Returns a list of coord transforms contained in this coordinate system.
+   * 
+   * @return coordinate transforms
+   */
+  public List<CoordinateTransform> getCoordTransforms(){
+	  return this.coordTransforms;
+  }
+  
+  /**
+   * Returns the list of dimensions contained in this coordinate system.
+   * 
+   * @return dimensions
+   */
+  public List<Dimension> getDimensions(){
+	  return this.dims;
+  }
+  
+  /**
+   * Returns the list of simple geometry axes contained in this coordinate system.
+   *
+   * @return simple geometry axes
+   */
+  public List<CoordinateAxis> getSgAxes(){
+	  return this.sgAxes;
   }
   
   /**
@@ -124,6 +160,15 @@ public class SimpleGeometryCSBuilder {
    */
   public GeometryType getGeometryType(String name) {
 	 return geometryReader.getGeometryType(name);
+  }
+  
+  /**
+   * Get the projection of this coordinate system.
+   * 
+   * @return projection
+   */
+  public Projection getProjection(){
+	  return this.orgProj;
   }
   
   /**
