@@ -11,13 +11,14 @@ import ucar.nc2.Attribute;
 import ucar.nc2.AttributeContainerHelper;
 import ucar.nc2.Dimension;
 import ucar.nc2.VariableSimpleIF;
+import ucar.nc2.constants.CF;
 import ucar.nc2.dataset.CoordinateAxis;
 import ucar.nc2.util.Indent;
-import ucar.nc2.ft2.coverage.CoverageReader;
 import ucar.nc2.ft2.coverage.adapter.SimpleGeometryCS;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 
@@ -30,7 +31,7 @@ import java.util.List;
  * @since 8/13/2018
  */
 // @Immutable
-public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvaluator { //add interface with geometry info? //subsetting data will be diffferent?? is it subset now
+public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvaluator {
   private final String name;
   private final DataType dataType;
   private final AttributeContainerHelper atts;
@@ -38,11 +39,14 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
   private final String coordSysName;
   protected final Object user;
   
-  private final CFGEOMETRY geometry; // use enum
+  private int[] shapes;
+  CoordinateAxis xAxis, yAxis, zAxis, IDAxis;
+  
+  private final GeometryType geometryType; // use enum
 
   private SimpleGeometryCS coordSys; // almost immutable use coordsys
 
-  public SimpleGeometryCoverage(String name, DataType dataType, List<Attribute> atts, String coordSysName, String units, String description, Object user, CFGEOMETRY geometry) {
+  public SimpleGeometryCoverage(String name, DataType dataType, List<Attribute> atts, String coordSysName, String units, String description, Object user, GeometryType geometryType) {
     this.name = name;
     this.dataType = dataType;
     this.atts = new AttributeContainerHelper(name, atts);
@@ -50,13 +54,73 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
     this.units = units;
     this.description = description;
     this.user = user;
-    this.geometry = geometry;
+    this.geometryType = geometryType;
+    this.xAxis = null;
+    this.yAxis = null;
+    this.zAxis = null;
+    this.IDAxis = null;
+    shapes = null;
   }
 
 
   public void setCoordSys (SimpleGeometryCS coordSys) {
     if (this.coordSys != null) throw new RuntimeException("Can't change coordSys once set");
     this.coordSys = coordSys;
+    
+    String axesStrList[] = null;
+    
+    // Find the name of the axes specific to this geometry
+    axesStrList = coordSysName.split(" ");
+
+    List<String> axesStrActualList = new ArrayList<String>();
+    int shapeLength = 0;
+    
+    if(axesStrList != null) {
+    
+    	for(int i = 0; i < axesStrList.length; i++) {
+    		axesStrActualList.add(axesStrList[i]);
+    	}
+    
+    	// Set up x Axis
+    	for(CoordinateAxis xAx : coordSys.getSimpleGeometryX()) {
+    		if(axesStrActualList.contains(xAx.getFullNameEscaped())) {
+    			xAxis = xAx;
+    			shapeLength++;
+    		}
+    	}
+    
+    	// Set up y Axis
+    	for(CoordinateAxis yAx : coordSys.getSimpleGeometryY()) {
+    		if(axesStrActualList.contains(yAx.getFullNameEscaped())) {
+    			yAxis = yAx;
+    			shapeLength++;
+    		}
+    	}
+    
+    	// Set up z Axis
+    	for(CoordinateAxis zAx : coordSys.getSimpleGeometryZ()) {
+    		if(axesStrActualList.contains(zAx.getFullNameEscaped())) {
+    			zAxis = zAx;
+    			shapeLength++;
+    		}
+    	}
+    
+    	// Set up ID axis
+    	for(CoordinateAxis idAx : coordSys.getSimpleGeometryID()) {
+    		if(axesStrActualList.contains(idAx.getFullNameEscaped())) {
+    			IDAxis = idAx;
+    			shapeLength++;
+    		}
+    	}
+    
+    	shapes = new int[shapeLength];
+    
+    	int shapeIndex = 0;
+    	if(xAxis != null) { shapes[shapeIndex] = (int) xAxis.getSize(); shapeIndex++;}
+    	if(yAxis != null) { shapes[shapeIndex] = (int) yAxis.getSize(); shapeIndex++; }
+    	if(zAxis != null) { shapes[shapeIndex] = (int) zAxis.getSize(); shapeIndex++; }
+    	if(IDAxis != null) { shapes[shapeIndex] = (int) IDAxis.getSize(); shapeIndex++; }
+    }
   }
 
   public String getName() {
@@ -96,12 +160,15 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
   public Object getUserObject() {
     return user;
   }
-  public CFGEOMETRY getGeometry() {
-	  return geometry; 
+  
+  public GeometryType getGeometryType() {
+	  return geometryType; 
   }
+  
   public String getGeometryDescription() {
-	  return this.geometry.getDescription();
+	  return this.geometryType.getDescription();
   }
+  
   @Override
   public String toString() {
     Formatter f = new Formatter();
@@ -123,46 +190,71 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
   public SimpleGeometryCS getCoordSys() {
     return coordSys;
   }
-
-  ///////////////////////////////////////////////////////////////
-
-  // LOOK must conform to whatever grid.readData() returns
-  // LOOK need to deal with runtime(time), runtime(runtime, time)
-  public List<CoordinateAxis> getAxis() {
-        return coordSys.getSimpleGeometryID();
+  
+  /**
+   * Retrieves the x Axis that corresponds to this geometry.
+   * 
+   * @return x axis
+   */
+  public CoordinateAxis getXAxis() {
+	return xAxis;  
+  }
+  
+  /**
+   * Retrieves the y Axis that corresponds to this geometry.
+   * 
+   * @return y axis
+   */
+  public CoordinateAxis getYAxis() {
+	return yAxis;  
+  }
+  
+  /**
+   * Retrieves the z Axis that corresponds to this geometry.
+   * 
+   * @return z axis
+   */
+  public CoordinateAxis getZAxis() {
+	return zAxis;  
+  }
+  
+  /**
+   * Retrieves the ID Axis that corresponds to this geometry.
+   * 
+   * @return id axis
+   */
+  public CoordinateAxis getIDAxis() {
+	return IDAxis;  
   }
 
   @Override
   public boolean hasMissing() {
-    return true;
+    return false;
   }
 
   @Override
   public boolean isMissing(double val) {
     return Double.isNaN(val);
   }
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////
   
 	/**
-	 * Get the data associated the index
+	 * Get the data associated with the index
 	 * @param  index  number associated with the geometry 
 	 */
-  //COME BACK TO: does it make sense for geometry to be a field in coverage type?
   public SimpleGeometry readGeometry(int index) throws IOException, InvalidRangeException {
 
 	  SimpleGeometry geom = null;
-	  switch (geometry) {
+	  switch (geometryType) {
 		  
-		  case CFPOINT:
+		  case POINT:
 			  Point point = coordSys.getPoint(name, index);
 			  geom = point;
 			  break;
-		  case CFLINE:
+		  case LINE:
 			  Line line = coordSys.getLine(name, index);
 			  geom = line;
 			  break;
-		  case CFPOLYGON:
+		  case POLYGON:
 			  Polygon poly = coordSys.getPolygon(name, index);
 			  geom = poly;
 			  break;
@@ -172,10 +264,6 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
 		  }
 	  return geom;
   }
-
-  
-  ////////////////////////////////////////////////////////////////////////////////////////
-  // implement VariableSimpleIF
 
   @Override
   public String getFullName() {
@@ -192,16 +280,14 @@ public class SimpleGeometryCoverage implements VariableSimpleIF, IsMissingEvalua
     return getShape().length;
   }
 
-  //TODO make nonnull once we can access coordinate system builder
   @Override
   public int[] getShape() {
-    return null;
+    return shapes;
   }
 
-  //TODO make actual return once we can
   @Override
   public List<Dimension> getDimensions() {
-    return null;
+    return coordSys.getDimensions();
   }
 
   @Override

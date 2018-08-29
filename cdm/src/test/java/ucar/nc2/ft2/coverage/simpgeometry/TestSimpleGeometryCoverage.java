@@ -15,9 +15,9 @@ import static org.mockito.Mockito.*;
 import static org.mockito.BDDMockito.*;
 import ucar.nc2.ft2.coverage.adapter.SimpleGeometryCS;
 
-import static ucar.nc2.ft2.coverage.simpgeometry.CFGEOMETRY.CFLINE;
-import static ucar.nc2.ft2.coverage.simpgeometry.CFGEOMETRY.CFPOINT;
-import static ucar.nc2.ft2.coverage.simpgeometry.CFGEOMETRY.CFPOLYGON;
+import static ucar.nc2.ft2.coverage.simpgeometry.GeometryType.LINE;
+import static ucar.nc2.ft2.coverage.simpgeometry.GeometryType.POINT;
+import static ucar.nc2.ft2.coverage.simpgeometry.GeometryType.POLYGON;
 
 public class TestSimpleGeometryCoverage {
 
@@ -27,15 +27,14 @@ public class TestSimpleGeometryCoverage {
     private String coordSysName = "coordsysname";
     private String units = "units";
     private String description = "desc";
-    private CoverageReader reader;
     private Object user;
-    private CFGEOMETRY geometry;
+    private GeometryType geometry;
 
 
 
     @Test (expected = RuntimeException.class)
     public void testSetCoordSysNull() {
-        SimpleGeometryCoverage cov = new SimpleGeometryCoverage(name, dt, att, coordSysName, units, description, reader, user, geometry);
+        SimpleGeometryCoverage cov = new SimpleGeometryCoverage(name, dt, att, coordSysName, units, description, user, geometry);
         SimpleGeometryCS cs = mock(SimpleGeometryCS.class);
         cov.setCoordSys(cs);
         cov.setCoordSys(cov.getCoordSys());
@@ -49,7 +48,7 @@ public class TestSimpleGeometryCoverage {
 
         Point point = mock(CFPoint.class);
         given(cs.getPoint(name, index)).willReturn(point);
-        SimpleGeometryCoverage cov = new SimpleGeometryCoverage(name, dt, att, coordSysName, units, description, reader, user, CFPOINT);
+        SimpleGeometryCoverage cov = new SimpleGeometryCoverage(name, dt, att, coordSysName, units, description, user, POINT);
         cov.setCoordSys(cs);
         Assert.assertEquals(cov.readGeometry(index), cs.getPoint(name, index));
     }
@@ -62,7 +61,7 @@ public class TestSimpleGeometryCoverage {
 
         Line line = mock(CFLine.class);
         given(cs.getLine(name, index)).willReturn(line);
-        SimpleGeometryCoverage cov = new SimpleGeometryCoverage(name, dt, att, coordSysName, units, description, reader, user, CFLINE);
+        SimpleGeometryCoverage cov = new SimpleGeometryCoverage(name, dt, att, coordSysName, units, description, user, LINE);
         cov.setCoordSys(cs);
         Assert.assertEquals(cov.readGeometry(index), cs.getLine(name, index));
 
@@ -76,7 +75,7 @@ public class TestSimpleGeometryCoverage {
 
         Polygon polygon = mock(CFPolygon.class);
         given(cs.getPolygon(name, index)).willReturn(polygon);
-        SimpleGeometryCoverage cov = new SimpleGeometryCoverage(name, dt, att, coordSysName, units, description, reader, user, CFPOLYGON);
+        SimpleGeometryCoverage cov = new SimpleGeometryCoverage(name, dt, att, coordSysName, units, description, user, POLYGON);
         cov.setCoordSys(cs);
         Assert.assertEquals(cov.readGeometry(index), cs.getPolygon(name, index));
 

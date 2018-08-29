@@ -57,13 +57,15 @@ public class SimpleGeometryCSBuilder {
   }
 
   ////////////////////////////////////////////////////////////////////////////////////
+  
   FeatureType type;
-
   boolean isLatLon;
   List<CoordinateAxis> independentAxes;
   List<CoordinateAxis> otherAxes;
   List<CoordinateAxis> allAxes;
+  List<CoordinateAxis> sgAxes;
   List<CoordinateTransform> coordTransforms;
+  List<Dimension> dims;
   SimpleGeometryReader geometryReader;
   ProjectionImpl orgProj;
 
@@ -74,16 +76,25 @@ public class SimpleGeometryCSBuilder {
       if (errlog != null) errlog.format("CoordinateSystem '%s': domain rank < 2%n", cs.getName());
       return;
     }
-
-    //Create Simple Geometry Reader if there are any Axes with type SimpleGeometryID
+    
+    sgAxes = new ArrayList<CoordinateAxis>();
+    dims = ds.getDimensions();
+    allAxes = cs.getCoordinateAxes();
+    
+    // Create Simple Geometry Reader if there are any Axes with type SimpleGeometryID
+    // Also, populate simple geometry axis list 
     boolean sgtype = false;
     for(CoordinateAxis axis : cs.getCoordinateAxes()) {
-    	if(axis.getAxisType().equals(AxisType.SimpleGeometryID)) sgtype = true;
+    	if(axis.getAxisType().equals(AxisType.SimpleGeometryID) || axis.getAxisType().equals(AxisType.SimpleGeometryX)
+    			|| axis.getAxisType().equals(AxisType.SimpleGeometryY) || axis.getAxisType().equals(AxisType.SimpleGeometryZ)) {
+    		sgAxes.add(axis);
+    		sgtype = true;
+    	}
     }
     
     if(sgtype) {
     	geometryReader = new SimpleGeometryReader(ds);
- 
+    	this.type = FeatureType.SIMPLE_GEOMETRY;
     } else geometryReader = null;
     
     this.type = classify();
@@ -218,6 +229,7 @@ public class SimpleGeometryCSBuilder {
       case SIMPLE_GEOMETRY:
     	return new SimpleGeometryCS(this);
     }
+    
     return new SimpleGeometryCS(this);
   }
 
