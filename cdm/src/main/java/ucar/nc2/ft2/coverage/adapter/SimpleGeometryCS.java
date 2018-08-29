@@ -6,14 +6,13 @@
 package ucar.nc2.ft2.coverage.adapter;
 
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
 
 import ucar.nc2.Variable;
 import ucar.nc2.constants.AxisType;
-import ucar.nc2.dataset.CoordinateAxis;
-import ucar.nc2.dataset.CoordinateAxis1D;
-import ucar.nc2.dataset.CoordinateAxis1DTime;
-import ucar.nc2.dataset.NetcdfDataset;
+import ucar.nc2.dataset.*;
+import ucar.nc2.dt.grid.GridCoordSys;
 import ucar.nc2.time.CalendarDateRange;
 import ucar.nc2.ft2.coverage.simpgeometry.*;
 
@@ -159,6 +158,24 @@ public class SimpleGeometryCS {
   public List<Point> getPoints(String name, int indexBegin, int indexEnd) {
 	  return builder.getPoints(name, indexBegin, indexEnd);
   }
+
+    public static SimpleGeometryCS makeSGCoordSys(Formatter sbuff, CoordinateSystem cs, VariableEnhanced v) {
+        if (sbuff != null) {
+            sbuff.format(" ");
+            v.getNameAndDimensions(sbuff, false, true);
+            sbuff.format(" check CS %s: ", cs.getName());
+        }
+
+        SimpleGeometryCS gcs = new SimpleGeometryCS(new SimpleGeometryCSBuilder(null, cs, null));
+        return gcs;
+
+//        if (isSGCoordSys(sbuff, cs, v)) {
+//            if (sbuff != null) sbuff.format(" OK%n");
+//            return gcs;
+//        }
+
+//        return null;
+    }
 
 
 }

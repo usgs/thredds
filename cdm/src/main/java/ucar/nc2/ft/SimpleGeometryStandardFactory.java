@@ -36,7 +36,7 @@ public class SimpleGeometryStandardFactory implements FeatureDatasetFactory {
 
   public FeatureDataset open(FeatureType ftype, NetcdfDataset ncd, Object analysis, CancelTask task, Formatter errlog) throws IOException {
 
-	  return new ucar.nc2.dt.grid.GridDataset( ncd);
+	  return new ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometryFeatureDataset( ncd);
   }
 
   public FeatureType[] getFeatureTypes() {
