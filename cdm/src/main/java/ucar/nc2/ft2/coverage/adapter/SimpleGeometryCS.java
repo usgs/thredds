@@ -48,6 +48,16 @@ public class SimpleGeometryCS {
   }
   
   /**
+   * Given a variable name, returns the type of geometry which that variable is holding
+   * 
+   * @param name name of the variable
+   * @return geometry type associated with that variable
+   */
+  public GeometryType getGeometryType(String name) {
+	return this.builder.getGeometryType(name);
+  }
+  
+  /**
    * Get a list of all simple geometry X axes.
    * 
    * @return list of simple geometry X axes

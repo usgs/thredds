@@ -8,6 +8,7 @@ import ucar.nc2.Dimension;
 import ucar.nc2.constants.AxisType;
 import ucar.nc2.constants.FeatureType;
 import ucar.nc2.dataset.*;
+import ucar.nc2.ft2.coverage.simpgeometry.GeometryType;
 import ucar.nc2.ft2.coverage.simpgeometry.Line;
 import ucar.nc2.ft2.coverage.simpgeometry.Point;
 import ucar.nc2.ft2.coverage.simpgeometry.Polygon;
@@ -56,12 +57,9 @@ public class SimpleGeometryCSBuilder {
     return fac.type == null ? "" : fac.showSummary();
   }
 
-  ////////////////////////////////////////////////////////////////////////////////////
   
   FeatureType type;
   boolean isLatLon;
-  List<CoordinateAxis> independentAxes;
-  List<CoordinateAxis> otherAxes;
   List<CoordinateAxis> allAxes;
   List<CoordinateAxis> sgAxes;
   List<CoordinateTransform> coordTransforms;
@@ -110,20 +108,22 @@ public class SimpleGeometryCSBuilder {
     	return FeatureType.SIMPLE_GEOMETRY;
     }
 
-    // what makes it a grid?
-    // each dimension must have its own coordinate variable
-    Set<Dimension> indDimensions = CoordinateSystem.makeDomain(independentAxes);
-    Set<Dimension> allDimensions = CoordinateSystem.makeDomain(allAxes);
-    if (indDimensions.size() == allDimensions.size()) {
-      return FeatureType.GRID;
-    }
-
-    // default
-    return FeatureType.COVERAGE;
+    // Default, station is similar to Simple Geometry
+    return FeatureType.STATION;
   }
 
   public FeatureType getCoverageType() {
     return type;
+  }
+  
+  /**
+   * Given a variable name, returns the type of geometry which that variable is holding
+   * 
+   * @param name name of the variable
+   * @return geometry type associated with that variable
+   */
+  public GeometryType getGeometryType(String name) {
+	 return geometryReader.getGeometryType(name);
   }
   
   /**
@@ -239,19 +239,6 @@ public class SimpleGeometryCSBuilder {
     f2.format("%s", type == null ? "" : type.toString());
     if (type == null) return f2.toString();
 
-    f2.format("%n%n independentAxes=(");
-    for (CoordinateAxis axis : independentAxes)
-      f2.format("%s, ", axis.getShortName());
-    f2.format(") {");
-    for (Dimension dim : CoordinateSystem.makeDomain(independentAxes))
-      f2.format("%s, ", dim.getShortName());
-    f2.format("}");
-    f2.format("%n otherAxes=(");
-    for (CoordinateAxis axis : otherAxes)
-      f2.format("%s, ", axis.getShortName());
-    f2.format(") {");
-    for (Dimension dim : CoordinateSystem.makeDomain(otherAxes))
-      f2.format("%s, ", dim.getShortName());
     f2.format("}");
     f2.format("%n allAxes=(");
     for (CoordinateAxis axis : allAxes)
@@ -272,20 +259,8 @@ public class SimpleGeometryCSBuilder {
 
     f2.format("(");
     int count = 0;
-    for (CoordinateAxis axis : independentAxes) {
-      if (count++ > 0) f2.format(",");
-      f2.format("%s", axis.getAxisType() == null ? axis.getShortName() : axis.getAxisType().getCFAxisName());
-    }
     f2.format(")");
 
-    if (otherAxes.size() > 0) {
-      f2.format(": ");
-      count = 0;
-      for (CoordinateAxis axis : otherAxes) {
-        if (count++ > 0) f2.format(",");
-        f2.format("%s", axis.getShortName());
-      }
-    }
     return f2.toString();
   }
 
