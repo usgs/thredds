@@ -60,7 +60,6 @@ public class SimpleGeometryCSBuilder {
 
   
   private FeatureType type;
-  private boolean isLatLon;
   private List<CoordinateAxis> allAxes;
   private List<CoordinateAxis> sgAxes;
   private List<CoordinateTransform> coordTransforms;
@@ -273,16 +272,16 @@ public class SimpleGeometryCSBuilder {
     switch (type) {
       case SIMPLE_GEOMETRY:
     	return new SimpleGeometryCS(this);
+      default:
+    	return null;
     }
-    
-    return new SimpleGeometryCS(this);
   }
 
   @Override
   public String toString() {
     Formatter f2 = new Formatter();
     f2.format("%s", type == null ? "" : type.toString());
-    if (type == null) return f2.toString();
+    if (type == null) {f2.close(); return "";}
 
     f2.format("}");
     f2.format("%n allAxes=(");
@@ -292,8 +291,9 @@ public class SimpleGeometryCSBuilder {
     for (Dimension dim : CoordinateSystem.makeDomain(allAxes))
       f2.format("%s, ", dim.getShortName());
     f2.format("}%n");
-
-    return f2.toString();
+    String string_repres = f2.toString();
+    f2.close();
+    return string_repres;
   }
 
   public String showSummary() {
@@ -303,10 +303,11 @@ public class SimpleGeometryCSBuilder {
     f2.format("%s", type.toString());
 
     f2.format("(");
-    int count = 0;
     f2.format(")");
 
-    return f2.toString();
+    String string_repres = f2.toString();
+    f2.close();
+    return string_repres;
   }
 
 }

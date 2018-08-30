@@ -6,12 +6,10 @@ package ucar.nc2.ft2.coverage.simpgeometry;
 
 import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
-import ucar.ma2.IsMissingEvaluator;
 import ucar.nc2.Attribute;
 import ucar.nc2.AttributeContainerHelper;
 import ucar.nc2.Dimension;
 import ucar.nc2.VariableSimpleIF;
-import ucar.nc2.constants.CF;
 import ucar.nc2.dataset.CoordinateAxis;
 import ucar.nc2.util.Indent;
 import ucar.nc2.ft2.coverage.adapter.SimpleGeometryCS;

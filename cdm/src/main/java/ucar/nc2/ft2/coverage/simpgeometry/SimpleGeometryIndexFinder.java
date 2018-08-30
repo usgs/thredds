@@ -4,8 +4,6 @@ import java.io.IOException;
 
 import ucar.ma2.Array;
 import ucar.nc2.Variable;
-import ucar.nc2.constants.CF;
-import ucar.nc2.ft2.coverage.simpgeometry.*;
 
 /**
  * A Simple Geometry Index Finder can go find the beginning and end indicies of

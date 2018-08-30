@@ -9,13 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ucar.nc2.Dimension;
-import ucar.nc2.Variable;
 import ucar.nc2.constants.AxisType;
 import ucar.nc2.dataset.CoordinateAxis;
-import ucar.nc2.dataset.CoordinateAxis1D;
-import ucar.nc2.dataset.CoordinateAxis1DTime;
-import ucar.nc2.dataset.NetcdfDataset;
-import ucar.nc2.time.CalendarDateRange;
 import ucar.nc2.ft2.coverage.simpgeometry.*;
 
 /**
