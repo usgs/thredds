@@ -15,6 +15,7 @@ import ucar.nc2.Variable;
  */
 public class SimpleGeometryIndexFinder {
 	
+	private final int INVALID_INDEX = -10;	// default invalid index before any lookups have been done
 	private Array nodeCount = null;
 	private int pastIndex;
 	private int previousEnd;
@@ -89,8 +90,8 @@ public class SimpleGeometryIndexFinder {
 			e.printStackTrace();
 		}
 		
-		pastIndex = -10;
-		previousEnd = -10;
-		previousBegin = -10;
+		pastIndex = INVALID_INDEX;
+		previousEnd = INVALID_INDEX;
+		previousBegin = INVALID_INDEX;
 	}
 }
