@@ -18,7 +18,4 @@ public interface SimpleGeometry {
     public void setData(Array data);
     public Array getData();
 
-
-
-
 }

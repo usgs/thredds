@@ -1,7 +1,7 @@
 package ucar.nc2.ft2.coverage.simpgeometry;
 
-enum CFGEOMETRY {
-    CFPOINT("Point"), CFLINE("Line"), CFPOLYGON("Polygon");
+public enum GeometryType {
+    POINT("Point"), LINE("Line"), POLYGON("Polygon");
 
     private String description;
 
@@ -9,7 +9,7 @@ enum CFGEOMETRY {
         return this.description;
     }
 
-    CFGEOMETRY(String description) {
+    GeometryType(String description) {
         this.description = description;
     }
 }
