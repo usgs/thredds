@@ -291,9 +291,9 @@ public class SimpleGeometryCSBuilder {
     for (Dimension dim : CoordinateSystem.makeDomain(allAxes))
       f2.format("%s, ", dim.getShortName());
     f2.format("}%n");
-    String string_repres = f2.toString();
+    String stringRepres = f2.toString();
     f2.close();
-    return string_repres;
+    return stringRepres;
   }
 
   public String showSummary() {
@@ -305,9 +305,9 @@ public class SimpleGeometryCSBuilder {
     f2.format("(");
     f2.format(")");
 
-    String string_repres = f2.toString();
+    String stringRepres = f2.toString();
     f2.close();
-    return string_repres;
+    return stringRepres;
   }
 
 }
