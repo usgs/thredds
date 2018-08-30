@@ -38,7 +38,7 @@ public class SimpleGeometryCoverage implements VariableSimpleIF{
   protected final Object user;
   
   private int[] shapes;
-  CoordinateAxis xAxis, yAxis, zAxis, IDAxis;
+  private CoordinateAxis xAxis, yAxis, zAxis, IDAxis;
   
   private final GeometryType geometryType; // use enum
 
