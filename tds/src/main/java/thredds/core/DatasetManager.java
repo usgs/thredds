@@ -30,6 +30,7 @@ import ucar.nc2.ft.FeatureDatasetPoint;
 import ucar.nc2.ft2.coverage.CoverageDatasetFactory;
 import ucar.nc2.ft2.coverage.FeatureDatasetCoverage;
 import ucar.nc2.ft2.coverage.CoverageCollection;
+import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometryFeatureDataset;
 import ucar.nc2.ncml.NcMLReader;
 import ucar.nc2.util.Optional;
 import ucar.nc2.util.cache.FileFactory;
@@ -269,7 +270,7 @@ public class DatasetManager implements InitializingBean {
     NetcdfDataset ncd = null;
     try {
       ncd = NetcdfDataset.wrap(ncfile, NetcdfDataset.getDefaultEnhanceMode());
-      return (FeatureDatasetPoint) FeatureDatasetFactoryManager.wrap(FeatureType.ANY_POINT, ncd, null, errlog);
+      return (FeatureDatasetPoint) FeatureDatasetFactoryManager.wrap(FeatureType.SIMPLE_GEOMETRY, ncd, null, errlog);
 
     } catch (Throwable t) {
       if (ncd == null)
@@ -282,7 +283,7 @@ public class DatasetManager implements InitializingBean {
 
       String msg = ncd == null ? "Problem wrapping NetcdfFile in NetcdfDataset; " : "Problem calling FeatureDatasetFactoryManager; ";
       msg += errlog.toString();
-      log.error("openGridDataset(): " + msg, t);
+      log.error("openSimpleGeometryDataset(): " + msg, t);
       throw new IOException(msg + t.getMessage());
     }
   }
@@ -341,59 +342,48 @@ public class DatasetManager implements InitializingBean {
 
     return null;
   }
-  /*public SimpleGeometryFeatureDataset openSimpleGeometryDataset(HttpServletRequest req, HttpServletResponse res, String reqPath) throws IOException {
-    if (reqPath == null)
-      return null;
-
-    if (reqPath.startsWith("/"))
-      reqPath = reqPath.substring(1);
-
-    // see if its under resource control
-    if (!resourceControlOk(req, res, reqPath))
-      return null;
-
-    DataRootManager.DataRootMatch match = dataRootManager.findDataRootMatch(reqPath);
-
+  public SimpleGeometryFeatureDataset openSimpleGeometryDataset(HttpServletRequest req, HttpServletResponse res, String reqPath) throws IOException {
     // first look for a feature collection
+    DataRootManager.DataRootMatch match = dataRootManager.findDataRootMatch(reqPath);
     if ((match != null) && (match.dataRoot.getFeatureCollection() != null)) {
+      // see if its under resource control
+      if (!resourceAuthorized(req, res, match.dataRoot.getRestrict()))
+        return null;
+
       FeatureCollectionRef featCollection = match.dataRoot.getFeatureCollection();
       if (log.isDebugEnabled()) log.debug("  -- DatasetHandler found FeatureCollection= " + featCollection);
 
       InvDatasetFeatureCollection fc = featureCollectionCache.get(featCollection);
-      SimpleGeometryFeatureDataset sgfd = fc.getGridCoverage(match.remaining);
-      if (gds == null) throw new FileNotFoundException(reqPath);
-      return gds;
+      SimpleGeometryFeatureDataset fd = fc.getSimpleGeometryDataset(match.remaining);
+      if (fd == null) throw new IllegalArgumentException("Not a Point Dataset " + fc.getName());
+      return fd;
     }
 
-    // otherwise assume its a local file
+    // fetch it as a NetcdfFile; this deals with possible NcML
+    NetcdfFile ncfile = openNetcdfFile(req, res, reqPath);
+    if (ncfile == null) return null;
 
-    // try to open as a FeatureDatasetCoverage. This allows GRIB to be handle specially
-    String location = getLocationFromRequestPath(reqPath);
-    if (location != null) {
-      Optional<FeatureDatasetCoverage> opt = CoverageDatasetFactory.openCoverageDataset(location);
-      if (!opt.isPresent())
-        throw new FileNotFoundException("Not a Grid Dataset " + reqPath + " err=" + opt.getErrorMessage());
+    Formatter errlog = new Formatter();
+    NetcdfDataset ncd = null;
+    try {
+      ncd = NetcdfDataset.wrap(ncfile, NetcdfDataset.getDefaultEnhanceMode());
+      return (SimpleGeometryFeatureDataset) FeatureDatasetFactoryManager.wrap(FeatureType.ANY_POINT, ncd, null, errlog);
 
-      if (log.isDebugEnabled()) log.debug("  -- DatasetHandler found FeatureCollection from file= " + location);
-      return opt.get().getSingleCoverageCollection(); // LOOK doesnt have to be single, then what is the URL?
+    } catch (Throwable t) {
+      if (ncd == null)
+        ncfile.close();
+      else
+        ncd.close();
 
+      if (t instanceof IOException)
+        throw (IOException) t;
+
+      String msg = ncd == null ? "Problem wrapping NetcdfFile in NetcdfDataset; " : "Problem calling FeatureDatasetFactoryManager; ";
+      msg += errlog.toString();
+      log.error("openGridDataset(): " + msg, t);
+      throw new IOException(msg + t.getMessage());
     }
-
-    // if ncml, must handle special, otherwise we're out of options for opening
-    // a coverage collection.
-
-    String ncml = datasetTracker.findNcml(reqPath);
-    if (ncml != null) {
-      Optional<FeatureDatasetCoverage> opt = CoverageDatasetFactory.openNcmlString(ncml);
-      if (!opt.isPresent())
-        throw new FileNotFoundException("NcML is not a Grid Dataset " + reqPath + " err=" + opt.getErrorMessage());
-
-      if (log.isDebugEnabled()) log.debug("  -- DatasetHandler found FeatureCollection from NcML");
-      return opt.get().getSingleCoverageCollection();
-    }
-
-    return null;
-  }*/
+  }
   /////////////////////////////////////////////////////////////////
   // Resource control
 

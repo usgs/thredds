@@ -110,4 +110,11 @@ public class FeatureDatasetTypeTest {
 		assertNotNull(fd);
 		assertEquals(FeatureType.STATION, fd.getFeatureType());
 	}
+	@Test
+	public void getFDForSimpleGeometryFeatureDataset() throws IOException{
+		MockHttpServletRequest req = new MockHttpServletRequest();
+		MockHttpServletResponse res = new MockHttpServletResponse();
+
+		FeatureDataset fd = TdsRequestedDataset.getSimpleGeometryFeatureDataset(req, res, "testStationFeatureCollection/Metar_Station_Data_fc.cdmr");
+	}
 }
