@@ -9,11 +9,8 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 
-import ucar.nc2.Variable;
 import ucar.nc2.constants.AxisType;
 import ucar.nc2.dataset.*;
-import ucar.nc2.dt.grid.GridCoordSys;
-import ucar.nc2.time.CalendarDateRange;
 import ucar.nc2.ft2.coverage.simpgeometry.*;
 
 /**

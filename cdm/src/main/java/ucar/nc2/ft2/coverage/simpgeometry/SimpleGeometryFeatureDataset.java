@@ -31,7 +31,7 @@ public class SimpleGeometryFeatureDataset implements FeatureDataset {
      * @throws java.io.IOException on read error
      * @see ucar.nc2.dataset.NetcdfDataset#acquireDataset
      */
-    static public SimpleGeometryFeatureDataset open(String location) throws java.io.IOException {
+    static public SimpleGeometryFeatureDataset open(String location) throws IOException {
         return open(location, NetcdfDataset.getDefaultEnhanceMode());
     }
 
@@ -45,7 +45,7 @@ public class SimpleGeometryFeatureDataset implements FeatureDataset {
      * @throws java.io.IOException on read error
      * @see ucar.nc2.dataset.NetcdfDataset#acquireDataset
      */
-    static public SimpleGeometryFeatureDataset open(String location, Set<NetcdfDataset.Enhance> enhanceMode) throws java.io.IOException {
+    static public SimpleGeometryFeatureDataset open(String location, Set<NetcdfDataset.Enhance> enhanceMode) throws IOException {
         NetcdfDataset ds = ucar.nc2.dataset.NetcdfDataset.acquireDataset(null, DatasetUrl.findDatasetUrl(location), enhanceMode, -1, null, null);
         return new SimpleGeometryFeatureDataset(ds, null);
     }
@@ -140,7 +140,7 @@ public class SimpleGeometryFeatureDataset implements FeatureDataset {
 
     @Override
     public void close() throws IOException {
-
+        ncd.close();
     }
 
     @Override
@@ -150,12 +150,12 @@ public class SimpleGeometryFeatureDataset implements FeatureDataset {
 
     @Override
     public void setFileCache(FileCacheIF fileCache) {
-
+        ncd.setFileCache(fileCache);
     }
 
     @Override
     public void getDetailInfo(Formatter sf) {
-
+        ncd.getDetailInfo(sf);
     }
 
     /**
@@ -248,7 +248,7 @@ public class SimpleGeometryFeatureDataset implements FeatureDataset {
      *
      * @deprecated : use GridDataset.open().
      */
-    static public SimpleGeometryFeatureDataset factory(String netcdfFileURI) throws java.io.IOException {
+    static public SimpleGeometryFeatureDataset factory(String netcdfFileURI) throws IOException {
         return open(netcdfFileURI);
     }
 }
