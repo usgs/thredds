@@ -180,24 +180,24 @@ public class SimpleGeometryFeatureDataset implements FeatureDataset {
     /**
      * This is a set of GeoGrids with the same GeoCoordSys.
      */
-    public static class Gridset  {
+    public static class SimpleGeometryCovSet  {
 
         private SimpleGeometryCS gcc;
-        private List<GridDatatype> grids = new ArrayList<>();
+        private List<SimpleGeometryCoverage> covs = new ArrayList<>();
 
-        private Gridset(SimpleGeometryCS gcc) {
+        private SimpleGeometryCovSet(SimpleGeometryCS gcc) {
             this.gcc = gcc;
         }
-
-        private void add(GeoGrid grid) {
-            grids.add(grid);
+        
+        private void add(SimpleGeometryCoverage cov) {
+            covs.add(cov);
         }
 
         /**
          * Get list of GeoGrid objects
          */
-        public List<GridDatatype> getGrids() {
-            return grids;
+        public List<SimpleGeometryCoverage> getGrids() {
+            return covs;
         }
 
         /**

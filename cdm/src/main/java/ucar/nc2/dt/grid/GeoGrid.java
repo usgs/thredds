@@ -9,6 +9,7 @@ import ucar.nc2.*;
 import ucar.nc2.constants.AxisType;
 import ucar.nc2.dt.GridCoordSystem;
 import ucar.nc2.dt.GridDatatype;
+import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometryFeatureDataset;
 import ucar.nc2.util.NamedObject;
 import ucar.nc2.dataset.*;
 import ucar.unidata.geoloc.*;
@@ -43,7 +44,7 @@ public class GeoGrid implements NamedObject, ucar.nc2.dt.GridDatatype {
 
   /**
    * Constructor.
-   * @param dataset belongs to this dataset
+   *  @param dataset belongs to this dataset
    * @param dsvar   wraps this Variable
    * @param gcs     has this grid coordinate system
    */
