@@ -4,8 +4,6 @@ import java.io.IOException;
 
 import ucar.ma2.Array;
 import ucar.nc2.Variable;
-import ucar.nc2.constants.CF;
-import ucar.nc2.ft2.coverage.simpgeometry.*;
 
 /**
  * A Simple Geometry Index Finder can go find the beginning and end indicies of
@@ -17,6 +15,7 @@ import ucar.nc2.ft2.coverage.simpgeometry.*;
  */
 public class SimpleGeometryIndexFinder {
 	
+	private final int INVALID_INDEX = -10;	// default invalid index before any lookups have been done
 	private Array nodeCount = null;
 	private int pastIndex;
 	private int previousEnd;
@@ -91,8 +90,8 @@ public class SimpleGeometryIndexFinder {
 			e.printStackTrace();
 		}
 		
-		pastIndex = -10;
-		previousEnd = -10;
-		previousBegin = -10;
+		pastIndex = INVALID_INDEX;
+		previousEnd = INVALID_INDEX;
+		previousBegin = INVALID_INDEX;
 	}
 }

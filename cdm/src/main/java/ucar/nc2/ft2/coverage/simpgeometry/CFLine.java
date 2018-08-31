@@ -30,9 +30,8 @@ public class CFLine implements Line {
 	 * Get the geometry the data is associated with.
 	 * 
 	 */
-	
-	public CFGEOMETRY getGeometryType() {
-		return CFGEOMETRY.CFLINE;
+	public GeometryType getGeometryType() {
+		return GeometryType.LINE;
 	}
 
 	/**

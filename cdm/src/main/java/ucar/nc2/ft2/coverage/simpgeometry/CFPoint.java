@@ -33,8 +33,8 @@ public class CFPoint implements Point{
 	 * 
 	 */
 	
-	public CFGEOMETRY getGeometryType() {
-		return CFGEOMETRY.CFPOINT;
+	public GeometryType getGeometryType() {
+		return GeometryType.POINT;
 	}
 	
 	/**

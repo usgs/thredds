@@ -11,6 +11,8 @@ import java.util.List;
 
 import ucar.nc2.constants.AxisType;
 import ucar.nc2.dataset.*;
+import ucar.nc2.Dimension;
+import ucar.nc2.dataset.CoordinateAxis;
 import ucar.nc2.ft2.coverage.simpgeometry.*;
 
 /**
@@ -31,7 +33,7 @@ public class SimpleGeometryCS {
     simpleGeometryX = new ArrayList<CoordinateAxis>(); simpleGeometryY = new ArrayList<CoordinateAxis>();
     simpleGeometryZ = new ArrayList<CoordinateAxis>(); simpleGeometryID = new ArrayList<CoordinateAxis>();
     
-    for(CoordinateAxis axis : builder.otherAxes) {
+    for(CoordinateAxis axis : builder.getSgAxes()) {
     	
     	// Look for simple geometry axes and add them
     	if(axis.getAxisType().equals(AxisType.SimpleGeometryX)) simpleGeometryX.add(axis);
@@ -43,12 +45,22 @@ public class SimpleGeometryCS {
   }
   
   /**
+   * Given a variable name, returns the type of geometry which that variable is holding
+   * 
+   * @param name name of the variable
+   * @return geometry type associated with that variable
+   */
+  public GeometryType getGeometryType(String name) {
+	return this.builder.getGeometryType(name);
+  }
+  
+  /**
    * Get a list of all simple geometry X axes.
    * 
    * @return list of simple geometry X axes
    */
   public List<CoordinateAxis> getSimpleGeometryX() {
-	return this.simpleGeometryX;  
+	return this.simpleGeometryX;
   }
   
   /**
@@ -57,7 +69,7 @@ public class SimpleGeometryCS {
    * @return list of simple geometry Y axes
    */
   public List<CoordinateAxis> getSimpleGeometryY() {
-	return this.simpleGeometryY;  
+	return this.simpleGeometryY;
   }
   
   /**
@@ -66,7 +78,7 @@ public class SimpleGeometryCS {
    * @return list of simple geometry Z axes.
    */
   public List<CoordinateAxis> getSimpleGeometryZ() {
-	return this.simpleGeometryZ;  
+	return this.simpleGeometryZ;
   }
   
   /**
@@ -76,7 +88,16 @@ public class SimpleGeometryCS {
    * @return list of simple geometry ID axes
    */
   public List<CoordinateAxis> getSimpleGeometryID() {
-	return this.simpleGeometryID;  
+	return this.simpleGeometryID;
+  }
+  
+  /**
+   * Get a list of all dimensions in this dataset.
+   * 
+   * @return list of dimensions.
+   */
+  public List<Dimension> getDimensions(){
+	  return builder.getDimensions();
   }
   
   /**
