@@ -6,8 +6,6 @@ import ucar.nc2.VariableSimpleIF;
 import ucar.nc2.constants.CDM;
 import ucar.nc2.constants.FeatureType;
 import ucar.nc2.dataset.*;
-import ucar.nc2.dt.GridDatatype;
-import ucar.nc2.dt.grid.GeoGrid;
 import ucar.nc2.ft.FeatureDataset;
 import ucar.nc2.ft2.coverage.adapter.SimpleGeometryCS;
 import ucar.nc2.time.CalendarDate;
@@ -47,7 +45,7 @@ public class SimpleGeometryFeatureDataset implements FeatureDataset {
      */
     static public SimpleGeometryFeatureDataset open(String location, Set<NetcdfDataset.Enhance> enhanceMode) throws IOException {
         NetcdfDataset ds = ucar.nc2.dataset.NetcdfDataset.acquireDataset(null, DatasetUrl.findDatasetUrl(location), enhanceMode, -1, null, null);
-        return new SimpleGeometryFeatureDataset(ds, null);
+        return new SimpleGeometryFeatureDataset(ds);
     }
 
     /**
@@ -57,19 +55,7 @@ public class SimpleGeometryFeatureDataset implements FeatureDataset {
      * @throws java.io.IOException on read error
      */
     public SimpleGeometryFeatureDataset(NetcdfDataset ncd) throws IOException {
-        this(ncd, null);
-    }
-
-    /**
-     * Create a SimpleGeometryFeatureDataset from a NetcdfDataset.
-     *
-     * @param ncd underlying NetcdfDataset, will do Enhance.CoordSystems if not already done.
-     * @param parseInfo put parse info here, may be null
-     * @throws java.io.IOException on read error
-     */
-    public SimpleGeometryFeatureDataset(NetcdfDataset ncd, Formatter parseInfo) throws IOException {
         this.ncd = ncd;
-        // ds.enhance(EnumSet.of(NetcdfDataset.Enhance.CoordSystems));
         Set<NetcdfDataset.Enhance> enhance = ncd.getEnhanceMode();
         if(enhance == null || enhance.isEmpty()) enhance = NetcdfDataset.getDefaultEnhanceMode();
         ncd.enhance(enhance);

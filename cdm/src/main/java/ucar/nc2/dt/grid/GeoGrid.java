@@ -9,7 +9,6 @@ import ucar.nc2.*;
 import ucar.nc2.constants.AxisType;
 import ucar.nc2.dt.GridCoordSystem;
 import ucar.nc2.dt.GridDatatype;
-import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometryFeatureDataset;
 import ucar.nc2.util.NamedObject;
 import ucar.nc2.dataset.*;
 import ucar.unidata.geoloc.*;
