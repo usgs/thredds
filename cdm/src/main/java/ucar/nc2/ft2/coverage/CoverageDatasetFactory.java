@@ -82,43 +82,6 @@ public class CoverageDatasetFactory {
     return Optional.empty("Could not open as Coverage: " + endpoint);
   }
 
-  static public Optional<FeatureDatasetCoverage> openSimpleGeometryCoverageDataset(String endpoint) throws IOException {
-
-    // remote cdmrFeature datasets
-    if (endpoint.startsWith(ucar.nc2.ft.remote.CdmrFeatureDataset.SCHEME)) {
-      Optional<FeatureDataset> opt = ucar.nc2.ft.remote.CdmrFeatureDataset.factory(FeatureType.SIMPLE_GEOMETRY, endpoint);
-      return opt.isPresent() ? Optional.of( (FeatureDatasetCoverage) opt.get()) : Optional.empty(opt.getErrorMessage());
-    }
-
-    DatasetUrl durl = DatasetUrl.findDatasetUrl(endpoint);
-    if (durl.serviceType == null) { // skip GRIB check for anything not a plain ole file
-      // check if its GRIB collection
-      Optional<FeatureDatasetCoverage> opt = openGrib(endpoint);
-      if (opt.isPresent()) return opt;
-      if (opt.getErrorMessage() == null)
-        return Optional.empty("Unknown error opening grib coverage dataset");
-      if (!opt.getErrorMessage().startsWith(CoverageDatasetFactory.NOT_GRIB_FILE) &&
-              !opt.getErrorMessage().startsWith(CoverageDatasetFactory.NO_GRIB_CLASS)) {
-        return opt;  // its a GRIB file with an error
-      }
-    }
-
-    // adapt a DtCoverageDataset (forked from ucar.nc2.dt.GridDataset), eg a local file
-    DtCoverageDataset gds = DtCoverageDataset.open(durl);
-    if (gds.getGrids().size() > 0) {
-      Formatter errlog = new Formatter();
-      FeatureDatasetCoverage result = DtCoverageAdapter.factory(gds, errlog);
-      if (result != null)
-        return Optional.of(result);
-      else
-        return Optional.empty(errlog.toString());
-    }
-
-    return Optional.empty("Could not open as Coverage: " + endpoint);
-  }
-
-
-
   /**
    *
    * @param endpoint cdmrFeature:url, local GRIB data or index file, or NetcdfDataset location

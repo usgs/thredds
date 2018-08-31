@@ -8,10 +8,12 @@ import ucar.nc2.Dimension;
 import ucar.nc2.constants.AxisType;
 import ucar.nc2.constants.FeatureType;
 import ucar.nc2.dataset.*;
+import ucar.nc2.ft2.coverage.simpgeometry.GeometryType;
 import ucar.nc2.ft2.coverage.simpgeometry.Line;
 import ucar.nc2.ft2.coverage.simpgeometry.Point;
 import ucar.nc2.ft2.coverage.simpgeometry.Polygon;
 import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometryReader;
+import ucar.unidata.geoloc.Projection;
 import ucar.unidata.geoloc.ProjectionImpl;
 
 import java.util.*;
@@ -56,16 +58,14 @@ public class SimpleGeometryCSBuilder {
     return fac.type == null ? "" : fac.showSummary();
   }
 
-  ////////////////////////////////////////////////////////////////////////////////////
-  FeatureType type;
-
-  boolean isLatLon;
-  List<CoordinateAxis> independentAxes;
-  List<CoordinateAxis> otherAxes;
-  List<CoordinateAxis> allAxes;
-  List<CoordinateTransform> coordTransforms;
-  SimpleGeometryReader geometryReader;
-  ProjectionImpl orgProj;
+  
+  private FeatureType type;
+  private List<CoordinateAxis> allAxes;
+  private List<CoordinateAxis> sgAxes;
+  private List<CoordinateTransform> coordTransforms;
+  private List<Dimension> dims;
+  private SimpleGeometryReader geometryReader;
+  private ProjectionImpl orgProj;
 
   SimpleGeometryCSBuilder(NetcdfDataset ds, CoordinateSystem cs, Formatter errlog) {
 
@@ -74,16 +74,25 @@ public class SimpleGeometryCSBuilder {
       if (errlog != null) errlog.format("CoordinateSystem '%s': domain rank < 2%n", cs.getName());
       return;
     }
-
-    //Create Simple Geometry Reader if there are any Axes with type SimpleGeometryID
+    
+    sgAxes = new ArrayList<CoordinateAxis>();
+    dims = ds.getDimensions();
+    allAxes = cs.getCoordinateAxes();
+    
+    // Create Simple Geometry Reader if there are any Axes with type SimpleGeometryID
+    // Also, populate simple geometry axis list 
     boolean sgtype = false;
     for(CoordinateAxis axis : cs.getCoordinateAxes()) {
-    	if(axis.getAxisType().equals(AxisType.SimpleGeometryID)) sgtype = true;
+    	if(axis.getAxisType().equals(AxisType.SimpleGeometryID) || axis.getAxisType().equals(AxisType.SimpleGeometryX)
+    			|| axis.getAxisType().equals(AxisType.SimpleGeometryY) || axis.getAxisType().equals(AxisType.SimpleGeometryZ)) {
+    		sgAxes.add(axis);
+    		sgtype = true;
+    	}
     }
     
     if(sgtype) {
     	geometryReader = new SimpleGeometryReader(ds);
- 
+    	this.type = FeatureType.SIMPLE_GEOMETRY;
     } else geometryReader = null;
     
     this.type = classify();
@@ -99,20 +108,66 @@ public class SimpleGeometryCSBuilder {
     	return FeatureType.SIMPLE_GEOMETRY;
     }
 
-    // what makes it a grid?
-    // each dimension must have its own coordinate variable
-    Set<Dimension> indDimensions = CoordinateSystem.makeDomain(independentAxes);
-    Set<Dimension> allDimensions = CoordinateSystem.makeDomain(allAxes);
-    if (indDimensions.size() == allDimensions.size()) {
-      return FeatureType.GRID;
-    }
-
-    // default
-    return FeatureType.COVERAGE;
+    return null;
   }
 
   public FeatureType getCoverageType() {
     return type;
+  }
+  
+  /**
+   * Returns the list of all axes contained in this coordinate system.
+   *
+   * @return simple geometry axes
+   */
+  public List<CoordinateAxis> getAllAxes(){
+	  return this.allAxes;
+  }
+  
+  /**
+   * Returns a list of coord transforms contained in this coordinate system.
+   * 
+   * @return coordinate transforms
+   */
+  public List<CoordinateTransform> getCoordTransforms(){
+	  return this.coordTransforms;
+  }
+  
+  /**
+   * Returns the list of dimensions contained in this coordinate system.
+   * 
+   * @return dimensions
+   */
+  public List<Dimension> getDimensions(){
+	  return this.dims;
+  }
+  
+  /**
+   * Returns the list of simple geometry axes contained in this coordinate system.
+   *
+   * @return simple geometry axes
+   */
+  public List<CoordinateAxis> getSgAxes(){
+	  return this.sgAxes;
+  }
+  
+  /**
+   * Given a variable name, returns the type of geometry which that variable is holding
+   * 
+   * @param name name of the variable
+   * @return geometry type associated with that variable
+   */
+  public GeometryType getGeometryType(String name) {
+	 return geometryReader.getGeometryType(name);
+  }
+  
+  /**
+   * Get the projection of this coordinate system.
+   * 
+   * @return projection
+   */
+  public Projection getProjection(){
+	  return this.orgProj;
   }
   
   /**
@@ -217,29 +272,17 @@ public class SimpleGeometryCSBuilder {
     switch (type) {
       case SIMPLE_GEOMETRY:
     	return new SimpleGeometryCS(this);
+      default:
+    	return null;
     }
-    return new SimpleGeometryCS(this);
   }
 
   @Override
   public String toString() {
     Formatter f2 = new Formatter();
     f2.format("%s", type == null ? "" : type.toString());
-    if (type == null) return f2.toString();
+    if (type == null) {f2.close(); return "";}
 
-    f2.format("%n%n independentAxes=(");
-    for (CoordinateAxis axis : independentAxes)
-      f2.format("%s, ", axis.getShortName());
-    f2.format(") {");
-    for (Dimension dim : CoordinateSystem.makeDomain(independentAxes))
-      f2.format("%s, ", dim.getShortName());
-    f2.format("}");
-    f2.format("%n otherAxes=(");
-    for (CoordinateAxis axis : otherAxes)
-      f2.format("%s, ", axis.getShortName());
-    f2.format(") {");
-    for (Dimension dim : CoordinateSystem.makeDomain(otherAxes))
-      f2.format("%s, ", dim.getShortName());
     f2.format("}");
     f2.format("%n allAxes=(");
     for (CoordinateAxis axis : allAxes)
@@ -248,8 +291,9 @@ public class SimpleGeometryCSBuilder {
     for (Dimension dim : CoordinateSystem.makeDomain(allAxes))
       f2.format("%s, ", dim.getShortName());
     f2.format("}%n");
-
-    return f2.toString();
+    String stringRepres = f2.toString();
+    f2.close();
+    return stringRepres;
   }
 
   public String showSummary() {
@@ -259,22 +303,11 @@ public class SimpleGeometryCSBuilder {
     f2.format("%s", type.toString());
 
     f2.format("(");
-    int count = 0;
-    for (CoordinateAxis axis : independentAxes) {
-      if (count++ > 0) f2.format(",");
-      f2.format("%s", axis.getAxisType() == null ? axis.getShortName() : axis.getAxisType().getCFAxisName());
-    }
     f2.format(")");
 
-    if (otherAxes.size() > 0) {
-      f2.format(": ");
-      count = 0;
-      for (CoordinateAxis axis : otherAxes) {
-        if (count++ > 0) f2.format(",");
-        f2.format("%s", axis.getShortName());
-      }
-    }
-    return f2.toString();
+    String stringRepres = f2.toString();
+    f2.close();
+    return stringRepres;
   }
 
 }

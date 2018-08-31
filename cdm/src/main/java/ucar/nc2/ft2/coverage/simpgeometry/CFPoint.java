@@ -33,8 +33,8 @@ public class CFPoint implements Point{
 	 * 
 	 */
 	
-	public CFGEOMETRY getGeometryType() {
-		return CFGEOMETRY.CFPOINT;
+	public GeometryType getGeometryType() {
+		return GeometryType.POINT;
 	}
 	
 	/**
@@ -114,6 +114,7 @@ public class CFPoint implements Point{
 	 *  Sets the next point in a multipoint
 	 * 
 	 */
+
 	public void setNext(Point next) {
 		this.next = next;
 	}

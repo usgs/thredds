@@ -1,5 +1,6 @@
 package ucar.nc2.ft2.coverage.simpgeometry;
 
+import ucar.nc2.Attribute;
 import ucar.nc2.Variable;
 import ucar.nc2.constants.CF;
 import ucar.nc2.dataset.NetcdfDataset;
@@ -82,6 +83,44 @@ public class SimpleGeometryReader {
 		
 		if(pt == null) return pt;
 		else return pt.setupPoint(ds, pointvar, index);
+	}
+	
+	/**
+	 * Given a variable name, returns the geometry type which that variable is associated with.
+	 * If the variable has no simple geometry information, null will be returned.
+	 * 
+	 * @param name variable name which will have geometry type be checked
+	 * @return Geometry Type if holds geometry information, null if not
+	 */
+	public GeometryType getGeometryType(String name) {
+		Variable geometryVar = ds.findVariable(name);
+		if(geometryVar == null) return null;
+		
+		// CFConvention
+		if(ds.findGlobalAttribute(CF.CONVENTIONS) != null)
+			if(ucar.nc2.dataset.conv.CF1Convention.getVersion(ds.findGlobalAttribute(CF.CONVENTIONS).getStringValue()) >= 8)
+			{
+				Attribute geometryTypeAttr = null;
+				String geometry_type = null;
+				
+				geometryTypeAttr = geometryVar.findAttribute(CF.GEOMETRY_TYPE);
+				if(geometryTypeAttr == null) return null;
+				geometry_type = geometryTypeAttr.getStringValue();
+				
+				switch(geometry_type)
+				{
+					case CF.POLYGON:
+						return GeometryType.POLYGON;
+					case CF.LINE:
+						return GeometryType.LINE;
+					case CF.POINT:
+						return GeometryType.POINT;
+					default:
+						return null;
+				}
+			}
+		
+		return null;
 	}
 	
 	/**

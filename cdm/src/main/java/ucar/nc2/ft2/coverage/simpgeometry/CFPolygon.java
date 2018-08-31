@@ -33,8 +33,8 @@ public class CFPolygon implements Polygon  {
 	 * 
 	 */
 	
-	public CFGEOMETRY getGeometryType() {
-		return CFGEOMETRY.CFPOLYGON;
+	public GeometryType getGeometryType() {
+		return GeometryType.POLYGON;
 	}
 	
 	/**
