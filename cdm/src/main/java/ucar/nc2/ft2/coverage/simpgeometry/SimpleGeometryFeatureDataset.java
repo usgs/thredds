@@ -61,7 +61,7 @@ public class SimpleGeometryFeatureDataset implements FeatureDataset {
         ncd.enhance(enhance);
     }
 
-    // stuff to satisfy ucar.nc2.dt.TypedDataset
+    @Override
     public String getTitle() {
         String title = ncd.getTitle();
         if (title == null)
@@ -71,13 +71,15 @@ public class SimpleGeometryFeatureDataset implements FeatureDataset {
         return title;
     }
 
+    @Override
     public String getDescription() {
-        String desc = ncd.findAttValueIgnoreCase(null, "description", null);
+        String desc = ncd.findAttValueIgnoreCase(null, CDM.DESCRIPTION, null);
         if (desc == null)
             desc = ncd.findAttValueIgnoreCase(null, CDM.HISTORY, null);
         return (desc == null) ? getName() : desc;
     }
 
+    @Override
     public String getLocation() {
         return (ncd != null) ?  ncd.getLocation() : "";
     }
@@ -171,6 +173,7 @@ public class SimpleGeometryFeatureDataset implements FeatureDataset {
         private SimpleGeometryCS gcc;
         private List<SimpleGeometryCoverage> covs = new ArrayList<>();
 
+
         private SimpleGeometryCovSet(SimpleGeometryCS gcc) {
             this.gcc = gcc;
         }
@@ -184,13 +187,6 @@ public class SimpleGeometryFeatureDataset implements FeatureDataset {
          */
         public List<SimpleGeometryCoverage> getGrids() {
             return covs;
-        }
-
-        /**
-         * all GridDatatype point to this GridCoordSystem
-         */
-        public SimpleGeometryCS getSGCoordSystem() {
-            return gcc;
         }
 
         /**
@@ -223,18 +219,5 @@ public class SimpleGeometryFeatureDataset implements FeatureDataset {
     // reacquire any resources like file handles
     public void reacquire() throws IOException {
         if (ncd != null) ncd.reacquire();
-    }
-
-    /////////////////////////////
-    // deprecated
-
-
-    /**
-     * Open a netcdf dataset, parse Conventions, find all the geoGrids, return a GridDataset.
-     *
-     * @deprecated : use GridDataset.open().
-     */
-    static public SimpleGeometryFeatureDataset factory(String netcdfFileURI) throws IOException {
-        return open(netcdfFileURI);
     }
 }
