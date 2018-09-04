@@ -2,6 +2,7 @@ package thredds.server.wfs;
 
 import java.io.PrintWriter;
 import java.util.List;
+import ucar.nc2.ft2.coverage.simpgeometry.*;
 
 /**
  * A writer for a WFS compliant Geospatial XML given a print writer.
@@ -14,8 +15,7 @@ public class WFSDataWriter {
 	private PrintWriter response;
 	private String fileOutput;
 	private WFSRequestType requestType;
-	private List<WFSRequestType> supportedOperations;
-	private List<GeometryType> supportedFTs;
+	private String server;
 	
 	/**
 	 * Initiate the response with an XML file with an XML header and the WFS_Capabilities tag.
@@ -50,7 +50,7 @@ public class WFSDataWriter {
 	 * Starts writing an operations metadata section/
 	 */
 	public void startOperationsMetadata(){
-		fileOutput += "<ows:OperationsMetadata>";
+		fileOutput += "<ows:OperationsMetadata> ";
 	}
 	
 	/**
@@ -59,7 +59,14 @@ public class WFSDataWriter {
 	 */
 	public void addOperation(WFSRequestType rt) {
 		
-		fileOutput += "<ows:Operation name=\"" + rt.toString() + "\">";;
+		fileOutput += "<ows:Operation name=\"" + rt.toString() + "\"> "
+				+ "<ows:DCP> "
+				+ "<ows:HTTP> "
+				+ "<ows:Get xlink:href=\"" + server + "?\"/> "
+				+ "<ows:Post xlink:href=\"" + server + "\"/> "
+				+ "</ows:HTTP> "
+				+ "</ows:DCP>";
+		fileOutput += "</ows:Operation> ";
 	}
 	
 	/**
@@ -81,5 +88,9 @@ public class WFSDataWriter {
 		this.response = response;
 		fileOutput = "";
 		requestType = null;
+	}
+
+	public void setServer(String server) {
+		this.server = server;
 	}
 }

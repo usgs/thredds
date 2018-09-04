@@ -32,9 +32,15 @@ public class WFSController extends HttpServlet {
 	 * @param out
 	 * @return
 	 */
-	private void getCapabilities(PrintWriter out) {
+	private void getCapabilities(PrintWriter out, HttpServletRequest hsreq) {
 		WFSDataWriter gcdw = new WFSDataWriter(out);
 		gcdw.startXML();
+		gcdw.setServer(hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs");
+		gcdw.startOperationsMetadata();
+		gcdw.addOperation(WFSRequestType.GetCapabilities);
+		gcdw.addOperation(WFSRequestType.DescribeFeatureType);
+		gcdw.addOperation(WFSRequestType.GetFeature);
+		gcdw.finishOperationsMetadata();
 		gcdw.finishXML();
 	}
 	
@@ -54,12 +60,15 @@ public class WFSController extends HttpServlet {
 			// 
 			if(request != null) {
 				if(request.equals(WFSRequestType.GetCapabilities.toString())) {
-					getCapabilities(wr);
+					getCapabilities(wr, hsreq);
 				}
 			}
 			
+			
+			
 			else{
-				wr.append("ncWFS on THREDDS");
+				wr.append("ncWFS on THREDDS - ");
+				wr.append(hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs");
 			}
 		}
 		
