@@ -115,6 +115,8 @@ public class FeatureDatasetTypeTest {
 		MockHttpServletRequest req = new MockHttpServletRequest();
 		MockHttpServletResponse res = new MockHttpServletResponse();
 
-		FeatureDataset fd = TdsRequestedDataset.getSimpleGeometryFeatureDataset(req, res, "testStationFeatureCollection/Metar_Station_Data_fc.cdmr");
+		FeatureDataset fd = TdsRequestedDataset.getSimpleGeometryFeatureDataset(req, res, "/thredds/cdm/src/test/data/dataset/SimpleGeos/hru_soil_moist_3hru_5timestep.nc");
+		assertNotNull(fd);
+		assertEquals(FeatureType.SIMPLE_GEOMETRY, fd.getFeatureType());
 	}
 }
