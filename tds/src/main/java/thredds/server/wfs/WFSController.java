@@ -33,14 +33,13 @@ public class WFSController extends HttpServlet {
 	 * @return
 	 */
 	private void getCapabilities(PrintWriter out, HttpServletRequest hsreq) {
-		WFSDataWriter gcdw = new WFSDataWriter(out);
+		WFSGetCapabilitiesWriter gcdw = new WFSGetCapabilitiesWriter(out);
 		gcdw.startXML();
 		gcdw.setServer(hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs");
-		gcdw.startOperationsMetadata();
-		gcdw.addOperation(WFSRequestType.GetCapabilities);
-		gcdw.addOperation(WFSRequestType.DescribeFeatureType);
-		gcdw.addOperation(WFSRequestType.GetFeature);
-		gcdw.finishOperationsMetadata();
+		gcdw.addOperation(WFSRequestType.GetCapabilities); gcdw.addOperation(WFSRequestType.DescribeFeatureType); gcdw.addOperation(WFSRequestType.GetFeature);
+		gcdw.writeOperations();
+		gcdw.addFeature(new WFSFeature("hru_soil_moist", "HRU Soil Moisture"));
+		gcdw.writeFeatureTypes();
 		gcdw.finishXML();
 	}
 	
