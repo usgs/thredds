@@ -3,9 +3,6 @@ package thredds.server.wfs;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import thredds.core.TdsRequestedDataset;
-
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -27,7 +24,7 @@ public class WFSController extends HttpServlet {
 
 
 	/**
-	 * Processes getCapabilities requests.
+	 * Processes GetCapabilities requests.
 	 * 
 	 * @param out
 	 * @return
