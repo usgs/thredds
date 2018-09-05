@@ -25,7 +25,7 @@ public class WFSGetCapabilitiesWriter {
 	 */
 	public void startXML() {
 		fileOutput += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-		fileOutput += "<WFS_Capabilities xsi:schemaLocation=\"http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
+		fileOutput += "<wfs:WFS_Capabilities xsi:schemaLocation=\"http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
 				+ " xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:gml=\"http://opengis.net/gml\" xmlns:fes=\"http://www.opengis.net/fes/2.0\" xmlns:ogc=\"http://www.opengis.net/ogc\""
 				+ " xmlns:ows=\"http://www.opengis.net/ows/1.1\" xmlns:wfs=\"http://opengis.net/wfs/2.0\" xmlns=\"http://www.opengis.net/wfs/2.0\" version=\"2.0.0\">";
 		writeServiceInfo();
@@ -37,7 +37,7 @@ public class WFSGetCapabilitiesWriter {
 	 * Once a XML is finished, the WFSDataWriter is no longer usable.
 	 */
 	public void finishXML() {
-		fileOutput += "</WFS_Capabilities>";
+		fileOutput += "</wfs:WFS_Capabilities>";
 		this.response.append(fileOutput);
 		response = null;
 		fileOutput = null;
@@ -67,7 +67,7 @@ public class WFSGetCapabilitiesWriter {
 	 * Given the parameter operation name, add the operation
 	 * to the operations metadata section.
 	 */
-	private void writeOperation(WFSRequestType rt) {
+	private void writeAOperation(WFSRequestType rt) {
 		
 		fileOutput += "<ows:Operation name=\"" + rt.toString() + "\"> "
 				+ "<ows:DCP> "
@@ -112,9 +112,38 @@ public class WFSGetCapabilitiesWriter {
 	public void writeOperations() {
 		fileOutput += "<ows:OperationsMetadata> ";
 		for(WFSRequestType rt : operationList) {
-			writeOperation(rt);
+			writeAOperation(rt);
 		}
 		
+		// Write parameters
+		fileOutput += "<ows:Parameter name=\"AcceptVersions\"> "
+				+ "<ows:AllowedValues> "
+				+ "<ows:Value>2.0.0</ows:Value>"
+				+ "</ows:AllowedValues>"
+				+ "</ows:Parameter>";
+		
+		fileOutput += "<ows:Parameter name=\"AcceptFormats\">"
+				+ "<ows:AllowedValues> "
+				+ "<ows:Value>text/xml</ows:Value>"
+				+ "</ows:AllowedValues>"
+				+ "</ows:Parameter>";
+		
+		fileOutput += "<ows:Parameter name=\"Sections\"> "
+				+ "<ows:AllowedValues> "
+				+ "<ows:Value>ServiceIdentification</ows:Value> "
+				+ "<ows:Value>ServiceProvider</ows:Value> "
+				+ "<ows:Value>OperationsMetadata</ows:Value> "
+				+ "<ows:Value>FeatureTypeList</ows:Value> "
+				+ "</ows:AllowedValues>"
+				+ "</ows:Parameter>";
+		
+		fileOutput += "<ows:Parameter name=\"version\"> "
+				+ "<ows:AllowedValues> "
+				+ "<ows:Value>2.0.0</ows:Value>"
+				+ "</ows:AllowedValues>"
+				+ "</ows:Parameter>";
+		
+		// Write constraints
 		writeAConstraint("ImplementsBasicWFS", true);
 		writeAConstraint("ImplementsTransactionalWFS", false);
 		writeAConstraint("ImplementsLockingWFS", false);
@@ -144,8 +173,15 @@ public class WFSGetCapabilitiesWriter {
 			for(WFSFeature wf : featureList) {
 				fileOutput +=
 						"<FeatureType> "
-					+ 	"<Name>" + wf.getName() + "</Name>"
-					+ 	"<Title>" + wf.getTitle() + "</Title>"
+					+ 	"<Name>" + wf.getName() + "</Name> "
+					+ 	"<Title>" + wf.getTitle() + "</Title> "
+					+ 	"<DefaultCRS>" + "urn:ogc:def:crs:EPSG::4326" + "</DefaultCRS>"
+					+ 	"<OutputFormats> "
+					+ 	"<Format>text/xml; subtype=gml/3.2.1</Format> "
+					+ 	"</OutputFormats> "
+					+ 	"<ows:WGS84BoundingBox dimensions=\"2\"> "
+					+ 	"<ows:LowerCorner>-180 -90</ows:LowerCorner> <ows:UpperCorner>180 90</ows:UpperCorner>"
+					+ 	"</ows:WGS84BoundingBox>"
 					+	"</FeatureType> ";
 			}
 		

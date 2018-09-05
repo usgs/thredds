@@ -63,8 +63,6 @@ public class WFSController extends HttpServlet {
 				}
 			}
 			
-			
-			
 			else{
 				wr.append("ncWFS on THREDDS - ");
 				wr.append(hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs");
