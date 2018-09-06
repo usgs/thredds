@@ -270,7 +270,7 @@ public class DatasetManager implements InitializingBean {
     NetcdfDataset ncd = null;
     try {
       ncd = NetcdfDataset.wrap(ncfile, NetcdfDataset.getDefaultEnhanceMode());
-      return (FeatureDatasetPoint) FeatureDatasetFactoryManager.wrap(FeatureType.SIMPLE_GEOMETRY, ncd, null, errlog);
+      return (FeatureDatasetPoint) FeatureDatasetFactoryManager.wrap(FeatureType.ANY_POINT, ncd, null, errlog);
 
     } catch (Throwable t) {
       if (ncd == null)
@@ -283,7 +283,7 @@ public class DatasetManager implements InitializingBean {
 
       String msg = ncd == null ? "Problem wrapping NetcdfFile in NetcdfDataset; " : "Problem calling FeatureDatasetFactoryManager; ";
       msg += errlog.toString();
-      log.error("openSimpleGeometryDataset(): " + msg, t);
+      log.error("openGridDataset(): " + msg, t);
       throw new IOException(msg + t.getMessage());
     }
   }
@@ -355,7 +355,7 @@ public class DatasetManager implements InitializingBean {
 
       InvDatasetFeatureCollection fc = featureCollectionCache.get(featCollection);
       SimpleGeometryFeatureDataset fd = fc.getSimpleGeometryDataset(match.remaining);
-      if (fd == null) throw new IllegalArgumentException("Not a Point Dataset " + fc.getName());
+      if (fd == null) throw new IllegalArgumentException("Not a Simple Geometry Dataset " + fc.getName());
       return fd;
     }
 
@@ -367,7 +367,7 @@ public class DatasetManager implements InitializingBean {
     NetcdfDataset ncd = null;
     try {
       ncd = NetcdfDataset.wrap(ncfile, NetcdfDataset.getDefaultEnhanceMode());
-      return (SimpleGeometryFeatureDataset) FeatureDatasetFactoryManager.wrap(FeatureType.ANY_POINT, ncd, null, errlog);
+      return (SimpleGeometryFeatureDataset) FeatureDatasetFactoryManager.wrap(FeatureType.SIMPLE_GEOMETRY, ncd, null, errlog);
 
     } catch (Throwable t) {
       if (ncd == null)
@@ -380,7 +380,7 @@ public class DatasetManager implements InitializingBean {
 
       String msg = ncd == null ? "Problem wrapping NetcdfFile in NetcdfDataset; " : "Problem calling FeatureDatasetFactoryManager; ";
       msg += errlog.toString();
-      log.error("openGridDataset(): " + msg, t);
+      log.error("openSimpleGeometryDataset(): " + msg, t);
       throw new IOException(msg + t.getMessage());
     }
   }
