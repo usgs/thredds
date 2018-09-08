@@ -1,7 +1,5 @@
 package thredds.server.wfs;
 
-import org.geotoolkit.referencing.CRS;
-
 /**
  * A simple container for a WFS Feature Type
  * 
@@ -9,8 +7,8 @@ import org.geotoolkit.referencing.CRS;
  *
  */
 public class WFSFeature {
-	private String name;
-	private String title;
+	private final String name;
+	private final String title;
 
 	public String getName() {
 		return name;

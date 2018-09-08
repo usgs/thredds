@@ -22,7 +22,6 @@ import thredds.server.wfs.WFSRequestType;
 @RequestMapping("/wfs")
 public class WFSController extends HttpServlet {
 
-
 	/**
 	 * Processes GetCapabilities requests.
 	 * 
@@ -55,19 +54,22 @@ public class WFSController extends HttpServlet {
 			
 			// 
 			if(request != null) {
+				WFSLogger.logInfo("WFS Server received GetCapabilities request.");
 				if(request.equals(WFSRequestType.GetCapabilities.toString())) {
 					getCapabilities(wr, hsreq);
 				}
 			}
 			
 			else{
-				wr.append("ncWFS on THREDDS - ");
-				wr.append(hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs");
+				WFSExceptionWriter owsExcept = new WFSExceptionWriter("WFS server error. REQUEST parameter is required.", "request", "MissingParameterValue", hsres);
+				owsExcept.write();
+				return;
 			}
 		}
 		
 		catch(IOException io) {
-			
+			WFSLogger.logError("ERROR: retrieval of writer failed.");
+			throw new RuntimeException("ERROR: retrieval of writer failed");
 		}
 	}
 }
