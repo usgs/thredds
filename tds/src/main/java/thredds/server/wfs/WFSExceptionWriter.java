@@ -5,6 +5,12 @@ import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * A simple XML writer for XML-based WFS exceptions.
+ * 
+ * @author wchen@usgs.gov
+ *
+ */
 public class WFSExceptionWriter {
 	private final String text;
 	private final String ExceptionCode;
