@@ -43,6 +43,7 @@ public class WFSController extends HttpServlet {
 		WFSDescribeFeatureTypeWriter dftw = new WFSDescribeFeatureTypeWriter(out);
 		dftw.startXML();
 		dftw.setServer(hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs");
+		dftw.addFeature(new WFSFeature("hru_soil_moist", "HRU Soil Moisture", "simplegeom"));
 		dftw.writeFeatures();
 		dftw.finishXML();
 	}

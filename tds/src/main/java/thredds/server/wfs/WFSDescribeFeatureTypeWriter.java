@@ -30,10 +30,15 @@ public class WFSDescribeFeatureTypeWriter {
         this.server = server;
     }
 
+    public void addFeature(WFSFeature feature) {
+
+        featureList.add(feature);
+    }
+
     public void writeFeatures() {
 
         for (WFSFeature feat : featureList) {
-            fileOutput += "<element name =\"" + feat.getName() + "\" type=\"" +feat.getTitle() + "\">";
+            fileOutput += "<element name =\"" + feat.getName() + "\" type=\"" +feat.getType() + "\">";
         }
     }
 
