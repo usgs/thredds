@@ -52,9 +52,8 @@ public class WFSController extends HttpServlet {
 			PrintWriter wr = hsres.getWriter();
 			String request = hsreq.getParameter("REQUEST");
 			
-			// 
+			// The REQUEST Parameter is required. If not specified, is an error (throw exception through XML).
 			if(request != null) {
-				WFSLogger.logInfo("WFS Server received GetCapabilities request.");
 				if(request.equals(WFSRequestType.GetCapabilities.toString())) {
 					getCapabilities(wr, hsreq);
 				}
@@ -68,8 +67,7 @@ public class WFSController extends HttpServlet {
 		}
 		
 		catch(IOException io) {
-			WFSLogger.logError("ERROR: retrieval of writer failed.");
-			throw new RuntimeException("ERROR: retrieval of writer failed");
+			throw new RuntimeException("ERROR: retrieval of writer failed", io);
 		}
 	}
 }
