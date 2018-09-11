@@ -7,6 +7,7 @@ package thredds.server.wfs;
  *
  */
 public class WFSFeature {
+
 	private final String name;
 	private final String title;
 

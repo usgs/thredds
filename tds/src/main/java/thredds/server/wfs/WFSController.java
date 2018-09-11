@@ -38,6 +38,14 @@ public class WFSController extends HttpServlet {
 		gcdw.writeFeatureTypes();
 		gcdw.finishXML();
 	}
+
+	private void describeFeatureType(PrintWriter out, HttpServletRequest hsreq) {
+		WFSDescribeFeatureTypeWriter dftw = new WFSDescribeFeatureTypeWriter(out);
+		dftw.startXML();
+		dftw.setServer(hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs");
+		dftw.writeFeatures();
+		dftw.finishXML();
+	}
 	
 	/**
 	 * A handler for WFS based HTTP requests that sends to other request handlers
@@ -56,6 +64,10 @@ public class WFSController extends HttpServlet {
 			if(request != null) {
 				if(request.equals(WFSRequestType.GetCapabilities.toString())) {
 					getCapabilities(wr, hsreq);
+				}
+
+				else if (request.equals(WFSRequestType.DescribeFeatureType.toString())) {
+					describeFeatureType(wr, hsreq);
 				}
 			}
 			
