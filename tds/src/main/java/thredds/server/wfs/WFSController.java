@@ -59,7 +59,7 @@ public class WFSController extends HttpServlet {
 		if(service != null) {
 			// For the WFS servlet it must be WFS if not, write out an InvalidParameterValue exception.
 			if(!service.equalsIgnoreCase("WFS")) {
-					return new WFSExceptionWriter("WFS Server error. SERVICE parameter must be of value WFS.", service, "InvalidParameterValue");
+					return new WFSExceptionWriter("WFS Server error. SERVICE parameter must be of value WFS.", "service", "InvalidParameterValue");
 			}
 			
 		}
@@ -77,32 +77,24 @@ public class WFSController extends HttpServlet {
 				if(version != null ) {
 					// If the version is not failed report exception VersionNegotiationFailed, from OGC Web Services Common Standard section 7.4.1
 					
-					List<String> versionParts = new ArrayList<String>();
-					String currentPart = "";
+					// Get each part
+					String[] versionParts = version.split("\\.");
 					
-					//Interestingly, string split has problems with "." so split it manually
-					for(int ind = 0; ind < version.length(); ind++) {
+						for(int ind = 0; ind < versionParts.length; ind++) {
 						
-						// Check if number. If it is add it to the version part list
-						if(version.charAt(ind) >= '0' && version.charAt(ind) <= '9') {
-							currentPart += version.charAt(ind);
-						}
-						
-						// A period marks the beginning of a new part in the Version
-						else if(version.charAt(ind) == '.') {
-							versionParts.add(currentPart);
-							currentPart = "";
+						// Check if number will throw NumberFormatException if not.
+						try {
+							Integer.valueOf(versionParts[ind]);
 						}
 						
 						/* Version parameters are only allowed to consist of numbers and periods. If this is not the case then
 						 * It qualifies for InvalidParameterException
 						 */
-						else {
+						catch (NumberFormatException excep){
 							return new WFSExceptionWriter("WFS server error. VERSION parameter consists of invalid characters.", "version", "InvalidParameterValue");
 						}
 					}
 					
-					if(currentPart != null) versionParts.add(currentPart);
 					
 					/* Now the version parts are all constructed from the parameter
 					 * Analyze for correctness. 
@@ -111,10 +103,10 @@ public class WFSController extends HttpServlet {
 					
 					
 					// If just number 2 is specified, assume 2.0.0, pass the check
-					if(versionParts.size() == 1) if(versionParts.get(0).equals("2")) validVersion = true;
+					if(versionParts.length == 1) if(versionParts[0].equals("2")) validVersion = true;
 					
 					// Two version parts specified, make sure it's 2.0
-					if(versionParts.size() >= 2) if(versionParts.get(0).equals("2") && versionParts.get(1).equals("0")) validVersion = true;
+					if(versionParts.length >= 2) if(versionParts[0].equals("2") && versionParts[1].equals("0")) validVersion = true;
 					
 					/* Another exception VersionNegotiationFailed is specified by OGC Web Services Common
 					 * for version mismatches. If the version check failed print this exception
@@ -130,9 +122,10 @@ public class WFSController extends HttpServlet {
 				}
 			}
 			
-			else {
-				return new WFSExceptionWriter("WFS server error. REQUEST parameter is not valid. Possible values: GetCapabilities, DescribeFeatureType, GetFeature", "request", "InvalidParameterValue");
-			}
+			WFSRequestType reqToProc = WFSRequestType.getWFSRequestType(request);
+			if(reqToProc == null) return new WFSExceptionWriter("WFS server error. REQUEST parameter is not valid. Possible values: GetCapabilities, "
+					+ "DescribeFeatureType, GetFeature", "request", "InvalidParameterValue");
+			
 		}
 		
 		else{
@@ -185,17 +178,25 @@ public class WFSController extends HttpServlet {
 			
 			// If parameter checks all pass launch the request
 			if(paramError == null) {
-				if(request.equalsIgnoreCase(WFSRequestType.GetCapabilities.toString())) {
-					getCapabilities(wr, hsreq);
-				}
 				
-				else if(request.equalsIgnoreCase(WFSRequestType.DescribeFeatureType.toString())) {
-					
-				}
+				WFSRequestType reqToProc = WFSRequestType.getWFSRequestType(request);
 				
-				else if(request.equalsIgnoreCase(WFSRequestType.GetFeature.toString())) {
+				switch(reqToProc) {
+					case GetCapabilities:
+						getCapabilities(wr, hsreq);
+					break;
 					
-				}
+					case DescribeFeatureType:
+						
+					break;
+					
+					case GetFeature:
+						
+					break;
+					
+					default:
+				}	
+				
 			}
 			
 			// Parameter checks did not all pass, print the error and return
