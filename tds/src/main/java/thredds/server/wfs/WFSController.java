@@ -46,6 +46,103 @@ public class WFSController extends HttpServlet {
 	}
 	
 	/**
+	 * Checks request parameters for errors.
+	 * Will send back an XML Exception if any errors are encountered.
+	 * 
+	 * @param request parameter value
+	 * @param version parameter value
+	 * @param service parameter value
+	 * @return an ExceptionWriter if any errors occurred or null if none occurred
+	 */
+	private WFSExceptionWriter checkParametersForError(String request, String version, String service) {
+		// The SERVICE parameter is required. If not specified, is an error (throw exception through XML).
+		if(service != null) {
+			// For the WFS servlet it must be WFS if not, write out an InvalidParameterValue exception.
+			if(!service.equalsIgnoreCase("WFS")) {
+					return new WFSExceptionWriter("WFS Server error. SERVICE parameter must be of value WFS.", service, "InvalidParameterValue");
+			}
+			
+		}
+					
+		else {
+			return new WFSExceptionWriter("WFS server error. SERVICE parameter is required.", "request", "MissingParameterValue");
+		}
+		
+		// The REQUEST Parameter is required. If not specified, is an error (throw exception through XML).
+		if(request != null) {
+			
+			// Only go through version checks if NOT a Get Capabilities request, the VERSION parameter is required for all operations EXCEPT GetCapabilities section 7.6.25 of WFS 2.0 Interface Standard
+			if(!request.equalsIgnoreCase(WFSRequestType.GetCapabilities.toString())) {
+			
+				if(version != null ) {
+					// If the version is not failed report exception VersionNegotiationFailed, from OGC Web Services Common Standard section 7.4.1
+					
+					List<String> versionParts = new ArrayList<String>();
+					String currentPart = "";
+					
+					//Interestingly, string split has problems with "." so split it manually
+					for(int ind = 0; ind < version.length(); ind++) {
+						
+						// Check if number. If it is add it to the version part list
+						if(version.charAt(ind) >= '0' && version.charAt(ind) <= '9') {
+							currentPart += version.charAt(ind);
+						}
+						
+						// A period marks the beginning of a new part in the Version
+						else if(version.charAt(ind) == '.') {
+							versionParts.add(currentPart);
+							currentPart = "";
+						}
+						
+						/* Version parameters are only allowed to consist of numbers and periods. If this is not the case then
+						 * It qualifies for InvalidParameterException
+						 */
+						else {
+							return new WFSExceptionWriter("WFS server error. VERSION parameter consists of invalid characters.", "version", "InvalidParameterValue");
+						}
+					}
+					
+					if(currentPart != null) versionParts.add(currentPart);
+					
+					/* Now the version parts are all constructed from the parameter
+					 * Analyze for correctness. 
+					 */
+					boolean validVersion = false;
+					
+					
+					// If just number 2 is specified, assume 2.0.0, pass the check
+					if(versionParts.size() == 1) if(versionParts.get(0).equals("2")) validVersion = true;
+					
+					// Two version parts specified, make sure it's 2.0
+					if(versionParts.size() >= 2) if(versionParts.get(0).equals("2") && versionParts.get(1).equals("0")) validVersion = true;
+					
+					/* Another exception VersionNegotiationFailed is specified by OGC Web Services Common
+					 * for version mismatches. If the version check failed print this exception
+					 */
+					if(!validVersion){
+						return new WFSExceptionWriter("WFS Server error. Version requested is not supported.", null, "VersionNegotiationFailed");
+					}
+				}
+		
+				else {
+					return new WFSExceptionWriter("WFS server error. VERSION parameter is required.", "request", "MissingParameterValue");
+
+				}
+			}
+			
+			else {
+				return new WFSExceptionWriter("WFS server error. REQUEST parameter is not valid. Possible values: GetCapabilities, DescribeFeatureType, GetFeature", "request", "InvalidParameterValue");
+			}
+		}
+		
+		else{
+			return new WFSExceptionWriter("WFS server error. REQUEST parameter is required.", "request", "MissingParameterValue");
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * A handler for WFS based HTTP requests that sends to other request handlers
 	 * to handle the request.
 	 *
@@ -69,7 +166,6 @@ public class WFSController extends HttpServlet {
 			/* Look for parameter names to assign values
 			 * in order to avoid casing issues with parameter names (such as a mismatch between reQUEST and request and REQUEST).
 			 */
-			
 			for(String paramName : paramNames) {
 				if(paramName.equalsIgnoreCase("REQUEST")) {
 					request = hsreq.getParameter(paramName);
@@ -85,90 +181,10 @@ public class WFSController extends HttpServlet {
 				}
 			}
 			
-			// The SERVICE parameter is required. If not specified, is an error (throw exception through XML).
-			if(service != null) {
-
-				// For the WFS servlet it must be WFS if not, write out an InvalidParameterValue exception.
-				if(!service.equalsIgnoreCase("WFS")) {
-					WFSExceptionWriter owsExcept = new WFSExceptionWriter("WFS Server error. SERVICE parameter must be of value WFS.", service, "InvalidParameterValue", hsres);
-					owsExcept.write();
-					return;
-				}
-				
-			}
+			WFSExceptionWriter paramError = checkParametersForError(request, version, service);
 			
-			else {
-				WFSExceptionWriter owsExcept = new WFSExceptionWriter("WFS server error. SERVICE parameter is required.", "request", "MissingParameterValue", hsres);
-				owsExcept.write();
-				return;
-			}
-			
-			// The REQUEST Parameter is required. If not specified, is an error (throw exception through XML).
-			if(request != null) {
-				
-				// Only go through version checks if NOT a Get Capabilities request, the VERSION parameter is required for all operations EXCEPT GetCapabilities section 7.6.25 of WFS 2.0 Interface Standard
-				if(!request.equalsIgnoreCase(WFSRequestType.GetCapabilities.toString())) {
-				
-					if(version != null ) {
-						// If the version is not failed report exception VersionNegotiationFailed, from OGC Web Services Common Standard section 7.4.1
-						
-						List<String> versionParts = new ArrayList<String>();
-						String currentPart = "";
-						
-						//Interestingly, string split has problems with "." so split it manually
-						for(int ind = 0; ind < version.length(); ind++) {
-							
-							// Check if number. If it is add it to the version part list
-							if(version.charAt(ind) >= '0' && version.charAt(ind) <= '9') {
-								currentPart += version.charAt(ind);
-							}
-							
-							// A period marks the beginning of a new part in the Version
-							else if(version.charAt(ind) == '.') {
-								versionParts.add(currentPart);
-								currentPart = "";
-							}
-							
-							/* Version parameters are only allowed to consist of numbers and periods. If this is not the case then
-							 * It qualifies for InvalidParameterException
-							 */
-							else {
-								WFSExceptionWriter owsExcept = new WFSExceptionWriter("WFS server error. VERSION parameter consists of invalid characters.", "version", "InvalidParameterValue", hsres);
-								owsExcept.write();
-								return;
-							}
-						}
-						
-						if(currentPart != null) versionParts.add(currentPart);
-						
-						/* Now the version parts are all constructed from the parameter
-						 * Analyze for correctness. 
-						 */
-						boolean validVersion = false;
-						
-						
-						// If just number 2 is specified, assume 2.0.0, pass the check
-						if(versionParts.size() == 1) if(versionParts.get(0).equals("2")) validVersion = true;
-						
-						// Two version parts specified, make sure it's 2.0
-						if(versionParts.size() >= 2) if(versionParts.get(0).equals("2") && versionParts.get(1).equals("0")) validVersion = true;
-						
-						/* Another exception VersionNegotiationFailed is specified by OGC Web Services Common
-						 * for version mismatches. If the version check failed print this exception
-						 */
-						if(!validVersion){
-							WFSExceptionWriter owsExcept = new WFSExceptionWriter("WFS Server error. Version requested is not supported.", null, "VersionNegotiationFailed", hsres);
-							owsExcept.write();
-						}
-					}
-			
-					else {
-						WFSExceptionWriter owsExcept = new WFSExceptionWriter("WFS server error. VERSION parameter is required.", "request", "MissingParameterValue", hsres);
-						owsExcept.write();
-						return;
-					}
-				}
-				
+			// If parameter checks all pass launch the request
+			if(paramError == null) {
 				if(request.equalsIgnoreCase(WFSRequestType.GetCapabilities.toString())) {
 					getCapabilities(wr, hsreq);
 				}
@@ -180,17 +196,11 @@ public class WFSController extends HttpServlet {
 				else if(request.equalsIgnoreCase(WFSRequestType.GetFeature.toString())) {
 					
 				}
-				
-				else {
-					WFSExceptionWriter owsExcept = new WFSExceptionWriter("WFS server error. REQUEST parameter is not valid. Possible values: GetCapabilities, DescribeFeatureType, GetFeature", "request", "InvalidParameterValue", hsres);
-					owsExcept.write();
-					return;
-				}
 			}
 			
-			else{
-				WFSExceptionWriter owsExcept = new WFSExceptionWriter("WFS server error. REQUEST parameter is required.", "request", "MissingParameterValue", hsres);
-				owsExcept.write();
+			// Parameter checks did not all pass, print the error and return
+			else {
+				paramError.write(hsres);
 				return;
 			}
 		}

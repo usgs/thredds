@@ -15,14 +15,14 @@ public class WFSExceptionWriter {
 	private final String text;
 	private final String ExceptionCode;
 	private final String locator;
-	private final HttpServletResponse hsr;
 	
 	/**
 	 * Given the information on construction, writes the necessary exception information.
 	 * 
+	 * @param hsr the Servlet Response to write to
 	 * @throws IOException
 	 */
-	public void write() throws IOException{
+	public void write(HttpServletResponse hsr) throws IOException{
 		PrintWriter xmlResponse = hsr.getWriter();
 		
 		xmlResponse.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
@@ -47,10 +47,9 @@ public class WFSExceptionWriter {
 	 * @param ExceptionCode the standardized exception code
 	 * @param hsr http response to write to
 	 */
-	public WFSExceptionWriter(String text, String locator, String ExceptionCode, HttpServletResponse hsr) {
+	public WFSExceptionWriter(String text, String locator, String ExceptionCode) {
 		this.text = text;
 		this.locator = locator;
 		this.ExceptionCode = ExceptionCode;
-		this.hsr = hsr;
 	}
 }
