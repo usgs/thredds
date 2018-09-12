@@ -29,7 +29,9 @@ public class WFSExceptionWriter {
 		xmlResponse.append("<ows:ExceptionReport xml:lang=\"en-US\" xsi:schemaLocation=\"http://www.opengis.net/ows/1.1"
 				+ " http://schemas.opengis.net/ows/1.1.0/owsExceptionReport.xsd\" version=\"2.0.0\" xmlns:ows=\"http://www.opengis.net/ows/1.1\""
 				+ " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">");
-		xmlResponse.append("<ows:Exception locator=\"" + locator + "\" exceptionCode=\"" + ExceptionCode + "\">");
+		xmlResponse.append("<ows:Exception ");
+		if(locator != null) xmlResponse.append("locator=\"" + locator + "\" ");
+		xmlResponse.append("exceptionCode=\"" + ExceptionCode + "\">");
 		xmlResponse.append("<ows:ExceptionText>" + text + "</ows:ExceptionText>");
 		xmlResponse.append("</ows:Exception>");
 		xmlResponse.append("</ows:ExceptionReport>");
@@ -37,6 +39,8 @@ public class WFSExceptionWriter {
 	
 	/**
 	 * Creates a new OWS Exception Report based on a text and an exception code.
+	 * 
+	 * Some exceptions do not specify locators. For these exceptions send in null for the locator.
 	 * 
 	 * @param text the text associated with the exception
 	 * @param locator the locator associated with the exception
