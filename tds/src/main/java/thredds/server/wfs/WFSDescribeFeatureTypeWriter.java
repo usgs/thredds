@@ -20,9 +20,13 @@ public class WFSDescribeFeatureTypeWriter {
 
     public void startXML() {
         fileOutput += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-        fileOutput += "<wfs:WFS_FeatureType xsi:schemaLocation=\"http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
-                + " xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:gml=\"http://opengis.net/gml\" xmlns:fes=\"http://www.opengis.net/fes/2.0\" xmlns:ogc=\"http://www.opengis.net/ogc\""
-                + " xmlns:ows=\"http://www.opengis.net/ows/1.1\" xmlns:wfs=\"http://opengis.net/wfs/2.0\" xmlns=\"http://www.opengis.net/wfs/2.0\" version=\"2.0.0\">";
+        fileOutput += "<schema xmlns:ms=\"http://mapserver.gis.umn.edu/mapserver\" " +
+                "xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" " +
+                "xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:gml=\"http://www.opengis.net/gml\" " +
+                "targetNamespace=\"http://mapserver.gis.umn.edu/mapserver\" elementFormDefault=\"qualified\" " +
+                "version=\"0.1\">";
+        fileOutput += "<import namespace=\"http://www.opengis.net/gml\" " +
+                "schemaLocation=\"http://schemas.opengis.net/gml/2.1.2/feature.xsd\"/>";
         writeFeatures();
     }
 
@@ -38,12 +42,26 @@ public class WFSDescribeFeatureTypeWriter {
     public void writeFeatures() {
 
         for (WFSFeature feat : featureList) {
-            fileOutput += "<element name =\"" + feat.getName() + "\" type=\"" +feat.getType() + "\">";
+            fileOutput += "<element name =\"ms:" + feat.getName() + "\" type=\"" + feat.getTitle() + "\">";
+            fileOutput += "<complexType name=\"" + feat.getTitle() + "\">";
+            fileOutput += "<complexContent>";
+            fileOutput += "<extension base=\"gnl:" + feat.getType() + "\">";
+            fileOutput += "<sequence>";
+
+            for (WFSFeatureAttribute attribute : feat.getAttributes()) {
+                fileOutput += "<element name =\"" + attribute.getName() + "\" type=\"" + attribute.getType() + "\">";
+            }
+
+            fileOutput += "</sequence>";
+            fileOutput += "</extension>";
+            fileOutput += "</complexContent>";
+            fileOutput += "</complexType>";
+
         }
     }
 
     public void finishXML() {
-        fileOutput += "</wfs:WFS_FeatureType>";
+        fileOutput += "</schema>";
         this.response.append(fileOutput);
         response = null;
         fileOutput = null;

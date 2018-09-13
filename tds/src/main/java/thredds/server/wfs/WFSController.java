@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +44,16 @@ public class WFSController extends HttpServlet {
 		WFSDescribeFeatureTypeWriter dftw = new WFSDescribeFeatureTypeWriter(out);
 		dftw.startXML();
 		dftw.setServer(hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs");
-		dftw.addFeature(new WFSFeature("hru_soil_moist", "HRU Soil Moisture", "simplegeom"));
+		ArrayList<WFSFeatureAttribute> attributes = new ArrayList<>();
+		attributes.add(new WFSFeatureAttribute("catchments_geometry_container", "int"));
+		attributes.add(new WFSFeatureAttribute("hruid", "int"));
+		attributes.add(new WFSFeatureAttribute("lat", "double"));
+		attributes.add(new WFSFeatureAttribute("lon", "double"));
+		attributes.add(new WFSFeatureAttribute("catchments_area", "double"));
+		attributes.add(new WFSFeatureAttribute("catchments_perimeter", "double"));
+		attributes.add(new WFSFeatureAttribute("catchments_veght", "double"));
+		attributes.add(new WFSFeatureAttribute("catchments_cov", "double"));
+		dftw.addFeature(new WFSFeature("hru_soil_moist", "HRU Soil Moisture", "simplegeom",attributes));
 		dftw.writeFeatures();
 		dftw.finishXML();
 	}
