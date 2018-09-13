@@ -120,7 +120,7 @@ public class TdsRequestedDataset {
     return datasetManager.openCoverageDataset(request, response, path);
   }
   public SimpleGeometryFeatureDataset openAsSimpleGeometryDataset(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    return datasetManager.openSimpleGeometryDataset(request, response, path);
+    return isRemote? SimpleGeometryFeatureDataset.open(path) : datasetManager.openSimpleGeometryDataset(request, response, path);
   }
   // return null means request has been handled, and calling routine should exit without further processing
   public GridDataset openAsGridDataset(HttpServletRequest request, HttpServletResponse response) throws IOException {
