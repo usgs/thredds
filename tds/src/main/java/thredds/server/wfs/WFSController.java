@@ -185,10 +185,6 @@ public class WFSController extends HttpServlet {
 				if(paramName.equalsIgnoreCase("SERVICE")) {
 					service = hsreq.getParameter(paramName);
 				}
-
-				else if (request.equals(WFSRequestType.DescribeFeatureType.toString())) {
-					describeFeatureType(wr, hsreq);
-				}
 			}
 			
 			WFSExceptionWriter paramError = checkParametersForError(request, version, service);
@@ -204,6 +200,7 @@ public class WFSController extends HttpServlet {
 					break;
 					
 					case DescribeFeatureType:
+						describeFeatureType(wr, hsreq);
 						
 					break;
 					
