@@ -25,6 +25,10 @@ public class WFSGetFeatureWriter {
 				+ " xmlns:ows=\"http://www.opengis.net/ows/1.1\" xmlns:wfs=\"http://opengis.net/wfs/2.0\" xmlns=\"http://www.opengis.net/wfs/2.0\" version=\"2.0.0\">";
 	}
 	
+	public void setGeometry() {
+		
+	}
+	
 	/**
 	 * Finish writing the XML file, write the end tag for FeatureCollection and append it all to the PrintWriter.
 	 * 

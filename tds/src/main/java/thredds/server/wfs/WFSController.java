@@ -46,6 +46,16 @@ public class WFSController extends HttpServlet {
 	}
 	
 	/**
+	 * Processes GetFeature requests.
+	 * 
+	 * @param out
+	 * @return
+	 */
+	private void getFeature(PrintWriter out, HttpServletRequest hsreq) {
+		
+	}
+	
+	/**
 	 * Checks request parameters for errors.
 	 * Will send back an XML Exception if any errors are encountered.
 	 * 
@@ -155,6 +165,7 @@ public class WFSController extends HttpServlet {
 			String request = null;
 			String version = null;
 			String service = null;
+			String typeNames = null;
 			
 			/* Look for parameter names to assign values
 			 * in order to avoid casing issues with parameter names (such as a mismatch between reQUEST and request and REQUEST).
@@ -172,9 +183,14 @@ public class WFSController extends HttpServlet {
 				if(paramName.equalsIgnoreCase("SERVICE")) {
 					service = hsreq.getParameter(paramName);
 				}
+				
+				if(paramName.equalsIgnoreCase("TYPENAMES")) {
+					typeNames = hsreq.getParameter(paramName);
+				}
 			}
 			
 			WFSExceptionWriter paramError = checkParametersForError(request, version, service);
+			
 			
 			// If parameter checks all pass launch the request
 			if(paramError == null) {
@@ -191,7 +207,7 @@ public class WFSController extends HttpServlet {
 					break;
 					
 					case GetFeature:
-						
+						getFeature(wr, hsreq);
 					break;
 					
 					default:
