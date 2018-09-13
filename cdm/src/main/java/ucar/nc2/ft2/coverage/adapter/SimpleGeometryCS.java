@@ -186,13 +186,6 @@ public class SimpleGeometryCS {
 
         SimpleGeometryCS gcs = new SimpleGeometryCS(new SimpleGeometryCSBuilder(null, cs, null));
         return gcs;
-
-//        if (isSGCoordSys(sbuff, cs, v)) {
-//            if (sbuff != null) sbuff.format(" OK%n");
-//            return gcs;
-//        }
-
-//        return null;
     }
 
 
