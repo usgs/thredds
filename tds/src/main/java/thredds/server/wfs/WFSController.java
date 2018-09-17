@@ -6,18 +6,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import thredds.server.wfs.WFSRequestType;
-
 /**
  * Controller for WFS Simple Geometry Web Service
  * 
@@ -43,6 +38,24 @@ public class WFSController extends HttpServlet {
 		gcdw.addFeature(new WFSFeature("hru_soil_moist", "HRU Soil Moisture"));
 		gcdw.writeFeatureTypes();
 		gcdw.finishXML();
+	}
+
+	private void describeFeatureType(PrintWriter out, HttpServletRequest hsreq) {
+		WFSDescribeFeatureTypeWriter dftw = new WFSDescribeFeatureTypeWriter(out);
+		dftw.startXML();
+		dftw.setServer(hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs");
+		ArrayList<WFSFeatureAttribute> attributes = new ArrayList<>();
+		attributes.add(new WFSFeatureAttribute("catchments_geometry_container", "int"));
+		attributes.add(new WFSFeatureAttribute("hruid", "int"));
+		attributes.add(new WFSFeatureAttribute("lat", "double"));
+		attributes.add(new WFSFeatureAttribute("lon", "double"));
+		attributes.add(new WFSFeatureAttribute("catchments_area", "double"));
+		attributes.add(new WFSFeatureAttribute("catchments_perimeter", "double"));
+		attributes.add(new WFSFeatureAttribute("catchments_veght", "double"));
+		attributes.add(new WFSFeatureAttribute("catchments_cov", "double"));
+		dftw.addFeature(new WFSFeature("hru_soil_moist", "HRU Soil Moisture", "simplegeom",attributes));
+		dftw.writeFeatures();
+		dftw.finishXML();
 	}
 	
 	/**
@@ -206,6 +219,7 @@ public class WFSController extends HttpServlet {
 					break;
 					
 					case DescribeFeatureType:
+						describeFeatureType(wr, hsreq);
 						
 					break;
 					

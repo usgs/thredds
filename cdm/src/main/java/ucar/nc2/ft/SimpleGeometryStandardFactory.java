@@ -7,7 +7,9 @@ package ucar.nc2.ft;
 import ucar.nc2.constants.FeatureType;
 import ucar.nc2.dataset.NetcdfDataset;
 import ucar.nc2.ft2.coverage.adapter.SimpleGeometryCSBuilder;
+import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometryFeatureDataset;
 import ucar.nc2.util.CancelTask;
+import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometryFeatureDataset;
 
 import java.io.IOException;
 import java.util.Formatter;
@@ -36,7 +38,7 @@ public class SimpleGeometryStandardFactory implements FeatureDatasetFactory {
 
   public FeatureDataset open(FeatureType ftype, NetcdfDataset ncd, Object analysis, CancelTask task, Formatter errlog) throws IOException {
 
-	  return new ucar.nc2.dt.grid.GridDataset( ncd);
+	  return new SimpleGeometryFeatureDataset( ncd);
   }
 
   public FeatureType[] getFeatureTypes() {
