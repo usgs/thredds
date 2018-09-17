@@ -2,11 +2,6 @@ package thredds.server.wfs;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
-
-import ucar.nc2.ft2.coverage.simpgeometry.CFPolygon;
-import ucar.nc2.ft2.coverage.simpgeometry.Polygon;
-import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometry;
 
 /**
  * A writer for a WFS compliant Feature Collection GML file.
@@ -19,7 +14,6 @@ public class WFSGetFeatureWriter {
 	
 	private PrintWriter response;
 	private String fileOutput;
-	private List<SimpleGeometry> geometryList;
 	
 	
 	/**
@@ -59,13 +53,8 @@ public class WFSGetFeatureWriter {
 					+ "<gml:Point srsName=\"http://www.opengis.net/gml/srs/epsg.xml@900913\" srsDimension=\"2\">"
 					+ "<gml:pos>50.0 50.0</gml:pos>"
 					+ "</gml:Point>"
-					// Test what type of Geometry this is, later
-			//		+ "<gml:Polygon gml:id=\"hru_soil_moist\" srsName=\"urn:ogc:def:crs:EPSG::4326\">"
-				//		+ "<gml:exterior>"
-					//		+ "<gml:posList srsDimension=\"2\"> 50.0 -50.0 63.0 -55.0 66.0 -66.0"
-				//		+ "</gml:exterior>"
-				//	+ "</gml:Polygon>"
 					
+					// Cap off headers
 					+ "</tds:catchments_geometry_container>"
 					+ "</tds:hru_soil_moist>"
 					+ "</wfs:member>";
