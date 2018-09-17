@@ -52,7 +52,10 @@ public class WFSController extends HttpServlet {
 	 * @return
 	 */
 	private void getFeature(PrintWriter out, HttpServletRequest hsreq) {
-		
+		WFSGetFeatureWriter gfdw = new WFSGetFeatureWriter(out);
+		gfdw.startXML();
+		gfdw.writeMembers();
+		gfdw.finishXML();
 	}
 	
 	/**

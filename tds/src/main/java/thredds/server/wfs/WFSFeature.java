@@ -9,13 +9,35 @@ package thredds.server.wfs;
 public class WFSFeature {
 	private final String name;
 	private final String title;
-
+	private String fileDSName;
+	
+	/**
+	 * Gets the name of this WFS feature.
+	 * 
+	 * @return name
+	 */
 	public String getName() {
 		return name;
 	}
 	
+	/**
+	 * Gets the title of this WFS feature.
+	 * 
+	 * @return
+	 */
 	public String getTitle() {
 		return title;
+	}
+	
+	/**
+	 * Gets the file / dataset name from which the WFS feature was retrieved.
+	 * 
+	 * The File DS name is used for the namespace of the feature type.
+	 * 
+	 * @return
+	 */
+	public String getFileDSName() {
+		return fileDSName;
 	}
 	
 	/**
@@ -27,5 +49,6 @@ public class WFSFeature {
 	public WFSFeature(String name, String title) {
 		this.name = name;
 		this.title = title;
+		fileDSName = null;
 	}
 }
