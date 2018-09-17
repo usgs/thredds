@@ -54,8 +54,8 @@ public class WFSGetFeatureWriter {
 					+ "</gml:boundedBy>"
 					
 					// Write Geometry Information
-					+ "<tds:results gml:id=\"results.1\">"
-					+ "<tds:tdsGeometry>"
+					+ "<tds:hru_soil_moist gml:id=\"hru_soil_moist.1\">"
+					+ "<tds:catchments_geometry_container>"
 					+ "<gml:Point srsName=\"http://www.opengis.net/gml/srs/epsg.xml@900913\" srsDimension=\"2\">"
 					+ "<gml:pos>50.0 50.0</gml:pos>"
 					+ "</gml:Point>"
@@ -66,8 +66,8 @@ public class WFSGetFeatureWriter {
 				//		+ "</gml:exterior>"
 				//	+ "</gml:Polygon>"
 					
-					+ "</tds:tdsGeometry>"
-					+ "</tds:results>"
+					+ "</tds:catchments_geometry_container>"
+					+ "</tds:hru_soil_moist>"
 					+ "</wfs:member>";
 		//}
 	}
