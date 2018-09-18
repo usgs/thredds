@@ -42,37 +42,19 @@ public class WFSController extends HttpServlet {
 		gcdw.writeFeatureTypes();
 		gcdw.finishXML();
 	}
-	/*//hardcoded
-	private void describeFeatureType(PrintWriter out, HttpServletRequest hsreq) {
-		WFSDescribeFeatureTypeWriter dftw = new WFSDescribeFeatureTypeWriter(out);
-		dftw.startXML();
-		dftw.setServer(hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs");
-		ArrayList<WFSFeatureAttribute> attributes = new ArrayList<>();
-		attributes.add(new WFSFeatureAttribute("catchments_geometry_container", "int"));
-		attributes.add(new WFSFeatureAttribute("hruid", "int"));
-		attributes.add(new WFSFeatureAttribute("lat", "double"));
-		attributes.add(new WFSFeatureAttribute("lon", "double"));
-		attributes.add(new WFSFeatureAttribute("catchments_area", "double"));
-		attributes.add(new WFSFeatureAttribute("catchments_perimeter", "double"));
-		attributes.add(new WFSFeatureAttribute("catchments_veght", "double"));
-		attributes.add(new WFSFeatureAttribute("catchments_cov", "double"));
-		dftw.addFeature(new WFSFeature("hru_soil_moist", "HRU Soil Moisture", "simplegeom",attributes));
-		dftw.writeFeatures();
-		dftw.finishXML();
-	}*/
-	//not hard coded
+
+
 	private void describeFeatureType(PrintWriter out, HttpServletRequest hsreq) {
 		WFSDescribeFeatureTypeWriter dftw = new WFSDescribeFeatureTypeWriter(out);
 		dftw.startXML();
 		dftw.setServer(hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs");
 		try {
-			//need to replace these to both be based off of request
+
 			NetcdfDataset data = NetcdfDataset.openDataset("../cdm/src/test/data/dataset/SimpleGeos/hru_soil_moist_3hru_5timestep.nc");
 			Variable hru_test = data.findVariable("hru_soil_moist");
 
 			ArrayList<WFSFeatureAttribute> attributes = new ArrayList<>();
-			//new simple geometry reader?
-			//for loop to call attributes.
+
 			for (Attribute attr : hru_test.getAttributes()){
 				attributes.add(new WFSFeatureAttribute(attr.getShortName(), attr.getDataType().toString())); //short name vs long name?
 			}
