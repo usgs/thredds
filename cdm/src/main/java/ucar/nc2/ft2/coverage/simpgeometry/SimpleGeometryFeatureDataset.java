@@ -220,4 +220,6 @@ public class SimpleGeometryFeatureDataset implements FeatureDataset {
     public void reacquire() throws IOException {
         if (ncd != null) ncd.reacquire();
     }
+
 }
+

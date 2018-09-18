@@ -9,6 +9,7 @@ import ucar.nc2.dataset.NetcdfDataset;
 import ucar.nc2.ft2.coverage.adapter.SimpleGeometryCSBuilder;
 import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometryFeatureDataset;
 import ucar.nc2.util.CancelTask;
+import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometryFeatureDataset;
 
 import java.io.IOException;
 import java.util.Formatter;

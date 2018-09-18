@@ -23,6 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/wfs")
 public class WFSController extends HttpServlet {
 
+	public static final String TDSNAMESPACE = "\"http://localhost:8080/thredds/wfs/results\"";
+	
 	/**
 	 * Processes GetCapabilities requests.
 	 * 
@@ -35,7 +37,7 @@ public class WFSController extends HttpServlet {
 		gcdw.setServer(hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs");
 		gcdw.addOperation(WFSRequestType.GetCapabilities); gcdw.addOperation(WFSRequestType.DescribeFeatureType); gcdw.addOperation(WFSRequestType.GetFeature);
 		gcdw.writeOperations();
-		gcdw.addFeature(new WFSFeature("hru_soil_moist", "HRU Soil Moisture"));
+		gcdw.addFeature(new WFSFeature("tds:hru_soil_moist", "hru_soil_moist"));
 		gcdw.writeFeatureTypes();
 		gcdw.finishXML();
 	}
@@ -45,7 +47,7 @@ public class WFSController extends HttpServlet {
 		dftw.startXML();
 		dftw.setServer(hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs");
 		ArrayList<WFSFeatureAttribute> attributes = new ArrayList<>();
-		attributes.add(new WFSFeatureAttribute("catchments_geometry_container", "int"));
+		attributes.add(new WFSFeatureAttribute("catchments_geometry_container", "gml:PointPropertyType"));
 		attributes.add(new WFSFeatureAttribute("hruid", "int"));
 		attributes.add(new WFSFeatureAttribute("lat", "double"));
 		attributes.add(new WFSFeatureAttribute("lon", "double"));
@@ -53,9 +55,22 @@ public class WFSController extends HttpServlet {
 		attributes.add(new WFSFeatureAttribute("catchments_perimeter", "double"));
 		attributes.add(new WFSFeatureAttribute("catchments_veght", "double"));
 		attributes.add(new WFSFeatureAttribute("catchments_cov", "double"));
-		dftw.addFeature(new WFSFeature("hru_soil_moist", "HRU Soil Moisture", "simplegeom",attributes));
+		dftw.addFeature(new WFSFeature("hru_soil_moist", "hru_soil_moistType", "AbstractFeatureType",attributes));
 		dftw.writeFeatures();
 		dftw.finishXML();
+	}
+	
+	/**
+	 * Processes GetFeature requests.
+	 * 
+	 * @param out
+	 * @return
+	 */
+	private void getFeature(PrintWriter out, HttpServletRequest hsreq) {
+		WFSGetFeatureWriter gfdw = new WFSGetFeatureWriter(out);
+		gfdw.startXML();
+		gfdw.writeMembers();
+		gfdw.finishXML();
 	}
 	
 	/**
@@ -168,6 +183,7 @@ public class WFSController extends HttpServlet {
 			String request = null;
 			String version = null;
 			String service = null;
+			String typeNames = null;
 			
 			/* Look for parameter names to assign values
 			 * in order to avoid casing issues with parameter names (such as a mismatch between reQUEST and request and REQUEST).
@@ -185,9 +201,14 @@ public class WFSController extends HttpServlet {
 				if(paramName.equalsIgnoreCase("SERVICE")) {
 					service = hsreq.getParameter(paramName);
 				}
+				
+				if(paramName.equalsIgnoreCase("TYPENAMES")) {
+					typeNames = hsreq.getParameter(paramName);
+				}
 			}
 			
 			WFSExceptionWriter paramError = checkParametersForError(request, version, service);
+			
 			
 			// If parameter checks all pass launch the request
 			if(paramError == null) {
@@ -205,7 +226,7 @@ public class WFSController extends HttpServlet {
 					break;
 					
 					case GetFeature:
-						
+						getFeature(wr, hsreq);
 					break;
 					
 					default:

@@ -20,7 +20,7 @@ public class WFSDescribeFeatureTypeWriter {
 
     public void startXML() {
         fileOutput += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-        fileOutput += "<schema xmlns:ms=\"" + server + "\" " +
+        fileOutput += "<schema xmlns:ms=\"" + server + "\" " + "xmlns:tds=" + WFSController.TDSNAMESPACE + " " +
                 "xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" " +
                 "xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:gml=\"http://www.opengis.net/gml\" " +
                 "targetNamespace=\"" + server + "\" elementFormDefault=\"qualified\" " +
@@ -42,10 +42,10 @@ public class WFSDescribeFeatureTypeWriter {
     public void writeFeatures() {
 
         for (WFSFeature feat : featureList) {
-            fileOutput += "<element name =\"ms:" + feat.getName() + "\" type=\"" + feat.getTitle() + "\"/>";
+            fileOutput += "<element name =\"" + feat.getName() + "\" type=\"" + feat.getTitle() + "\"/>";
             fileOutput += "<complexType name=\"" + feat.getTitle() + "\">";
             fileOutput += "<complexContent>";
-            fileOutput += "<extension base=\"gnl:" + feat.getType() + "\">";
+            fileOutput += "<extension base=\"gml:" + feat.getType() + "\">";
             fileOutput += "<sequence>";
 
             for (WFSFeatureAttribute attribute : feat.getAttributes()) {

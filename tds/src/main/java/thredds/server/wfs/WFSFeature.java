@@ -12,17 +12,41 @@ public class WFSFeature {
 
 	private final String name;
 	private final String title;
+	private String fileDSName;
 	private final String type;
-	private final ArrayList<WFSFeatureAttribute> attributes;
-
+	private final ArrayList<WFSFeatureAttribute> attributes;	
+	
+	/**
+	 * Gets the name of this WFS feature.
+	 * 
+	 * @return name
+	 */
 	public String getName() {
 		return name;
 	}
+	
+	/**
+	 * Gets the title of this WFS feature.
+	 * 
+	 * @return
+	 */
 	public String getTitle() {
 		return title;
 	}
+	
 	public String getType() { return type; }
 	public ArrayList<WFSFeatureAttribute> getAttributes() {return attributes;}
+	
+	/**
+	 * Gets the file / dataset name from which the WFS feature was retrieved.
+	 * 
+	 * The File DS name is used for the namespace of the feature type.
+	 * 
+	 * @return
+	 */
+	public String getFileDSName() {
+		return fileDSName;
+	}
 	
 	/**
 	 * Creates a new WFSFeature of the given name and type.
@@ -37,6 +61,7 @@ public class WFSFeature {
 	public WFSFeature(String name, String title, String type, ArrayList<WFSFeatureAttribute> attributes) {
 		this.name = name;
 		this.title = title;
+		fileDSName = null;
 		this.type = type;
 		this.attributes = attributes;
 	}

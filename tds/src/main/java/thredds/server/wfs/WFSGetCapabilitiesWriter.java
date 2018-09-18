@@ -25,7 +25,7 @@ public class WFSGetCapabilitiesWriter {
 	 */
 	public void startXML() {
 		fileOutput += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-		fileOutput += "<wfs:WFS_Capabilities xsi:schemaLocation=\"http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
+		fileOutput += "<wfs:WFS_Capabilities xsi:schemaLocation=\"http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd\" xmlns:tds=" + WFSController.TDSNAMESPACE + " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
 				+ " xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:gml=\"http://opengis.net/gml\" xmlns:fes=\"http://www.opengis.net/fes/2.0\" xmlns:ogc=\"http://www.opengis.net/ogc\""
 				+ " xmlns:ows=\"http://www.opengis.net/ows/1.1\" xmlns:wfs=\"http://opengis.net/wfs/2.0\" xmlns=\"http://www.opengis.net/wfs/2.0\" version=\"2.0.0\">";
 		writeServiceInfo();
