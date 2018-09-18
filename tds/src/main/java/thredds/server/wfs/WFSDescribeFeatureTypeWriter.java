@@ -42,14 +42,14 @@ public class WFSDescribeFeatureTypeWriter {
     public void writeFeatures() {
 
         for (WFSFeature feat : featureList) {
-            fileOutput += "<element name =\"ms:" + feat.getName() + "\" type=\"" + feat.getTitle() + "\"></element>";
+            fileOutput += "<element name =\"ms:" + feat.getName() + "\" type=\"" + feat.getTitle() + "\"/>";
             fileOutput += "<complexType name=\"" + feat.getTitle() + "\">";
             fileOutput += "<complexContent>";
             fileOutput += "<extension base=\"gnl:" + feat.getType() + "\">";
             fileOutput += "<sequence>";
 
             for (WFSFeatureAttribute attribute : feat.getAttributes()) {
-                fileOutput += "<element name =\"" + attribute.getName() + "\" type=\"" + attribute.getType() + "\"></element>";
+                fileOutput += "<element name =\"" + attribute.getName() + "\" type=\"" + attribute.getType() + "\"/>";
             }
 
             fileOutput += "</sequence>";
