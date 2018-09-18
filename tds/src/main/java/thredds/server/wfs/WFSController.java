@@ -44,8 +44,8 @@ public class WFSController extends HttpServlet {
 
 	private void describeFeatureType(PrintWriter out, HttpServletRequest hsreq) {
 		WFSDescribeFeatureTypeWriter dftw = new WFSDescribeFeatureTypeWriter(out);
-		dftw.startXML();
 		dftw.setServer(hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs");
+		dftw.startXML();
 		ArrayList<WFSFeatureAttribute> attributes = new ArrayList<>();
 		attributes.add(new WFSFeatureAttribute("catchments_geometry_container", "gml:PointPropertyType"));
 		attributes.add(new WFSFeatureAttribute("hruid", "int"));
