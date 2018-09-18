@@ -2,6 +2,9 @@ package thredds.server.wfs;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ucar.nc2.Variable;
+import ucar.nc2.Attribute;
+import ucar.nc2.dataset.NetcdfDataset;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -40,23 +43,31 @@ public class WFSController extends HttpServlet {
 		gcdw.finishXML();
 	}
 
+
 	private void describeFeatureType(PrintWriter out, HttpServletRequest hsreq) {
 		WFSDescribeFeatureTypeWriter dftw = new WFSDescribeFeatureTypeWriter(out);
 		dftw.startXML();
 		dftw.setServer(hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs");
-		ArrayList<WFSFeatureAttribute> attributes = new ArrayList<>();
-		attributes.add(new WFSFeatureAttribute("catchments_geometry_container", "int"));
-		attributes.add(new WFSFeatureAttribute("hruid", "int"));
-		attributes.add(new WFSFeatureAttribute("lat", "double"));
-		attributes.add(new WFSFeatureAttribute("lon", "double"));
-		attributes.add(new WFSFeatureAttribute("catchments_area", "double"));
-		attributes.add(new WFSFeatureAttribute("catchments_perimeter", "double"));
-		attributes.add(new WFSFeatureAttribute("catchments_veght", "double"));
-		attributes.add(new WFSFeatureAttribute("catchments_cov", "double"));
-		dftw.addFeature(new WFSFeature("hru_soil_moist", "HRU Soil Moisture", "simplegeom",attributes));
-		dftw.writeFeatures();
-		dftw.finishXML();
+		try {
+
+			NetcdfDataset data = NetcdfDataset.openDataset("../cdm/src/test/data/dataset/SimpleGeos/hru_soil_moist_3hru_5timestep.nc");
+			Variable hru_test = data.findVariable("hru_soil_moist");
+
+			ArrayList<WFSFeatureAttribute> attributes = new ArrayList<>();
+
+			for (Attribute attr : hru_test.getAttributes()){
+				attributes.add(new WFSFeatureAttribute(attr.getShortName(), attr.getDataType().toString())); //short name vs long name?
+			}
+
+			dftw.addFeature(new WFSFeature("hru_soil_moist", "HRU Soil Moisture", "simplegeom",attributes));
+			dftw.writeFeatures();
+			dftw.finishXML();
+
+		}
+		catch(IOException e) {
+		}
 	}
+
 	
 	/**
 	 * Checks request parameters for errors.
