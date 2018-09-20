@@ -83,7 +83,7 @@ public class WFSDescribeFeatureTypeWriter {
      * Once a XML is finished, the WFSDataWriter is no longer usable.
      */
     public void finishXML() {
-        fileOutput += "</xsd:schema>";
+        fileOutput += "</schema>";
         this.response.append(fileOutput);
         response = null;
         fileOutput = null;
