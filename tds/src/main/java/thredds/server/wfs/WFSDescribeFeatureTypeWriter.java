@@ -22,7 +22,7 @@ public class WFSDescribeFeatureTypeWriter {
 
     public void startXML() {
         fileOutput += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-        fileOutput += "<schema " + "xmlns:" + WFSController.TDSNAMESPACE + "="  + WFSXMLGeneral.encQuotes(namespace) + " " +
+        fileOutput += "<schema " + "xmlns:" + WFSController.TDSNAMESPACE + "="  + WFSXMLHelper.encQuotes(namespace) + " " +
                 "xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" " +
                 "xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:gml=\"http://www.opengis.net/gml\" " +
                 "targetNamespace=\"" + server + "\" elementFormDefault=\"qualified\" " +

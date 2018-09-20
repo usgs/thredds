@@ -24,21 +24,23 @@ public class WFSGetFeatureWriter {
 		return "<gml:Point srsName=\"http://www.opengis.net/gml/srs/epsg.xml@900913\" srsDimension=\"2\">"
 				+ "<gml:pos>50.0 50.0</gml:pos>"
 				+ "</gml:Point>";
-	}
+	} 
 	
 	/**
 	 * Writes headers and bounding box
 	 */
 	private void writeHeadersAndBB() {
-		fileOutput += "<wfs:FeatureCollection xsi:schemaLocation=" + WFSXMLGeneral.encQuotes("http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd " + namespace + " " + server + "?request=DescribeFeature" + WFSXMLGeneral.AMPERSAND + "service=wfs" + WFSXMLGeneral.AMPERSAND + "version=2.0.0")
-				+ " xmlns:xsi=" + WFSXMLGeneral.encQuotes("http://www.w3.org/2001/XMLSchema-instance")
-				+ " xmlns:xlink=" + WFSXMLGeneral.encQuotes("http://www.w3.org/1999/xlink")
-				+ " xmlns:gml=" + WFSXMLGeneral.encQuotes("http://opengis.net/gml/3.2")
-				+ " xmlns:fes=" + WFSXMLGeneral.encQuotes("http://www.opengis.net/fes/2.0")
-				+ " xmlns:ogc=" + WFSXMLGeneral.encQuotes("http://www.opengis.net/ogc")
-				+ " xmlns:wfs=" + WFSXMLGeneral.encQuotes("http://opengis.net/wfs/2.0") 
-				+ " xmlns:" + WFSController.TDSNAMESPACE +"=" + WFSXMLGeneral.encQuotes(namespace)
-				+ " xmlns=" + WFSXMLGeneral.encQuotes("http://www.opengis.net/wfs/2.0")
+		fileOutput += "<wfs:FeatureCollection xsi:schemaLocation=" + WFSXMLHelper.encQuotes("http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd " + namespace + " " + server
+					+ "?request=DescribeFeatureType" + WFSXMLHelper.AMPERSAND + "service=wfs" + WFSXMLHelper.AMPERSAND + "version=2.0.0" + WFSXMLHelper.AMPERSAND + "typename=" 
+					+ WFSController.TDSNAMESPACE + "%3A" + "hru_soil_moist")
+				+ " xmlns:xsi=" + WFSXMLHelper.encQuotes("http://www.w3.org/2001/XMLSchema-instance")
+				+ " xmlns:xlink=" + WFSXMLHelper.encQuotes("http://www.w3.org/1999/xlink")
+				+ " xmlns:gml=" + WFSXMLHelper.encQuotes("http://opengis.net/gml/3.2")
+				+ " xmlns:fes=" + WFSXMLHelper.encQuotes("http://www.opengis.net/fes/2.0")
+				+ " xmlns:ogc=" + WFSXMLHelper.encQuotes("http://www.opengis.net/ogc")
+				+ " xmlns:wfs=" + WFSXMLHelper.encQuotes("http://opengis.net/wfs/2.0") 
+				+ " xmlns:" + WFSController.TDSNAMESPACE +"=" + WFSXMLHelper.encQuotes(namespace)
+				+ " xmlns=" + WFSXMLHelper.encQuotes("http://www.opengis.net/wfs/2.0")
 				+ " version=\"2.0.0\" numberMatched=\"1\" numberReturned=\"1\">"
 		
 		   // WFS Bounding Box

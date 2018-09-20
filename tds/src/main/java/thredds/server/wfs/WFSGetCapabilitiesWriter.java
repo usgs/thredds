@@ -79,14 +79,14 @@ public class WFSGetCapabilitiesWriter {
 	 */
 	private void writeHeadersAndSS() {
 		fileOutput += "<wfs:WFS_Capabilities xsi:schemaLocation="
-				+ WFSXMLGeneral.encQuotes("http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd ")
-				+ " xmlns:xsi=" + WFSXMLGeneral.encQuotes("http://www.w3.org/2001/XMLSchema-instance")
-				+ " xmlns:xlink=" + WFSXMLGeneral.encQuotes("http://www.w3.org/1999/xlink") 
-				+ " xmlns:gml=" + WFSXMLGeneral.encQuotes("http://opengis.net/gml")
-				+ " xmlns:fes=" + WFSXMLGeneral.encQuotes("http://www.opengis.net/fes/2.0")
-				+ " xmlns:ogc=" + WFSXMLGeneral.encQuotes("http://www.opengis.net/ogc")
-				+ " xmlns:ows=" + WFSXMLGeneral.encQuotes("http://www.opengis.net/ows/1.1\" xmlns:wfs=\"http://opengis.net/wfs/2.0")
-				+ " xmlns=" + WFSXMLGeneral.encQuotes("http://www.opengis.net/wfs/2.0")
+				+ WFSXMLHelper.encQuotes("http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd ")
+				+ " xmlns:xsi=" + WFSXMLHelper.encQuotes("http://www.w3.org/2001/XMLSchema-instance")
+				+ " xmlns:xlink=" + WFSXMLHelper.encQuotes("http://www.w3.org/1999/xlink") 
+				+ " xmlns:gml=" + WFSXMLHelper.encQuotes("http://opengis.net/gml")
+				+ " xmlns:fes=" + WFSXMLHelper.encQuotes("http://www.opengis.net/fes/2.0")
+				+ " xmlns:ogc=" + WFSXMLHelper.encQuotes("http://www.opengis.net/ogc")
+				+ " xmlns:ows=" + WFSXMLHelper.encQuotes("http://www.opengis.net/ows/1.1\" xmlns:wfs=\"http://opengis.net/wfs/2.0")
+				+ " xmlns=" + WFSXMLHelper.encQuotes("http://www.opengis.net/wfs/2.0")
 				+ " version=\"2.0.0\">";
 		writeServiceInfo();
 	}
