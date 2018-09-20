@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/wfs")
 public class WFSController extends HttpServlet {
 
-	public static final String TDSNAMESPACE = "tds";
+	public static final String TDSNAMESPACE = "tdswfs";
 	
 	/**
 	 * Gets the namespace associated with the WFS Controller and this specific THREDDS server
@@ -52,11 +52,8 @@ public class WFSController extends HttpServlet {
 	 * @return
 	 */
 	private void getCapabilities(PrintWriter out, HttpServletRequest hsreq) {
-		WFSGetCapabilitiesWriter gcdw = new WFSGetCapabilitiesWriter(out);
+		WFSGetCapabilitiesWriter gcdw = new WFSGetCapabilitiesWriter(out, WFSController.constructServerPath(hsreq));
 		gcdw.startXML();
-		gcdw.setNamespace(WFSController.getXMLNamespaceXMLNSValue(hsreq));
-		gcdw.setServer(WFSController.constructServerPath(hsreq));
-		gcdw.writeHeadersAndSS();
 		gcdw.addOperation(WFSRequestType.GetCapabilities); gcdw.addOperation(WFSRequestType.DescribeFeatureType); gcdw.addOperation(WFSRequestType.GetFeature);
 		gcdw.writeOperations();
 		gcdw.addFeature(new WFSFeature(TDSNAMESPACE + ":hru_soil_moist", "hru_soil_moist"));
@@ -65,10 +62,8 @@ public class WFSController extends HttpServlet {
 	}
 
 	private void describeFeatureType(PrintWriter out, HttpServletRequest hsreq) {
-		WFSDescribeFeatureTypeWriter dftw = new WFSDescribeFeatureTypeWriter(out);
+		WFSDescribeFeatureTypeWriter dftw = new WFSDescribeFeatureTypeWriter(out, WFSController.constructServerPath(hsreq), WFSController.getXMLNamespaceXMLNSValue(hsreq));
 		dftw.startXML();
-		dftw.setServer(WFSController.constructServerPath(hsreq));
-		dftw.setNamespace(WFSController.getXMLNamespaceXMLNSValue(hsreq));
 		ArrayList<WFSFeatureAttribute> attributes = new ArrayList<>();
 		attributes.add(new WFSFeatureAttribute("catchments_geometry_container", "gml:PointPropertyType"));
 		attributes.add(new WFSFeatureAttribute("hruid", "int"));
@@ -90,10 +85,8 @@ public class WFSController extends HttpServlet {
 	 * @return
 	 */
 	private void getFeature(PrintWriter out, HttpServletRequest hsreq) {
-		WFSGetFeatureWriter gfdw = new WFSGetFeatureWriter(out);
+		WFSGetFeatureWriter gfdw = new WFSGetFeatureWriter(out, WFSController.constructServerPath(hsreq), WFSController.getXMLNamespaceXMLNSValue(hsreq));
 		gfdw.startXML();
-		gfdw.setNamespace(WFSController.getXMLNamespaceXMLNSValue(hsreq));
-		gfdw.writeHeadersAndBB();
 		gfdw.writeMembers();
 		gfdw.finishXML();
 	}
