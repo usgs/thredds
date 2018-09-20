@@ -23,7 +23,27 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/wfs")
 public class WFSController extends HttpServlet {
 
-	public static final String TDSNAMESPACE = "\"http://localhost:8080/thredds/wfs/results\"";
+	public static final String TDSNAMESPACE = "tds";
+	
+	/**
+	 * Gets the namespace associated with the WFS Controller and this specific THREDDS server
+	 * 
+	 * @param req The request which contains the applicable URI of the WFS Controller
+	 * @return the namespace value as "SERVER/PATH"
+	 */
+	public static String getXMLNamespaceXMLNSValue(HttpServletRequest hsreq) {
+		return hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs/geospatial";
+	}
+	
+	/**
+	 * Constructs the full server URI from a request
+	 * 
+	 * @param hsreq The relevant request
+	 * @return The URI of the server corresponding to the request
+	 */
+	public static String constructServerPath(HttpServletRequest hsreq) {
+		return hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs/";
+	}
 	
 	/**
 	 * Processes GetCapabilities requests.
@@ -34,10 +54,12 @@ public class WFSController extends HttpServlet {
 	private void getCapabilities(PrintWriter out, HttpServletRequest hsreq) {
 		WFSGetCapabilitiesWriter gcdw = new WFSGetCapabilitiesWriter(out);
 		gcdw.startXML();
-		gcdw.setServer(hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs");
+		gcdw.setNamespace(WFSController.getXMLNamespaceXMLNSValue(hsreq));
+		gcdw.setServer(WFSController.constructServerPath(hsreq));
+		gcdw.writeHeadersAndSS();
 		gcdw.addOperation(WFSRequestType.GetCapabilities); gcdw.addOperation(WFSRequestType.DescribeFeatureType); gcdw.addOperation(WFSRequestType.GetFeature);
 		gcdw.writeOperations();
-		gcdw.addFeature(new WFSFeature("tds:hru_soil_moist", "hru_soil_moist"));
+		gcdw.addFeature(new WFSFeature(TDSNAMESPACE + ":hru_soil_moist", "hru_soil_moist"));
 		gcdw.writeFeatureTypes();
 		gcdw.finishXML();
 	}
@@ -45,7 +67,8 @@ public class WFSController extends HttpServlet {
 	private void describeFeatureType(PrintWriter out, HttpServletRequest hsreq) {
 		WFSDescribeFeatureTypeWriter dftw = new WFSDescribeFeatureTypeWriter(out);
 		dftw.startXML();
-		dftw.setServer(hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs");
+		dftw.setServer(WFSController.constructServerPath(hsreq));
+		dftw.setNamespace(WFSController.getXMLNamespaceXMLNSValue(hsreq));
 		ArrayList<WFSFeatureAttribute> attributes = new ArrayList<>();
 		attributes.add(new WFSFeatureAttribute("catchments_geometry_container", "gml:PointPropertyType"));
 		attributes.add(new WFSFeatureAttribute("hruid", "int"));
@@ -69,6 +92,8 @@ public class WFSController extends HttpServlet {
 	private void getFeature(PrintWriter out, HttpServletRequest hsreq) {
 		WFSGetFeatureWriter gfdw = new WFSGetFeatureWriter(out);
 		gfdw.startXML();
+		gfdw.setNamespace(WFSController.getXMLNamespaceXMLNSValue(hsreq));
+		gfdw.writeHeadersAndBB();
 		gfdw.writeMembers();
 		gfdw.finishXML();
 	}
@@ -133,7 +158,7 @@ public class WFSController extends HttpServlet {
 					// If just number 2 is specified, assume 2.0.0, pass the check
 					if(versionParts.length == 1) if(versionParts[0].equals("2")) validVersion = true;
 					
-					// Two version parts specified, make sure it's 2.0
+					// Two or more version parts specified, make sure it's 2.0.#.#...
 					if(versionParts.length >= 2) if(versionParts[0].equals("2") && versionParts[1].equals("0")) validVersion = true;
 					
 					/* Another exception VersionNegotiationFailed is specified by OGC Web Services Common

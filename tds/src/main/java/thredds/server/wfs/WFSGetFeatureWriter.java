@@ -2,6 +2,12 @@ package thredds.server.wfs;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+
+import ucar.nc2.ft2.coverage.simpgeometry.CFPoint;
+import ucar.nc2.ft2.coverage.simpgeometry.Line;
+import ucar.nc2.ft2.coverage.simpgeometry.Point;
+import ucar.nc2.ft2.coverage.simpgeometry.Polygon;
 
 /**
  * A writer for a WFS compliant Feature Collection GML file.
@@ -14,16 +20,45 @@ public class WFSGetFeatureWriter {
 	
 	private PrintWriter response;
 	private String fileOutput;
+	private List<WFSFeature> memberList;
+	private String namespace;
+	private String server;
 	
+	private String writeGeometryInformation(Point point) {
+		return "<gml:Point srsName=\"http://www.opengis.net/gml/srs/epsg.xml@900913\" srsDimension=\"2\">"
+				+ "<gml:pos>50.0 50.0</gml:pos>"
+				+ "</gml:Point>";
+	}
+	
+	private void writeGeometryInformation(Line line) {
+		
+	}
+	
+	private void writeGeometryInformation(Polygon poly) {
+		
+	}
 	
 	/**
 	 * Initiate the response with an XML file with an XML header and the FeatureCollection tag. Write bounding box information.
 	 */
 	public void startXML() {
 		fileOutput += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-		fileOutput += "<wfs:FeatureCollection xsi:schemaLocation=\"http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
-				+ " xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:gml=\"http://opengis.net/gml/3.2\" xmlns:fes=\"http://www.opengis.net/fes/2.0\" xmlns:ogc=\"http://www.opengis.net/ogc\""
-				+ " xmlns:wfs=\"http://opengis.net/wfs/2.0\" xmlns:tds=\"http://localhost:8080/thredds/wfs/results/tds\" xmlns=\"http://www.opengis.net/wfs/2.0\" version=\"2.0.0\" numberMatched=\"1\" numberReturned=\"1\">"
+	}
+	
+	/**
+	 * Writes headers and bounding box
+	 */
+	public void writeHeadersAndBB() {
+		fileOutput += "<wfs:FeatureCollection xsi:schemaLocation=" + WFSXMLGeneral.encQuotes("http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd" + namespace + " " + server + "?request=DescribeFeature" + WFSXMLGeneral.AMPERSAND + "service=wfs" + WFSXMLGeneral.AMPERSAND + "version=2.0.0")
+				+ " xmlns:xsi=" + WFSXMLGeneral.encQuotes("http://www.w3.org/2001/XMLSchema-instance")
+				+ " xmlns:xlink=" + WFSXMLGeneral.encQuotes("http://www.w3.org/1999/xlink")
+				+ " xmlns:gml=" + WFSXMLGeneral.encQuotes("http://opengis.net/gml/3.2")
+				+ " xmlns:fes=" + WFSXMLGeneral.encQuotes("http://www.opengis.net/fes/2.0")
+				+ " xmlns:ogc=" + WFSXMLGeneral.encQuotes("http://www.opengis.net/ogc")
+				+ " xmlns:wfs=" + WFSXMLGeneral.encQuotes("http://opengis.net/wfs/2.0") 
+				+ " xmlns:" + WFSController.TDSNAMESPACE +"=" + WFSXMLGeneral.encQuotes(namespace)
+				+ " xmlns=" + WFSXMLGeneral.encQuotes("http://www.opengis.net/wfs/2.0")
+				+ " version=\"2.0.0\" numberMatched=\"1\" numberReturned=\"1\">"
 		
 		   // WFS Bounding Box
 			+ "<wfs:boundedBy>"
@@ -34,8 +69,11 @@ public class WFSGetFeatureWriter {
 			+ "</wfs:boundedBy>";
 	}
 	
+	/**
+	 * In the WFS specification for GetFeature each feature type is its own
+	 * member and so writeMembers add each member to the fileOutput
+	 */
 	public void writeMembers() {
-		//for(SimpleGeometry geometry : geometryList) {
 			fileOutput
 				   += "<wfs:member>" 
 					
@@ -50,15 +88,21 @@ public class WFSGetFeatureWriter {
 					// Write Geometry Information
 					+ "<tds:hru_soil_moist gml:id=\"hru_soil_moist.1\">"
 					+ "<tds:catchments_geometry_container>"
-					+ "<gml:Point srsName=\"http://www.opengis.net/gml/srs/epsg.xml@900913\" srsDimension=\"2\">"
-					+ "<gml:pos>50.0 50.0</gml:pos>"
-					+ "</gml:Point>"
+					+ writeGeometryInformation(new CFPoint(50.0, 50.0, null, null, null))
 					
 					// Cap off headers
 					+ "</tds:catchments_geometry_container>"
 					+ "</tds:hru_soil_moist>"
 					+ "</wfs:member>";
-		//}
+	}
+	
+	/**
+	 * Set the namespace of WFS tds
+	 * 
+	 * @param namespace
+	 */
+	public void setNamespace(String namespace) {
+		this.namespace = namespace;
 	}
 	
 	/**
@@ -81,5 +125,9 @@ public class WFSGetFeatureWriter {
 	public WFSGetFeatureWriter(PrintWriter response) {
 		this.fileOutput = "";
 		this.response = response;
+	}
+	
+	public void setServer(String server) {
+		this.server = server;
 	}
 }

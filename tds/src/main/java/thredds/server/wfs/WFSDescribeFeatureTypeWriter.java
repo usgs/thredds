@@ -9,6 +9,7 @@ public class WFSDescribeFeatureTypeWriter {
     private PrintWriter response;
     private String fileOutput;
     private String server;
+    private String namespace;
     private List<WFSFeature> featureList;
 
     public WFSDescribeFeatureTypeWriter(PrintWriter response) {
@@ -20,7 +21,7 @@ public class WFSDescribeFeatureTypeWriter {
 
     public void startXML() {
         fileOutput += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-        fileOutput += "<schema xmlns:ms=\"" + server + "\" " + "xmlns:tds=" + WFSController.TDSNAMESPACE + " " +
+        fileOutput += "<schema xmlns:ms=\"" + server + "\" " + "xmlns:+" + WFSController.TDSNAMESPACE + "="  + WFSXMLGeneral.encQuotes(namespace) + " " +
                 "xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" " +
                 "xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:gml=\"http://www.opengis.net/gml\" " +
                 "targetNamespace=\"" + server + "\" elementFormDefault=\"qualified\" " +
@@ -60,6 +61,10 @@ public class WFSDescribeFeatureTypeWriter {
         }
     }
 
+    public void setNamespace(String namespace) {
+    	this.namespace = namespace;
+    }
+    
     public void finishXML() {
         fileOutput += "</schema>";
         this.response.append(fileOutput);

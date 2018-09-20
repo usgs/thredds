@@ -17,18 +17,15 @@ public class WFSGetCapabilitiesWriter {
 	private PrintWriter response;
 	private String fileOutput;
 	private String server;
+	private String namespace;
 	private List<WFSRequestType> operationList;
 	private List<WFSFeature> featureList;
 	
 	/**
-	 * Initiate the response with an XML file with an XML header and the WFS_Capabilities tag.
+	 * Initiate the response with an XML file with an XML header.
 	 */
 	public void startXML() {
 		fileOutput += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-		fileOutput += "<wfs:WFS_Capabilities xsi:schemaLocation=\"http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd\" xmlns:tds=" + WFSController.TDSNAMESPACE + " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
-				+ " xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:gml=\"http://opengis.net/gml\" xmlns:fes=\"http://www.opengis.net/fes/2.0\" xmlns:ogc=\"http://www.opengis.net/ogc\""
-				+ " xmlns:ows=\"http://www.opengis.net/ows/1.1\" xmlns:wfs=\"http://opengis.net/wfs/2.0\" xmlns=\"http://www.opengis.net/wfs/2.0\" version=\"2.0.0\">";
-		writeServiceInfo();
 	}
 	
 	/**
@@ -41,6 +38,24 @@ public class WFSGetCapabilitiesWriter {
 		this.response.append(fileOutput);
 		response = null;
 		fileOutput = null;
+	}
+	
+	/**
+	 * Writes headers and service sections
+	 */
+	public void writeHeadersAndSS() {
+		fileOutput += "<wfs:WFS_Capabilities xsi:schemaLocation="
+				+ WFSXMLGeneral.encQuotes("http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd " + namespace + " " + server + "?request=DescribeFeature" + WFSXMLGeneral.AMPERSAND + "service=wfs" + WFSXMLGeneral.AMPERSAND + "version=2.0.0")
+				+ " xmlns:" + WFSController.TDSNAMESPACE + "=" + WFSXMLGeneral.encQuotes(namespace)
+				+ " xmlns:xsi=" + WFSXMLGeneral.encQuotes("http://www.w3.org/2001/XMLSchema-instance")
+				+ " xmlns:xlink=" + WFSXMLGeneral.encQuotes("http://www.w3.org/1999/xlink") 
+				+ " xmlns:gml=" + WFSXMLGeneral.encQuotes("http://opengis.net/gml")
+				+ " xmlns:fes=" + WFSXMLGeneral.encQuotes("http://www.opengis.net/fes/2.0")
+				+ " xmlns:ogc=" + WFSXMLGeneral.encQuotes("http://www.opengis.net/ogc")
+				+ " xmlns:ows=" + WFSXMLGeneral.encQuotes("http://www.opengis.net/ows/1.1\" xmlns:wfs=\"http://opengis.net/wfs/2.0")
+				+ " xmlns=" + WFSXMLGeneral.encQuotes("http://www.opengis.net/wfs/2.0")
+				+ " version=\"2.0.0\">";
+		writeServiceInfo();
 	}
 	
 	/**
@@ -195,6 +210,10 @@ public class WFSGetCapabilitiesWriter {
 	 */
 	public void addFeature(WFSFeature feature) {
 		this.featureList.add(feature);
+	}
+	
+	public void setNamespace(String namespace) {
+		this.namespace = namespace;
 	}
 	
 	/**
