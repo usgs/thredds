@@ -16,32 +16,9 @@ public class WFSGetCapabilitiesWriter {
 	
 	private PrintWriter response;
 	private String fileOutput;
-	private String server;
+	private final String server;
 	private List<WFSRequestType> operationList;
 	private List<WFSFeature> featureList;
-	
-	/**
-	 * Initiate the response with an XML file with an XML header and the WFS_Capabilities tag.
-	 */
-	public void startXML() {
-		fileOutput += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-		fileOutput += "<wfs:WFS_Capabilities xsi:schemaLocation=\"http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
-				+ " xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:gml=\"http://opengis.net/gml\" xmlns:fes=\"http://www.opengis.net/fes/2.0\" xmlns:ogc=\"http://www.opengis.net/ogc\""
-				+ " xmlns:ows=\"http://www.opengis.net/ows/1.1\" xmlns:wfs=\"http://opengis.net/wfs/2.0\" xmlns=\"http://www.opengis.net/wfs/2.0\" version=\"2.0.0\">";
-		writeServiceInfo();
-	}
-	
-	/**
-	 * Finish writing the XML file, write the end tag for WFS_Capabilities and append it all to the PrintWriter.
-	 * 
-	 * Once a XML is finished, the WFSDataWriter is no longer usable.
-	 */
-	public void finishXML() {
-		fileOutput += "</wfs:WFS_Capabilities>";
-		this.response.append(fileOutput);
-		response = null;
-		fileOutput = null;
-	}
 	
 	/**
 	 * Writes the two service sections
@@ -95,6 +72,43 @@ public class WFSGetCapabilitiesWriter {
 				+ "<ows:NoValues/> "
 				+ "<ows:DefaultValue>" + defValue +"</ows:DefaultValue> "
 						+ "</ows:Constraint>";
+	}
+	
+	/**
+	 * Writes headers and service sections
+	 */
+	private void writeHeadersAndSS() {
+		fileOutput += "<wfs:WFS_Capabilities xsi:schemaLocation="
+				+ WFSXMLHelper.encQuotes("http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd ")
+				+ " xmlns:xsi=" + WFSXMLHelper.encQuotes("http://www.w3.org/2001/XMLSchema-instance")
+				+ " xmlns:xlink=" + WFSXMLHelper.encQuotes("http://www.w3.org/1999/xlink") 
+				+ " xmlns:gml=" + WFSXMLHelper.encQuotes("http://opengis.net/gml")
+				+ " xmlns:fes=" + WFSXMLHelper.encQuotes("http://www.opengis.net/fes/2.0")
+				+ " xmlns:ogc=" + WFSXMLHelper.encQuotes("http://www.opengis.net/ogc")
+				+ " xmlns:ows=" + WFSXMLHelper.encQuotes("http://www.opengis.net/ows/1.1\" xmlns:wfs=\"http://opengis.net/wfs/2.0")
+				+ " xmlns=" + WFSXMLHelper.encQuotes("http://www.opengis.net/wfs/2.0")
+				+ " version=\"2.0.0\">";
+		writeServiceInfo();
+	}
+	
+	/**
+	 * Initiate the response with an XML file with an XML header.
+	 */
+	public void startXML() {
+		fileOutput += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+		writeHeadersAndSS();
+	}
+	
+	/**
+	 * Finish writing the XML file, write the end tag for WFS_Capabilities and append it all to the PrintWriter.
+	 * 
+	 * Once a XML is finished, the WFSDataWriter is no longer usable.
+	 */
+	public void finishXML() {
+		fileOutput += "</wfs:WFS_Capabilities>";
+		this.response.append(fileOutput);
+		response = null;
+		fileOutput = null;
 	}
 	
 	/**
@@ -201,16 +215,13 @@ public class WFSGetCapabilitiesWriter {
 	 * Opens a WFSDataWriter, writes to the HttpResponse given.
 	 * 
 	 * @param response to write to
+	 * @param server URI
 	 */
-	public WFSGetCapabilitiesWriter(PrintWriter response){
+	public WFSGetCapabilitiesWriter(PrintWriter response, String server){
 		this.response = response;
 		this.fileOutput = "";
-		this.server = null;
+		this.server = server;
 		this.operationList = new ArrayList<WFSRequestType>();
 		this.featureList = new ArrayList<WFSFeature>();
-	}
-
-	public void setServer(String server) {
-		this.server = server;
 	}
 }

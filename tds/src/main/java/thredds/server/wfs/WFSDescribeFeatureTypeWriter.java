@@ -8,19 +8,21 @@ public class WFSDescribeFeatureTypeWriter {
 
     private PrintWriter response;
     private String fileOutput;
-    private String server;
+    private final String server;
+    private final String namespace;
     private List<WFSFeature> featureList;
 
-    public WFSDescribeFeatureTypeWriter(PrintWriter response) {
+    public WFSDescribeFeatureTypeWriter(PrintWriter response, String server, String namespace) {
         this.response = response;
         this.fileOutput = "";
-        this.server = null;
+        this.server = server;
+        this.namespace = namespace;
         this.featureList = new ArrayList<WFSFeature>();
     }
 
     public void startXML() {
         fileOutput += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-        fileOutput += "<schema xmlns:ms=\"" + server + "\" " +
+        fileOutput += "<schema " + "xmlns:" + WFSController.TDSNAMESPACE + "="  + WFSXMLHelper.encQuotes(namespace) + " " +
                 "xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" " +
                 "xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:gml=\"http://www.opengis.net/gml\" " +
                 "targetNamespace=\"" + server + "\" elementFormDefault=\"qualified\" " +
@@ -28,10 +30,6 @@ public class WFSDescribeFeatureTypeWriter {
         fileOutput += "<import namespace=\"http://www.opengis.net/gml\" " +
                 "schemaLocation=\"http://schemas.opengis.net/gml/2.1.2/feature.xsd\"/>";
         writeFeatures();
-    }
-
-    public void setServer(String server) {
-        this.server = server;
     }
 
     public void addFeature(WFSFeature feature) {
@@ -42,14 +40,14 @@ public class WFSDescribeFeatureTypeWriter {
     public void writeFeatures() {
 
         for (WFSFeature feat : featureList) {
-            fileOutput += "<element name =\"ms:" + feat.getName() + "\" type=\"" + feat.getTitle() + "\">";
+            fileOutput += "<element name =\"" + feat.getName() + "\" type=\"" + feat.getTitle() + "\"/>";
             fileOutput += "<complexType name=\"" + feat.getTitle() + "\">";
             fileOutput += "<complexContent>";
-            fileOutput += "<extension base=\"gnl:" + feat.getType() + "\">";
+            fileOutput += "<extension base=\"gml:" + feat.getType() + "\">";
             fileOutput += "<sequence>";
 
             for (WFSFeatureAttribute attribute : feat.getAttributes()) {
-                fileOutput += "<element name =\"" + attribute.getName() + "\" type=\"" + attribute.getType() + "\">";
+                fileOutput += "<element name =\"" + attribute.getName() + "\" type=\"" + attribute.getType() + "\"/>";
             }
 
             fileOutput += "</sequence>";
@@ -59,7 +57,7 @@ public class WFSDescribeFeatureTypeWriter {
 
         }
     }
-
+    
     public void finishXML() {
         fileOutput += "</schema>";
         this.response.append(fileOutput);
