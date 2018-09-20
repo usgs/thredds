@@ -33,8 +33,19 @@ public class WFSFeature {
 	public String getTitle() {
 		return title;
 	}
-	
+
+	/**
+	 * gets the type of this WFS Feature
+	 * 
+	 * @return
+	 */
 	public String getType() { return type; }
+
+	/**
+	 * gets the list of attributes of this WFS Feature
+	 *
+	 * @return
+	 */
 	public ArrayList<WFSFeatureAttribute> getAttributes() {return attributes;}
 	
 	/**
@@ -47,17 +58,25 @@ public class WFSFeature {
 	public String getFileDSName() {
 		return fileDSName;
 	}
-	
+
 	/**
-	 * Creates a new WFSFeature of the given name and type.
-	 * 
-	 * @param name - name of the feature
-	 * @param title - title of the feature
+	 * Create a new WFS Feature with the given name and title
+	 *
+	 * @param name
+	 * @param title
 	 */
 	public WFSFeature(String name, String title) {
 		this(name, title, null, null);
 	}
 
+	/**
+	 * Create a new WFS Feature with given name, title, type, and attributes
+	 *
+	 * @param name
+	 * @param title
+	 * @param type
+	 * @param attributes
+	 */
 	public WFSFeature(String name, String title, String type, ArrayList<WFSFeatureAttribute> attributes) {
 		this.name = name;
 		this.title = title;
@@ -66,6 +85,11 @@ public class WFSFeature {
 		this.attributes = attributes;
 	}
 
+	/**
+	 * add attributes to list of attributes
+	 *
+	 * @param attribute
+	 */
 	public void addAttribute(WFSFeatureAttribute attribute) {
 		attributes.add(attribute);
 	}

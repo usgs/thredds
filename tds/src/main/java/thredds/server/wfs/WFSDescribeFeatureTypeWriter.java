@@ -17,6 +17,11 @@ public class WFSDescribeFeatureTypeWriter {
     private String server;
     private List<WFSFeature> featureList;
 
+    /**
+     * Opens a WFSDataWriter, writes to the HttpResponse given.
+     *
+     * @param response to write to
+     */
     public WFSDescribeFeatureTypeWriter(PrintWriter response) {
         this.response = response;
         this.fileOutput = "";
@@ -24,6 +29,9 @@ public class WFSDescribeFeatureTypeWriter {
         this.featureList = new ArrayList<WFSFeature>();
     }
 
+    /**
+     * Initiate the response with an XML file with an XML header
+     */
     public void startXML() {
         fileOutput += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
         fileOutput += "<xsd:schema xmlns:tds=\"" + server + "\" " +
@@ -33,18 +41,30 @@ public class WFSDescribeFeatureTypeWriter {
                 "version=\"0.1\">";
         fileOutput += "<xsd:import namespace=\"http://www.opengis.net/gml\" " +
                 "schemaLocation=\"http://schemas.opengis.net/gml/2.1.2/feature.xsd\"/>";
-        writeFeatures();
     }
 
+    /**
+     * Initialize server to correct value
+     *
+     * @param server
+     */
     public void setServer(String server) {
         this.server = server;
     }
 
+    /**
+     * Add a feature to the writer's feature list.
+     *
+     * @param feature to add
+     */
     public void addFeature(WFSFeature feature) {
 
         featureList.add(feature);
     }
 
+    /**
+     * Write the features from the featureList. For each feature, write its attributes
+     */
     public void writeFeatures() {
 
         for (WFSFeature feat : featureList) {
@@ -66,6 +86,11 @@ public class WFSDescribeFeatureTypeWriter {
         }
     }
 
+    /**
+     * Finish writing the XML file and append it all to the PrintWriter.
+     *
+     * Once a XML is finished, the WFSDataWriter is no longer usable.
+     */
     public void finishXML() {
         fileOutput += "</xsd:schema>";
         this.response.append(fileOutput);
