@@ -3,6 +3,9 @@ package thredds.server.wfs;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import ucar.nc2.VariableSimpleIF;
+import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometryFeatureDataset;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -32,7 +35,7 @@ public class WFSController extends HttpServlet {
 	 * @return the namespace value as "SERVER/PATH"
 	 */
 	public static String getXMLNamespaceXMLNSValue(HttpServletRequest hsreq) {
-		return hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs/geospatial";
+		return constructServerPath(hsreq) + "geospatial";
 	}
 	
 	/**
@@ -246,8 +249,6 @@ public class WFSController extends HttpServlet {
 					case GetFeature:
 						getFeature(wr, hsreq);
 					break;
-					
-					default:
 				}	
 				
 			}

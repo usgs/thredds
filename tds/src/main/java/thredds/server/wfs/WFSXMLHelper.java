@@ -6,7 +6,7 @@ package thredds.server.wfs;
  * @author wchen@usgs.gov
  *
  */
-public class WFSXMLGeneral {
+public class WFSXMLHelper {
 
 	/**
 	 * An XML escaped ampersand.
