@@ -14,18 +14,16 @@ public class WFSDescribeFeatureTypeWriter {
 
     private PrintWriter response;
     private String fileOutput;
-    private String server;
+    private final String server;
+    private final String namespace;
     private List<WFSFeature> featureList;
 
-    /**
-     * Opens a WFSDataWriter, writes to the HttpResponse given.
-     *
-     * @param response to write to
-     */
-    public WFSDescribeFeatureTypeWriter(PrintWriter response) {
+
+    public WFSDescribeFeatureTypeWriter(PrintWriter response, String server, String namespace) {
         this.response = response;
         this.fileOutput = "";
-        this.server = null;
+        this.server = server;
+        this.namespace = namespace;
         this.featureList = new ArrayList<WFSFeature>();
     }
 
@@ -34,7 +32,8 @@ public class WFSDescribeFeatureTypeWriter {
      */
     public void startXML() {
         fileOutput += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-        fileOutput += "<xsd:schema xmlns:tds=\"" + server + "\" " +
+
+        fileOutput += "<schema " + "xmlns:" + WFSController.TDSNAMESPACE + "="  + WFSXMLHelper.encQuotes(namespace) + " " +
                 "xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" " +
                 "xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:gml=\"http://www.opengis.net/gml\" " +
                 "targetNamespace=\"" + server + "\" elementFormDefault=\"qualified\" " +
@@ -44,19 +43,11 @@ public class WFSDescribeFeatureTypeWriter {
     }
 
     /**
-     * Initialize server to correct value
-     *
-     * @param server
-     */
-    public void setServer(String server) {
-        this.server = server;
-    }
-
-    /**
      * Add a feature to the writer's feature list.
      *
      * @param feature to add
      */
+
     public void addFeature(WFSFeature feature) {
 
         featureList.add(feature);

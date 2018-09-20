@@ -3,6 +3,9 @@ package thredds.server.wfs;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import ucar.nc2.VariableSimpleIF;
+import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometryFeatureDataset;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -23,7 +26,27 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/wfs")
 public class WFSController extends HttpServlet {
 
-	public static final String TDSNAMESPACE = "\"http://localhost:8080/thredds/wfs/results\"";
+	public static final String TDSNAMESPACE = "tdswfs";
+	
+	/**
+	 * Gets the namespace associated with the WFS Controller and this specific THREDDS server
+	 * 
+	 * @param req The request which contains the applicable URI of the WFS Controller
+	 * @return the namespace value as "SERVER/PATH"
+	 */
+	public static String getXMLNamespaceXMLNSValue(HttpServletRequest hsreq) {
+		return constructServerPath(hsreq) + "geospatial";
+	}
+	
+	/**
+	 * Constructs the full server URI from a request
+	 * 
+	 * @param hsreq The relevant request
+	 * @return The URI of the server corresponding to the request
+	 */
+	public static String constructServerPath(HttpServletRequest hsreq) {
+		return hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs/";
+	}
 	
 	/**
 	 * Processes GetCapabilities requests.
@@ -32,19 +55,17 @@ public class WFSController extends HttpServlet {
 	 * @return
 	 */
 	private void getCapabilities(PrintWriter out, HttpServletRequest hsreq) {
-		WFSGetCapabilitiesWriter gcdw = new WFSGetCapabilitiesWriter(out);
+		WFSGetCapabilitiesWriter gcdw = new WFSGetCapabilitiesWriter(out, WFSController.constructServerPath(hsreq));
 		gcdw.startXML();
-		gcdw.setServer(hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs");
 		gcdw.addOperation(WFSRequestType.GetCapabilities); gcdw.addOperation(WFSRequestType.DescribeFeatureType); gcdw.addOperation(WFSRequestType.GetFeature);
 		gcdw.writeOperations();
-		gcdw.addFeature(new WFSFeature("tds:hru_soil_moist", "hru_soil_moist"));
+		gcdw.addFeature(new WFSFeature(TDSNAMESPACE + ":hru_soil_moist", "hru_soil_moist"));
 		gcdw.writeFeatureTypes();
 		gcdw.finishXML();
 	}
 
 	private void describeFeatureType(PrintWriter out, HttpServletRequest hsreq) {
-		WFSDescribeFeatureTypeWriter dftw = new WFSDescribeFeatureTypeWriter(out);
-		dftw.setServer(hsreq.getScheme() + "://" + hsreq.getServerName() + ":" + hsreq.getServerPort() + "/thredds/wfs");
+		WFSDescribeFeatureTypeWriter dftw = new WFSDescribeFeatureTypeWriter(out, WFSController.constructServerPath(hsreq), WFSController.getXMLNamespaceXMLNSValue(hsreq));
 		dftw.startXML();
 		ArrayList<WFSFeatureAttribute> attributes = new ArrayList<>();
 		attributes.add(new WFSFeatureAttribute("catchments_geometry_container", "gml:PointPropertyType"));
@@ -67,7 +88,7 @@ public class WFSController extends HttpServlet {
 	 * @return
 	 */
 	private void getFeature(PrintWriter out, HttpServletRequest hsreq) {
-		WFSGetFeatureWriter gfdw = new WFSGetFeatureWriter(out);
+		WFSGetFeatureWriter gfdw = new WFSGetFeatureWriter(out, WFSController.constructServerPath(hsreq), WFSController.getXMLNamespaceXMLNSValue(hsreq));
 		gfdw.startXML();
 		gfdw.writeMembers();
 		gfdw.finishXML();
@@ -133,7 +154,7 @@ public class WFSController extends HttpServlet {
 					// If just number 2 is specified, assume 2.0.0, pass the check
 					if(versionParts.length == 1) if(versionParts[0].equals("2")) validVersion = true;
 					
-					// Two version parts specified, make sure it's 2.0
+					// Two or more version parts specified, make sure it's 2.0.#.#...
 					if(versionParts.length >= 2) if(versionParts[0].equals("2") && versionParts[1].equals("0")) validVersion = true;
 					
 					/* Another exception VersionNegotiationFailed is specified by OGC Web Services Common
@@ -228,8 +249,6 @@ public class WFSController extends HttpServlet {
 					case GetFeature:
 						getFeature(wr, hsreq);
 					break;
-					
-					default:
 				}	
 				
 			}

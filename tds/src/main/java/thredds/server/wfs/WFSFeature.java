@@ -36,7 +36,7 @@ public class WFSFeature {
 
 	/**
 	 * gets the type of this WFS Feature
-	 * 
+	 *
 	 * @return
 	 */
 	public String getType() { return type; }
