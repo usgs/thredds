@@ -84,7 +84,7 @@ public class GMLFeatureWriter {
                     xml += point.getX() + " " + point.getY() + " ";
                 }
 
-                xml += "</gml:exterior></gml:LinearRing></gml:posList>";
+                xml += "</gml:posList></gml:LinearRing></gml:exterior>";
 
             }
 
@@ -95,7 +95,7 @@ public class GMLFeatureWriter {
                     xml += point.getX() + " " + point.getY() + " ";
                 }
 
-                xml += "</gml:interior></gml:LinearRing></gml:posList>";
+                xml += "</gml:posList></gml:LinearRing></gml:interior>";
             }
 
             polygon = polygon.getNext();
