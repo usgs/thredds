@@ -11,7 +11,7 @@ public enum GMLFeatureType {
 	
 	Polygon("Polygon");
 	
-	
+
 	
 	
 	
@@ -25,4 +25,5 @@ public enum GMLFeatureType {
 	private GMLFeatureType(String stringRepresent) {
 		this.stringRepresent = stringRepresent;
 	}
+
 }

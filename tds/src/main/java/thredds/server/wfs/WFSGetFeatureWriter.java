@@ -2,9 +2,11 @@ package thredds.server.wfs;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import ucar.nc2.ft2.coverage.simpgeometry.CFPoint;
 import ucar.nc2.ft2.coverage.simpgeometry.Point;
+import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometry;
 
 /**
  * A writer for a WFS compliant Feature Collection GML file.
@@ -19,12 +21,7 @@ public class WFSGetFeatureWriter {
 	private String fileOutput;
 	private final String namespace;
 	private final String server;
-	
-	private String writeGeometryInformation(Point point) {
-		return "<gml:Point srsName=\"http://www.opengis.net/gml/srs/epsg.xml@900913\" srsDimension=\"2\">"
-				+ "<gml:pos>50.0 50.0</gml:pos>"
-				+ "</gml:Point>";
-	} 
+	private ArrayList<SimpleGeometry> geometries;
 	
 	/**
 	 * Writes headers and bounding box
@@ -78,11 +75,19 @@ public class WFSGetFeatureWriter {
 					
 					// Write Geometry Information
 					+ "<" + WFSController.TDSNAMESPACE + ":hru_soil_moist gml:id=\"hru_soil_moist.1\">"
-					+ "<" + WFSController.TDSNAMESPACE + ":catchments_geometry_container>"
-					+ writeGeometryInformation(new CFPoint(50.0, 50.0, null, null, null))
+					+ "<" + WFSController.TDSNAMESPACE + ":catchments_geometry_container>";
+
+			//write GML features
+			GMLFeatureWriter writer = new GMLFeatureWriter();
+			for (SimpleGeometry geom : geometries) {
+
+				fileOutput += writer.writeFeature(geom);
+
+			}
 					
-					// Cap off headers
-					+ "</" + WFSController.TDSNAMESPACE + ":catchments_geometry_container>"
+			// Cap off headers
+			fileOutput
+					+="</" + WFSController.TDSNAMESPACE + ":catchments_geometry_container>"
 					+ "</" + WFSController.TDSNAMESPACE + ":hru_soil_moist>"
 					+ "</wfs:member>";
 	}
@@ -106,10 +111,11 @@ public class WFSGetFeatureWriter {
 	 * @param namespace WFS TDS Namespace URI
 	 * @throws IOException 
 	 */
-	public WFSGetFeatureWriter(PrintWriter response, String server, String namespace) {
+	public WFSGetFeatureWriter(PrintWriter response, String server, String namespace, ArrayList<SimpleGeometry> geometries) {
 		this.fileOutput = "";
 		this.response = response;
 		this.server = server;
 		this.namespace = namespace;
+		this.geometries = geometries;
 	}
 }

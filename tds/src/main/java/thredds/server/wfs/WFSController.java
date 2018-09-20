@@ -4,6 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import ucar.nc2.VariableSimpleIF;
+import ucar.nc2.ft2.coverage.simpgeometry.CFPoint;
+import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometry;
 import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometryFeatureDataset;
 
 import java.io.IOException;
@@ -31,7 +33,7 @@ public class WFSController extends HttpServlet {
 	/**
 	 * Gets the namespace associated with the WFS Controller and this specific THREDDS server
 	 * 
-	 * @param req The request which contains the applicable URI of the WFS Controller
+	 * @param hsreq The request which contains the applicable URI of the WFS Controller
 	 * @return the namespace value as "SERVER/PATH"
 	 */
 	public static String getXMLNamespaceXMLNSValue(HttpServletRequest hsreq) {
@@ -88,7 +90,9 @@ public class WFSController extends HttpServlet {
 	 * @return
 	 */
 	private void getFeature(PrintWriter out, HttpServletRequest hsreq) {
-		WFSGetFeatureWriter gfdw = new WFSGetFeatureWriter(out, WFSController.constructServerPath(hsreq), WFSController.getXMLNamespaceXMLNSValue(hsreq));
+		ArrayList<SimpleGeometry> geometries = new ArrayList<SimpleGeometry>();
+		geometries.add(new CFPoint(50.0, 50.0, null, null, null));
+		WFSGetFeatureWriter gfdw = new WFSGetFeatureWriter(out, WFSController.constructServerPath(hsreq), WFSController.getXMLNamespaceXMLNSValue(hsreq), geometries);
 		gfdw.startXML();
 		gfdw.writeMembers();
 		gfdw.finishXML();
