@@ -4,9 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import ucar.nc2.VariableSimpleIF;
-import ucar.nc2.ft2.coverage.simpgeometry.CFPoint;
-import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometry;
-import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometryFeatureDataset;
+import ucar.nc2.ft2.coverage.simpgeometry.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -90,8 +88,23 @@ public class WFSController extends HttpServlet {
 	 * @return
 	 */
 	private void getFeature(PrintWriter out, HttpServletRequest hsreq) {
+
+		//test out functionality for different geometries
 		ArrayList<SimpleGeometry> geometries = new ArrayList<SimpleGeometry>();
+
 		geometries.add(new CFPoint(50.0, 50.0, null, null, null));
+
+		ArrayList<Point> points = new ArrayList<Point>();
+		points.add(new CFPoint(50.0, 50.0, null, null, null));
+		geometries.add(new CFLine(points));
+
+		CFPolygon polygon = new CFPolygon(points);
+		polygon.setInteriorRing(true);
+		polygon.setNext(new CFPolygon(points));
+		polygon.getNext().setInteriorRing(false);
+		geometries.add(polygon);
+
+
 		WFSGetFeatureWriter gfdw = new WFSGetFeatureWriter(out, WFSController.constructServerPath(hsreq), WFSController.getXMLNamespaceXMLNSValue(hsreq), geometries);
 		gfdw.startXML();
 		gfdw.writeMembers();
