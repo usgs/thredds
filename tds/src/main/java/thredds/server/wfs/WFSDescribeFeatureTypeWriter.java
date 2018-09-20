@@ -4,6 +4,12 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Writes the XML for a WFS DescribeFeatureType request
+ *
+ * @author Stanley Kaymen
+ *
+ */
 public class WFSDescribeFeatureTypeWriter {
 
     private PrintWriter response;
