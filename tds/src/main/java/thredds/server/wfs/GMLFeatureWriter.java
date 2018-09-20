@@ -68,13 +68,13 @@ public class GMLFeatureWriter {
      * @param polygon the polygon
      * @return the xml
      */
-    private String writePolygon(Polygon polygon) {
-
-        polygon.getInteriorRing();
+    private String writePolygon(Polygon poly) {
 
         String xml = "";
         xml += "<gml:Polygon>";
 
+        Polygon polygon = poly;
+        
         while (polygon != null) {
 
             if (!polygon.getInteriorRing()) {
