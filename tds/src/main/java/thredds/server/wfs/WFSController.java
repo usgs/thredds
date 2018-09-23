@@ -68,7 +68,7 @@ public class WFSController extends HttpServlet {
 		WFSDescribeFeatureTypeWriter dftw = new WFSDescribeFeatureTypeWriter(out, WFSController.constructServerPath(hsreq), WFSController.getXMLNamespaceXMLNSValue(hsreq));
 		dftw.startXML();
 		ArrayList<WFSFeatureAttribute> attributes = new ArrayList<>();
-		attributes.add(new WFSFeatureAttribute("catchments_geometry_container", "gml:PointPropertyType"));
+		attributes.add(new WFSFeatureAttribute("catchments_geometry_container", "gml:SurfaceArrayPropertyType"));
 		attributes.add(new WFSFeatureAttribute("hruid", "int"));
 		attributes.add(new WFSFeatureAttribute("lat", "double"));
 		attributes.add(new WFSFeatureAttribute("lon", "double"));
@@ -92,16 +92,23 @@ public class WFSController extends HttpServlet {
 		//test out functionality for different geometries
 		ArrayList<SimpleGeometry> geometries = new ArrayList<SimpleGeometry>();
 
-		geometries.add(new CFPoint(50.0, 50.0, null, null, null));
+//		geometries.add(new CFPoint(50.0, 50.0, null, null, null));
 
-		ArrayList<Point> points = new ArrayList<Point>();
-		points.add(new CFPoint(50.0, 50.0, null, null, null));
-		geometries.add(new CFLine(points));
+		//ArrayList<Point> points = new ArrayList<Point>();
+		//points.add(new CFPoint(50.0, 50.0, null, null, null));
+		//points.add(new CFPoint(70.0, 50.0, null, null, null));
+		//geometries.add(new CFLine(points));
 
-		CFPolygon polygon = new CFPolygon(points);
-		polygon.setInteriorRing(true);
-		polygon.setNext(new CFPolygon(points));
-		polygon.getNext().setInteriorRing(false);
+		
+		ArrayList<Point> points2 = new ArrayList<Point>();
+		points2.add(new CFPoint(50.0, 50.0, null, null, null));
+		points2.add(new CFPoint(70.0, 50.0, null, null, null));
+		points2.add(new CFPoint(66.0, 66.0, null, null, null));
+		
+		CFPolygon polygon = new CFPolygon(points2);
+		polygon.setInteriorRing(false);
+//		polygon.setNext(new CFPolygon(points));
+//		polygon.getNext().setInteriorRing(false);
 		geometries.add(polygon);
 
 
