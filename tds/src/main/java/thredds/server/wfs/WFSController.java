@@ -3,6 +3,9 @@ package thredds.server.wfs;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import thredds.core.DataRootManager;
+import thredds.core.DataRootManager.DataRootMatch;
+import thredds.server.catalog.DataRoot;
 import ucar.nc2.VariableSimpleIF;
 import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometryFeatureDataset;
 
@@ -205,6 +208,20 @@ public class WFSController extends HttpServlet {
 			String version = null;
 			String service = null;
 			String typeNames = null;
+			String datasetReqPath = null;
+			String actualPath = null;
+			
+			if(hsreq.getServletPath().length() > 4) {
+				datasetReqPath = hsreq.getServletPath().substring(4, hsreq.getServletPath().length());
+			}
+			
+			DataRootMatch match = DataRootManager.getInstance().findDataRootMatch(datasetReqPath);
+			
+			if(match != null) {
+				actualPath = match.dataRoot.getPath();
+				hsres.getWriter().append(actualPath);
+				return;
+			}
 			
 			/* Look for parameter names to assign values
 			 * in order to avoid casing issues with parameter names (such as a mismatch between reQUEST and request and REQUEST).
@@ -261,7 +278,8 @@ public class WFSController extends HttpServlet {
 		}
 		
 		catch(IOException io) {
-			throw new RuntimeException("ERROR: retrieval of writer failed", io);
+			throw new RuntimeException("ERROR: An IOException has occurred. The writer may not have been able to been have retrieved"
+					+ " or the requested dataset was not found", io);
 		}
 	}
 }
