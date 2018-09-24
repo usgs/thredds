@@ -61,12 +61,18 @@ public class WFSController extends HttpServlet {
 	 * @param out
 	 * @return
 	 */
-	private void getCapabilities(PrintWriter out, HttpServletRequest hsreq) {
+	private void getCapabilities(PrintWriter out, HttpServletRequest hsreq, SimpleGeometryCSBuilder sgcs) {
 		WFSGetCapabilitiesWriter gcdw = new WFSGetCapabilitiesWriter(out, WFSController.constructServerPath(hsreq));
 		gcdw.startXML();
 		gcdw.addOperation(WFSRequestType.GetCapabilities); gcdw.addOperation(WFSRequestType.DescribeFeatureType); gcdw.addOperation(WFSRequestType.GetFeature);
 		gcdw.writeOperations();
-		gcdw.addFeature(new WFSFeature(TDSNAMESPACE + ":hru_soil_moist", "hru_soil_moist"));
+		
+		List<String> seriesNames = sgcs.getGeometrySeriesNames();
+		
+		for(String name : seriesNames) {
+			gcdw.addFeature(new WFSFeature(TDSNAMESPACE + ":" + name, name));
+		}
+
 		gcdw.writeFeatureTypes();
 		gcdw.finishXML();
 	}
@@ -94,25 +100,71 @@ public class WFSController extends HttpServlet {
 	 * @param out
 	 * @return
 	 */
-	private void getFeature(PrintWriter out, HttpServletRequest hsreq, SimpleGeometryCSBuilder sgcs) {
-
+	private void getFeature(PrintWriter out, HttpServletRequest hsreq, SimpleGeometryCSBuilder sgcs, String ftName) {
+		
 		List<SimpleGeometry> geometryList = new ArrayList<SimpleGeometry>();
-		Polygon poly =	sgcs.getPolygon("hru_soil_moist", 0);
-		int i = 0;
-		while(poly != null) {
-			geometryList.add(poly);
-			i++;
-			try {
-				poly = sgcs.getPolygon("hru_soil_moist", i);
-			}
-			
-			catch(ArrayIndexOutOfBoundsException aout) {
+		
+		GeometryType geoT = sgcs.getGeometryType(ftName);
+		
+		switch(geoT) {
+			case POINT:
+				Point pt = sgcs.getPoint(ftName, 0);
+				int j = 0;
+				while(pt != null) {
+					geometryList.add(pt);
+					j++;
+					try {
+						pt = sgcs.getPoint(ftName, j);
+					}
+					
+					// Perhaps will change this to be implemented in the CFPolygon class
+					catch(ArrayIndexOutOfBoundsException aout) {
+						break;
+					}
+				}
 				break;
-			}
+				
+			case LINE:
+				
+				Line line = sgcs.getLine(ftName, 0);
+				int k = 0;
+				while(line != null) {
+					geometryList.add(line);
+					k++;
+					try {
+						line = sgcs.getLine(ftName, k);
+					}
+					
+					// Perhaps will change this to be implemented in the CFPolygon class
+					catch(ArrayIndexOutOfBoundsException aout) {
+						break;
+					}
+				}	
+				
+				break;
+				
+			case POLYGON:
+				
+				Polygon poly =	sgcs.getPolygon(ftName, 0);
+				int i = 0;
+				while(poly != null) {
+					geometryList.add(poly);
+					i++;
+					try {
+						poly = sgcs.getPolygon(ftName, i);
+					}
+					
+					// Perhaps will change this to be implemented in the CFPolygon class
+					catch(ArrayIndexOutOfBoundsException aout) {
+						break;
+					}
+				}
+				
+				break;
 		}
 
 
-		WFSGetFeatureWriter gfdw = new WFSGetFeatureWriter(out, WFSController.constructServerPath(hsreq), WFSController.getXMLNamespaceXMLNSValue(hsreq), geometryList);
+		WFSGetFeatureWriter gfdw = new WFSGetFeatureWriter(out, WFSController.constructServerPath(hsreq), WFSController.getXMLNamespaceXMLNSValue(hsreq), geometryList, ftName);
 		gfdw.startXML();
 		gfdw.writeMembers();
 		gfdw.finishXML();
@@ -125,9 +177,10 @@ public class WFSController extends HttpServlet {
 	 * @param request parameter value
 	 * @param version parameter value
 	 * @param service parameter value
+	 * @param actualFTName parameter value
 	 * @return an ExceptionWriter if any errors occurred or null if none occurred
 	 */
-	private WFSExceptionWriter checkParametersForError(String request, String version, String service) {
+	private WFSExceptionWriter checkParametersForError(String request, String version, String service, String actualFTName) {
 		// The SERVICE parameter is required. If not specified, is an error (throw exception through XML).
 		if(service != null) {
 			// For the WFS servlet it must be WFS if not, write out an InvalidParameterValue exception.
@@ -193,6 +246,9 @@ public class WFSController extends HttpServlet {
 					return new WFSExceptionWriter("WFS server error. VERSION parameter is required.", "request", "MissingParameterValue");
 
 				}
+				
+				// Similarly go through a simple typenames check for non-existing feature types
+				//if(actualFTName == null) return new WFSExceptionWriter("Failed to retrieve feature data. The Feature Type specifed may not be valid for this dataset.", "GetFeature", "OperationProcessingFailed");
 			}
 			
 			WFSRequestType reqToProc = WFSRequestType.getWFSRequestType(request);
@@ -231,6 +287,7 @@ public class WFSController extends HttpServlet {
 			String typeNames = null;
 			String datasetReqPath = null;
 			String actualPath = null;
+			String actualFTName = null;
 			NetcdfDataset dataset = null;
 			
 			if(hsreq.getServletPath().length() > 4) {
@@ -242,8 +299,11 @@ public class WFSController extends HttpServlet {
 			if(actualPath != null) dataset = NetcdfDataset.openDataset(actualPath);
 			else return;
 			
+			if(dataset == null) hsres.sendError(HttpServletResponse.SC_NOT_FOUND);	// can't open dataset an error for sure "not found"
+			
 			List<CoordinateSystem> csList = dataset.getCoordinateSystems();
 			SimpleGeometryCSBuilder cs = new SimpleGeometryCSBuilder(dataset, csList.get(0), null);
+			
 			
 			/* Look for parameter names to assign values
 			 * in order to avoid casing issues with parameter names (such as a mismatch between reQUEST and request and REQUEST).
@@ -262,12 +322,17 @@ public class WFSController extends HttpServlet {
 					service = hsreq.getParameter(paramName);
 				}
 				
-				if(paramName.equalsIgnoreCase("TYPENAMES")) {
+				if(paramName.equalsIgnoreCase("TYPENAMES") || paramName.equalsIgnoreCase("TYPENAME")) {
 					typeNames = hsreq.getParameter(paramName);
+					
+					// Remove namespace header for getFeature
+					if(typeNames != null) if(typeNames.length() > TDSNAMESPACE.length()) {
+						actualFTName = typeNames.substring(TDSNAMESPACE.length() + 1, typeNames.length());
+					}
 				}
 			}
 			
-			WFSExceptionWriter paramError = checkParametersForError(request, version, service);
+			WFSExceptionWriter paramError = checkParametersForError(request, version, service, actualFTName);
 			
 			
 			// If parameter checks all pass launch the request
@@ -277,7 +342,7 @@ public class WFSController extends HttpServlet {
 				
 				switch(reqToProc) {
 					case GetCapabilities:
-						getCapabilities(wr, hsreq);
+						getCapabilities(wr, hsreq, cs);
 					break;
 					
 					case DescribeFeatureType:
@@ -286,7 +351,7 @@ public class WFSController extends HttpServlet {
 					break;
 					
 					case GetFeature:
-						getFeature(wr, hsreq, cs);
+						getFeature(wr, hsreq, cs, actualFTName);
 					break;
 				}	
 				

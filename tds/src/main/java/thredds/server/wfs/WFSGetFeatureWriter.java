@@ -2,11 +2,8 @@ package thredds.server.wfs;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 
-import ucar.nc2.ft2.coverage.simpgeometry.CFPoint;
-import ucar.nc2.ft2.coverage.simpgeometry.Point;
 import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometry;
 
 /**
@@ -22,6 +19,7 @@ public class WFSGetFeatureWriter {
 	private String fileOutput;
 	private final String namespace;
 	private final String server;
+	private final String ftName;
 	private List<SimpleGeometry> geometries;
 	
 	/**
@@ -30,7 +28,7 @@ public class WFSGetFeatureWriter {
 	private void writeHeadersAndBB() {
 		fileOutput += "<wfs:FeatureCollection xsi:schemaLocation=" + WFSXMLHelper.encQuotes("http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd " + namespace + " " + server
 					+ "?request=DescribeFeatureType" + WFSXMLHelper.AMPERSAND + "service=wfs" + WFSXMLHelper.AMPERSAND + "version=2.0.0" + WFSXMLHelper.AMPERSAND + "typename=" 
-					+ WFSController.TDSNAMESPACE + "%3A" + "hru_soil_moist")
+					+ WFSController.TDSNAMESPACE + "%3A" + ftName)
 				+ " xmlns:xsi=" + WFSXMLHelper.encQuotes("http://www.w3.org/2001/XMLSchema-instance")
 				+ " xmlns:xlink=" + WFSXMLHelper.encQuotes("http://www.w3.org/1999/xlink")
 				+ " xmlns:gml=" + WFSXMLHelper.encQuotes("http://opengis.net/gml/3.2")
@@ -71,7 +69,7 @@ public class WFSGetFeatureWriter {
 				   += "<wfs:member>"
 					
 					// Write Geometry Information
-					+ "<" + WFSController.TDSNAMESPACE + ":hru_soil_moist gml:id=\"hru_soil_moist." + index + "\">"
+					+ "<" + WFSController.TDSNAMESPACE + ":" + ftName + " gml:id=\"" + ftName + "." + index + "\">"
 					
 					// GML Bounding Box
 					+ "<gml:boundedBy>"
@@ -89,7 +87,7 @@ public class WFSGetFeatureWriter {
 			// Cap off headers
 			fileOutput
 					+="</" + WFSController.TDSNAMESPACE + ":catchments_geometry_container>"
-					+ "</" + WFSController.TDSNAMESPACE + ":hru_soil_moist>"
+					+ "</" + WFSController.TDSNAMESPACE + ":" + ftName +">"
 					+ "</wfs:member>";
 			
 			index++;
@@ -115,11 +113,12 @@ public class WFSGetFeatureWriter {
 	 * @param namespace WFS TDS Namespace URI
 	 * @throws IOException 
 	 */
-	public WFSGetFeatureWriter(PrintWriter response, String server, String namespace, List<SimpleGeometry> geometries) {
+	public WFSGetFeatureWriter(PrintWriter response, String server, String namespace, List<SimpleGeometry> geometries, String ftName) {
 		this.fileOutput = "";
 		this.response = response;
 		this.server = server;
 		this.namespace = namespace;
 		this.geometries = geometries;
+		this.ftName = ftName;
 	}
 }
