@@ -3,6 +3,7 @@ package thredds.server.wfs;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
 
 import ucar.nc2.ft2.coverage.simpgeometry.CFPoint;
 import ucar.nc2.ft2.coverage.simpgeometry.Point;
@@ -21,7 +22,7 @@ public class WFSGetFeatureWriter {
 	private String fileOutput;
 	private final String namespace;
 	private final String server;
-	private ArrayList<SimpleGeometry> geometries;
+	private List<SimpleGeometry> geometries;
 	
 	/**
 	 * Writes headers and bounding box
@@ -38,7 +39,8 @@ public class WFSGetFeatureWriter {
 				+ " xmlns:wfs=" + WFSXMLHelper.encQuotes("http://opengis.net/wfs/2.0") 
 				+ " xmlns:" + WFSController.TDSNAMESPACE +"=" + WFSXMLHelper.encQuotes(namespace)
 				+ " xmlns=" + WFSXMLHelper.encQuotes("http://www.opengis.net/wfs/2.0")
-				+ " version=\"2.0.0\" numberMatched=\"1\" numberReturned=\"1\">"
+				+ " version=\"2.0.0\" numberMatched=" + WFSXMLHelper.encQuotes(String.valueOf(geometries.size())) + " numberReturned=" 
+				+ WFSXMLHelper.encQuotes(String.valueOf(geometries.size())) + ">"
 		
 		   // WFS Bounding Box
 			+ "<wfs:boundedBy>"
@@ -62,10 +64,16 @@ public class WFSGetFeatureWriter {
 	 * member and so writeMembers add each member to the fileOutput
 	 */
 	public void writeMembers() {
+		int index = 1;
+		GMLFeatureWriter writer = new GMLFeatureWriter();
+		for(SimpleGeometry geometryItem: geometries) {
 			fileOutput
-				   += "<wfs:member>" 
+				   += "<wfs:member>"
 					
-				   // GML Bounding Box
+					// Write Geometry Information
+					+ "<" + WFSController.TDSNAMESPACE + ":hru_soil_moist gml:id=\"hru_soil_moist." + index + "\">"
+					
+					// GML Bounding Box
 					+ "<gml:boundedBy>"
 					+ "<gml:Envelope srsName=" + "\"urn:ogc:def:crs:EPSG::4326\"" + ">"
 							+ "<gml:lowerCorner>" + "-180 -90" + "</gml:lowerCorner>"
@@ -73,23 +81,19 @@ public class WFSGetFeatureWriter {
 					+ "</gml:Envelope>"
 					+ "</gml:boundedBy>"
 					
-					// Write Geometry Information
-					+ "<" + WFSController.TDSNAMESPACE + ":hru_soil_moist gml:id=\"hru_soil_moist.1\">"
 					+ "<" + WFSController.TDSNAMESPACE + ":catchments_geometry_container>";
 
 			//write GML features
-			GMLFeatureWriter writer = new GMLFeatureWriter();
-			for (SimpleGeometry geom : geometries) {
-
-				fileOutput += writer.writeFeature(geom);
-
-			}
+			fileOutput += writer.writeFeature(geometryItem);
 					
 			// Cap off headers
 			fileOutput
 					+="</" + WFSController.TDSNAMESPACE + ":catchments_geometry_container>"
 					+ "</" + WFSController.TDSNAMESPACE + ":hru_soil_moist>"
 					+ "</wfs:member>";
+			
+			index++;
+		}
 	}
 	
 	/**
@@ -111,7 +115,7 @@ public class WFSGetFeatureWriter {
 	 * @param namespace WFS TDS Namespace URI
 	 * @throws IOException 
 	 */
-	public WFSGetFeatureWriter(PrintWriter response, String server, String namespace, ArrayList<SimpleGeometry> geometries) {
+	public WFSGetFeatureWriter(PrintWriter response, String server, String namespace, List<SimpleGeometry> geometries) {
 		this.fileOutput = "";
 		this.response = response;
 		this.server = server;

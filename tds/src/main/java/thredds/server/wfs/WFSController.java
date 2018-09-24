@@ -5,8 +5,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import thredds.core.DataRootManager;
 import thredds.core.DataRootManager.DataRootMatch;
+import thredds.core.TdsRequestedDataset;
 import thredds.server.catalog.DataRoot;
 import ucar.nc2.VariableSimpleIF;
+import ucar.nc2.dataset.CoordinateSystem;
+import ucar.nc2.dataset.NetcdfDataset;
+import ucar.nc2.ft2.coverage.adapter.SimpleGeometryCSBuilder;
 import ucar.nc2.ft2.coverage.simpgeometry.*;
 
 import java.io.IOException;
@@ -71,7 +75,7 @@ public class WFSController extends HttpServlet {
 		WFSDescribeFeatureTypeWriter dftw = new WFSDescribeFeatureTypeWriter(out, WFSController.constructServerPath(hsreq), WFSController.getXMLNamespaceXMLNSValue(hsreq));
 		dftw.startXML();
 		ArrayList<WFSFeatureAttribute> attributes = new ArrayList<>();
-		attributes.add(new WFSFeatureAttribute("catchments_geometry_container", "gml:PointPropertyType"));
+		attributes.add(new WFSFeatureAttribute("catchments_geometry_container", "gml:SurfaceArrayPropertyType"));
 		attributes.add(new WFSFeatureAttribute("hruid", "int"));
 		attributes.add(new WFSFeatureAttribute("lat", "double"));
 		attributes.add(new WFSFeatureAttribute("lon", "double"));
@@ -90,25 +94,25 @@ public class WFSController extends HttpServlet {
 	 * @param out
 	 * @return
 	 */
-	private void getFeature(PrintWriter out, HttpServletRequest hsreq) {
+	private void getFeature(PrintWriter out, HttpServletRequest hsreq, SimpleGeometryCSBuilder sgcs) {
 
-		//test out functionality for different geometries
-		ArrayList<SimpleGeometry> geometries = new ArrayList<SimpleGeometry>();
+		List<SimpleGeometry> geometryList = new ArrayList<SimpleGeometry>();
+		Polygon poly =	sgcs.getPolygon("hru_soil_moist", 0);
+		int i = 0;
+		while(poly != null) {
+			geometryList.add(poly);
+			i++;
+			try {
+				poly = sgcs.getPolygon("hru_soil_moist", i);
+			}
+			
+			catch(ArrayIndexOutOfBoundsException aout) {
+				break;
+			}
+		}
 
-		geometries.add(new CFPoint(50.0, 50.0, null, null, null));
 
-		ArrayList<Point> points = new ArrayList<Point>();
-		points.add(new CFPoint(50.0, 50.0, null, null, null));
-		geometries.add(new CFLine(points));
-
-		CFPolygon polygon = new CFPolygon(points);
-		polygon.setInteriorRing(true);
-		polygon.setNext(new CFPolygon(points));
-		polygon.getNext().setInteriorRing(false);
-		geometries.add(polygon);
-
-
-		WFSGetFeatureWriter gfdw = new WFSGetFeatureWriter(out, WFSController.constructServerPath(hsreq), WFSController.getXMLNamespaceXMLNSValue(hsreq), geometries);
+		WFSGetFeatureWriter gfdw = new WFSGetFeatureWriter(out, WFSController.constructServerPath(hsreq), WFSController.getXMLNamespaceXMLNSValue(hsreq), geometryList);
 		gfdw.startXML();
 		gfdw.writeMembers();
 		gfdw.finishXML();
@@ -227,18 +231,19 @@ public class WFSController extends HttpServlet {
 			String typeNames = null;
 			String datasetReqPath = null;
 			String actualPath = null;
+			NetcdfDataset dataset = null;
 			
 			if(hsreq.getServletPath().length() > 4) {
 				datasetReqPath = hsreq.getServletPath().substring(4, hsreq.getServletPath().length());
 			}
 			
-			DataRootMatch match = DataRootManager.getInstance().findDataRootMatch(datasetReqPath);
+			actualPath = TdsRequestedDataset.getLocationFromRequestPath(datasetReqPath);
 			
-			if(match != null) {
-				actualPath = match.dataRoot.getPath();
-				hsres.getWriter().append(actualPath);
-				return;
-			}
+			if(actualPath != null) dataset = NetcdfDataset.openDataset(actualPath);
+			else return;
+			
+			List<CoordinateSystem> csList = dataset.getCoordinateSystems();
+			SimpleGeometryCSBuilder cs = new SimpleGeometryCSBuilder(dataset, csList.get(0), null);
 			
 			/* Look for parameter names to assign values
 			 * in order to avoid casing issues with parameter names (such as a mismatch between reQUEST and request and REQUEST).
@@ -281,7 +286,7 @@ public class WFSController extends HttpServlet {
 					break;
 					
 					case GetFeature:
-						getFeature(wr, hsreq);
+						getFeature(wr, hsreq, cs);
 					break;
 				}	
 				

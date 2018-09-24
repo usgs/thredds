@@ -67,7 +67,7 @@ public class SimpleGeometryCSBuilder {
   private SimpleGeometryReader geometryReader;
   private ProjectionImpl orgProj;
 
-  SimpleGeometryCSBuilder(NetcdfDataset ds, CoordinateSystem cs, Formatter errlog) {
+  public SimpleGeometryCSBuilder(NetcdfDataset ds, CoordinateSystem cs, Formatter errlog) {
 
     // must be at least 2 dimensions
     if (cs.getRankDomain() < 2) {
