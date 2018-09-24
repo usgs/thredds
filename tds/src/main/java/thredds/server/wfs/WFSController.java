@@ -247,8 +247,6 @@ public class WFSController extends HttpServlet {
 
 				}
 				
-				// Similarly go through a simple typenames check for non-existing feature types
-				//if(actualFTName == null) return new WFSExceptionWriter("Failed to retrieve feature data. The Feature Type specifed may not be valid for this dataset.", "GetFeature", "OperationProcessingFailed");
 			}
 			
 			WFSRequestType reqToProc = WFSRequestType.getWFSRequestType(request);
