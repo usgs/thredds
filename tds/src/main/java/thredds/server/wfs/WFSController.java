@@ -3,11 +3,7 @@ package thredds.server.wfs;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import thredds.core.DataRootManager;
-import thredds.core.DataRootManager.DataRootMatch;
 import thredds.core.TdsRequestedDataset;
-import thredds.server.catalog.DataRoot;
-import ucar.nc2.VariableSimpleIF;
 import ucar.nc2.dataset.CoordinateSystem;
 import ucar.nc2.dataset.NetcdfDataset;
 import ucar.nc2.ft2.coverage.adapter.SimpleGeometryCSBuilder;
