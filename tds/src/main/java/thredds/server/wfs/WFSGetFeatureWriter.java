@@ -116,14 +116,14 @@ public class WFSGetFeatureWriter {
 					+ "</gml:Envelope>"
 					+ "</gml:boundedBy>"
 					
-					+ "<" + WFSController.TDSNAMESPACE + ":catchments_geometry_container>";
+					+ "<" + WFSController.TDSNAMESPACE + ":geometryInformation>";
 
 			//write GML features
 			fileOutput += writer.writeFeature(geometryItem);
 					
 			// Cap off headers
 			fileOutput
-					+="</" + WFSController.TDSNAMESPACE + ":catchments_geometry_container>"
+					+="</" + WFSController.TDSNAMESPACE + ":geometryInformation>"
 					+ "</" + WFSController.TDSNAMESPACE + ":" + ftName +">"
 					+ "</wfs:member>";
 			

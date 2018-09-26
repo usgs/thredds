@@ -73,11 +73,11 @@ public class WFSController extends HttpServlet {
 		gcdw.finishXML();
 	}
 
-	private void describeFeatureType(PrintWriter out, HttpServletRequest hsreq) {
+	private void describeFeatureType(PrintWriter out, HttpServletRequest hsreq, String ftName) {
 		WFSDescribeFeatureTypeWriter dftw = new WFSDescribeFeatureTypeWriter(out, WFSController.constructServerPath(hsreq), WFSController.getXMLNamespaceXMLNSValue(hsreq));
 		dftw.startXML();
 		ArrayList<WFSFeatureAttribute> attributes = new ArrayList<>();
-		attributes.add(new WFSFeatureAttribute("catchments_geometry_container", "gml:SurfaceArrayPropertyType"));
+		attributes.add(new WFSFeatureAttribute("geometryInformation", "gml:SurfaceArrayPropertyType"));
 		attributes.add(new WFSFeatureAttribute("hruid", "int"));
 		attributes.add(new WFSFeatureAttribute("lat", "double"));
 		attributes.add(new WFSFeatureAttribute("lon", "double"));
@@ -85,7 +85,7 @@ public class WFSController extends HttpServlet {
 		attributes.add(new WFSFeatureAttribute("catchments_perimeter", "double"));
 		attributes.add(new WFSFeatureAttribute("catchments_veght", "double"));
 		attributes.add(new WFSFeatureAttribute("catchments_cov", "double"));
-		dftw.addFeature(new WFSFeature("hru_soil_moist", "hru_soil_moistType", "AbstractFeatureType",attributes));
+		dftw.addFeature(new WFSFeature(ftName, ftName + "Type", "AbstractFeatureType",attributes));
 		dftw.writeFeatures();
 		dftw.finishXML();
 	}
@@ -338,7 +338,7 @@ public class WFSController extends HttpServlet {
 					break;
 					
 					case DescribeFeatureType:
-						describeFeatureType(wr, hsreq);
+						describeFeatureType(wr, hsreq, actualFTName);
 						
 					break;
 					
