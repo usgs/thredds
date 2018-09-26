@@ -38,13 +38,45 @@ public class WFSGetFeatureWriter {
 				+ " xmlns:" + WFSController.TDSNAMESPACE +"=" + WFSXMLHelper.encQuotes(namespace)
 				+ " xmlns=" + WFSXMLHelper.encQuotes("http://www.opengis.net/wfs/2.0")
 				+ " version=\"2.0.0\" numberMatched=" + WFSXMLHelper.encQuotes(String.valueOf(geometries.size())) + " numberReturned=" 
-				+ WFSXMLHelper.encQuotes(String.valueOf(geometries.size())) + ">"
+				+ WFSXMLHelper.encQuotes(String.valueOf(geometries.size())) + ">";
+		
+			double[] boundLower;
+			double[] boundUpper;
+			if(geometries.isEmpty()) { 
+				boundLower = new double[2]; boundUpper = new double[2];
+				boundLower[0] = -180;  boundLower[1] = -90;
+				boundUpper[0] = 180; boundUpper[1] = 90;
+			}
+			
+			else {
+				boundLower = geometries.get(0).getBBLower();
+				boundUpper = geometries.get(0).getBBUpper();
+			}
 		
 		   // WFS Bounding Box
-			+ "<wfs:boundedBy>"
+			for(SimpleGeometry item: geometries) {
+				
+				// Find the overall BB
+			
+				// Test Lower
+				double[] low = item.getBBLower();
+				if(boundLower[0] > low[0]) boundLower[0] = low[0];
+				if(boundLower[1] > low[1]) boundLower[1] = low[1];
+				
+				// Test Upper
+				double[] upper = item.getBBUpper();
+				if(boundUpper[0] < upper[0]) boundUpper[0] = upper[0];
+				if(boundUpper[1] < upper[1]) boundUpper[1] = upper[1];
+				
+				// Add some padding
+				boundLower[0] -= 10;  boundLower[1] -= 10;
+				boundUpper[0] += 10; boundUpper[1] += 10;
+			}
+		
+		fileOutput	+= "<wfs:boundedBy>"
 			+ "<wfs:Envelope srsName=" + "\"urn:ogc:def:crs:EPSG::4326\"" + ">"
-					+ "<wfs:lowerCorner>" + "-180 -90" + "</wfs:lowerCorner>"
-					+ "<wfs:upperCorner>" + "180 90" + "</wfs:upperCorner>"
+					+ "<wfs:lowerCorner>" + boundLower[0] + " " + boundLower[1] + "</wfs:lowerCorner>"
+					+ "<wfs:upperCorner>" + boundUpper[0] + " " + boundUpper[1] + "</wfs:upperCorner>"
 			+ "</wfs:Envelope>"
 			+ "</wfs:boundedBy>";
 	}
@@ -65,6 +97,11 @@ public class WFSGetFeatureWriter {
 		int index = 1;
 		GMLFeatureWriter writer = new GMLFeatureWriter();
 		for(SimpleGeometry geometryItem: geometries) {
+			
+			// Find bounding box information
+			double[] lowerCorner = geometryItem.getBBLower();
+			double[] upperCorner = geometryItem.getBBUpper();
+			
 			fileOutput
 				   += "<wfs:member>"
 					
@@ -74,8 +111,8 @@ public class WFSGetFeatureWriter {
 					// GML Bounding Box
 					+ "<gml:boundedBy>"
 					+ "<gml:Envelope srsName=" + "\"urn:ogc:def:crs:EPSG::4326\"" + ">"
-							+ "<gml:lowerCorner>" + "-180 -90" + "</gml:lowerCorner>"
-							+ "<gml:upperCorner>" + "180 90" + "</gml:upperCorner>"
+							+ "<gml:lowerCorner>" +  lowerCorner[0] + " " + lowerCorner[1] + "</gml:lowerCorner>"
+							+ "<gml:upperCorner>" +  upperCorner[0] + " " + upperCorner[1] + "</gml:upperCorner>"
 					+ "</gml:Envelope>"
 					+ "</gml:boundedBy>"
 					

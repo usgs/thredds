@@ -18,4 +18,6 @@ public interface SimpleGeometry {
     public void setData(Array data);
     public Array getData();
 
+    public double[] getBBLower();
+    public double[] getBBUpper();
 }
