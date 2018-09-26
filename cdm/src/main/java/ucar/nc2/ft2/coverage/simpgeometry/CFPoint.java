@@ -232,6 +232,24 @@ public class CFPoint implements Point{
 	}
 	
 	/**
+	 * Gets the upper bounding box coordinate on the point.
+	 * @return double array = (x, y)
+	 */
+	public double[] getBBUpper() {
+		double[] bbUpper = { this.getX() + 10, this.getY() + 10 };
+		return bbUpper;
+	}
+	
+	/**
+	 * Gets the lower bounding box coordinate on the polygon.
+	 * @return double array = (x, y)
+	 */
+	public double[] getBBLower() {
+		double[] bbLower = { this.getX() - 10, this.getY() - 10 };
+		return bbLower;
+	}
+	
+	/**
 	 * Construct a new point from specified parameters
 	 * The construction will automatically connect in related parts of a Multipoint - just specify any constituents
 	 * of a multipoint as next or prev.
