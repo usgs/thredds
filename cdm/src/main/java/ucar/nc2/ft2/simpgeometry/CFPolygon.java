@@ -256,7 +256,7 @@ public class CFPolygon implements Polygon  {
 				switch(polyvar.getRank()) {
 				
 				case 2:
-					this.setData(polyvar.read(":," + index).reduce());
+					this.setData(polyvar.read(CFSimpleGeometryHelper.getSubsetString2D(polyvar, index)).reduce());
 					break;
 					
 				case 1:
@@ -322,7 +322,7 @@ public class CFPolygon implements Polygon  {
 					switch(polyvar.getRank()) {
 					
 					case 2:
-						tail.setData(polyvar.read(":," + index).reduce());
+						tail.setData(polyvar.read(CFSimpleGeometryHelper.getSubsetString2D(polyvar, index)).reduce());
 						break;
 						
 					case 1:

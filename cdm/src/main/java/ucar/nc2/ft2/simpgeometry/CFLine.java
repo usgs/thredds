@@ -231,7 +231,7 @@ public class CFLine implements Line {
 				switch(var.getRank()) {
 				
 				case 2:
-					this.setData(var.read(":," + index).reduce());
+					this.setData(var.read(CFSimpleGeometryHelper.getSubsetString2D(var, index)).reduce());
 					break;
 					
 				case 1:
@@ -274,7 +274,7 @@ public class CFLine implements Line {
 					switch(var.getRank()) {
 					
 					case 2:
-						tail.setData(var.read(":," + index).reduce());
+						tail.setData(var.read(CFSimpleGeometryHelper.getSubsetString2D(var, index)).reduce());
 						break;
 						
 					case 1:
