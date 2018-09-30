@@ -171,21 +171,21 @@ public class SimpleGeometryFeatureDataset implements FeatureDataset {
     public static class SimpleGeometryCovSet  {
 
         private SimpleGeometryCS gcc;
-        private List<SimpleGeometryCoverage> covs = new ArrayList<>();
+        private List<SimpleGeometryFeature> covs = new ArrayList<>();
 
 
         private SimpleGeometryCovSet(SimpleGeometryCS gcc) {
             this.gcc = gcc;
         }
         
-        private void add(SimpleGeometryCoverage cov) {
+        private void add(SimpleGeometryFeature cov) {
             covs.add(cov);
         }
 
         /**
          * Get list of GeoGrid objects
          */
-        public List<SimpleGeometryCoverage> getGrids() {
+        public List<SimpleGeometryFeature> getGrids() {
             return covs;
         }
 

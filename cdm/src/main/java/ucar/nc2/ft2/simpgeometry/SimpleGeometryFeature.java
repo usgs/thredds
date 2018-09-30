@@ -29,7 +29,7 @@ import java.util.List;
  * @since 8/13/2018
  */
 // @Immutable
-public class SimpleGeometryCoverage implements VariableSimpleIF{
+public class SimpleGeometryFeature implements VariableSimpleIF{
   private final String name;
   private final DataType dataType;
   private final AttributeContainerHelper atts;
@@ -44,7 +44,7 @@ public class SimpleGeometryCoverage implements VariableSimpleIF{
 
   private SimpleGeometryCS coordSys; // almost immutable use coordsys
 
-  public SimpleGeometryCoverage(String name, DataType dataType, List<Attribute> atts, String coordSysName, String units, String description, Object user, GeometryType geometryType) {
+  public SimpleGeometryFeature(String name, DataType dataType, List<Attribute> atts, String coordSysName, String units, String description, Object user, GeometryType geometryType) {
     this.name = name;
     this.dataType = dataType;
     this.atts = new AttributeContainerHelper(name, atts);

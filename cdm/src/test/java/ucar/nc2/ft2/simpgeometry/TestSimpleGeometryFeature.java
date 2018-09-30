@@ -27,7 +27,7 @@ import ucar.nc2.ft2.simpgeometry.Polygon;
 import ucar.nc2.ft2.simpgeometry.SimpleGeometryCoverage;
 import ucar.nc2.ft2.simpgeometry.adapter.SimpleGeometryCS;
 
-public class TestSimpleGeometryCoverage {
+public class TestSimpleGeometryFeature {
 
     private String name = "name";
     private DataType dt;

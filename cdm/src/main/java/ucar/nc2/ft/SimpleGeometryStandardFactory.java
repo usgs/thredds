@@ -24,8 +24,8 @@ public class SimpleGeometryStandardFactory implements FeatureDatasetFactory {
 
   public Object isMine(FeatureType wantFeatureType, NetcdfDataset ncd, Formatter errlog) throws IOException {
     SimpleGeometryCSBuilder sgCoverage = SimpleGeometryCSBuilder.classify(ncd, errlog);
-    if (sgCoverage == null || sgCoverage.getCoverageType() == null) return null;
-    if (!match(wantFeatureType, sgCoverage.getCoverageType())) return null;
+    if (sgCoverage == null || sgCoverage.getFeatureType() == null) return null;
+    if (!match(wantFeatureType, sgCoverage.getFeatureType())) return null;
     return sgCoverage;
   }
 

@@ -33,7 +33,7 @@ public class SimpleGeometryCSBuilder {
 
   // classify based on largest coordinate system
   public static SimpleGeometryCSBuilder classify(NetcdfDataset ds, Formatter errlog) {
-    if (errlog != null) errlog.format("CoverageFactory for '%s'%n", ds.getLocation());
+    if (errlog != null) errlog.format("SimpleGeometryFactory for '%s'%n", ds.getLocation());
 
     // sort by largest size first
     List<CoordinateSystem> css = new ArrayList<>(ds.getCoordinateSystems());
@@ -46,7 +46,7 @@ public class SimpleGeometryCSBuilder {
     }
     
     if (builder == null) return null;
-    if (errlog != null) errlog.format("coverage = %s%n", builder.type);
+    if (errlog != null) errlog.format("simple geometry = %s%n", builder.type);
     return builder;
   }
 
@@ -343,9 +343,9 @@ public class SimpleGeometryCSBuilder {
   /**
    * Returns the feature type of this type
    * 
-   * @return
+   * @return Feature type of this type
    */
-  public FeatureType getCoverageType() {
+  public FeatureType getFeatureType() {
 	  return this.type;
   }
   
