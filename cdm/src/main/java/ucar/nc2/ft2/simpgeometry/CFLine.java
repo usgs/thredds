@@ -10,6 +10,7 @@ import ucar.nc2.Variable;
 import ucar.nc2.constants.CF;
 import ucar.nc2.dataset.CoordinateAxis;
 import ucar.nc2.dataset.NetcdfDataset;
+import ucar.nc2.ft2.simpgeometry.exception.InvalidDataseriesException;
 
 /**
  * A CF 1.8 compliant Line
@@ -238,7 +239,7 @@ public class CFLine implements Line {
 					break;
 					
 				default:
-					return null;	// currently do not support anything but dataseries and scalar associations
+					throw new InvalidDataseriesException(InvalidDataseriesException.RANK_MISMATCH);	// currently do not support anything but dataseries and scalar associations
 				
 				}
 			}
@@ -281,7 +282,7 @@ public class CFLine implements Line {
 						break;
 						
 					default:
-						return null;	// currently do not support anything but dataseries and scalar associations
+						throw new InvalidDataseriesException(InvalidDataseriesException.RANK_MISMATCH);	// currently do not support anything but dataseries and scalar associations
 					
 					}
 					
@@ -302,6 +303,9 @@ public class CFLine implements Line {
 			return null;
 		
 		} catch (InvalidRangeException e) {
+			e.printStackTrace();
+			return null;
+		} catch (InvalidDataseriesException e) {
 			e.printStackTrace();
 			return null;
 		}

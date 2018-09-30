@@ -11,6 +11,7 @@ import ucar.nc2.constants.CF;
 import ucar.nc2.dataset.CoordinateAxis;
 import ucar.nc2.dataset.NetcdfDataset;
 import ucar.nc2.ft2.simpgeometry.Point;
+import ucar.nc2.ft2.simpgeometry.exception.InvalidDataseriesException;
 
 /**
  * A CF 1.8 compliant Point
@@ -192,7 +193,23 @@ public class CFPoint implements Point{
 			if(!multi) {
 				this.x = xPts.getDouble(0);
 				this.y = yPts.getDouble(0);
-				this.data = vari.read(":," + index).reduce();
+				
+				// Set data of each
+				switch(vari.getRank()) {
+				
+				case 2:
+					this.setData(vari.read(":," + index).reduce());
+					break;
+					
+				case 1:
+					this.setData(vari.read("" + index));
+					break;
+					
+				default:
+					throw new InvalidDataseriesException(InvalidDataseriesException.RANK_MISMATCH);	// currently do not support anything but dataseries and scalar associations
+				
+				}
+				
 			}
 		
 			else {
@@ -207,7 +224,23 @@ public class CFPoint implements Point{
 				while(itrX.hasNext()) {
 					point.setX(itrX.getDoubleNext());
 					point.setY(itrY.getDoubleNext());
-					point.setData(vari.read(":," + index).reduce());
+					
+					// Set data of each
+					switch(vari.getRank()) {
+					
+					case 2:
+						point.setData(vari.read(":," + index).reduce());
+						break;
+						
+					case 1:
+						point.setData(vari.read("" + index));
+						break;
+						
+					default:
+						throw new InvalidDataseriesException(InvalidDataseriesException.RANK_MISMATCH);	// currently do not support anything but dataseries and scalar associations
+					
+					}
+
 					point.setNext(new CFPoint()); // -1 is a default value, it gets assigned eventually
 					point = point.getNext();
 				}
@@ -224,6 +257,10 @@ public class CFPoint implements Point{
 		
 		} catch (InvalidRangeException e) {
 			
+			e.printStackTrace();
+			return null;
+		} catch (InvalidDataseriesException e) {
+
 			e.printStackTrace();
 			return null;
 		}

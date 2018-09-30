@@ -11,6 +11,7 @@ import ucar.nc2.Variable;
 import ucar.nc2.constants.CF;
 import ucar.nc2.dataset.CoordinateAxis;
 import ucar.nc2.dataset.NetcdfDataset;
+import ucar.nc2.ft2.simpgeometry.exception.InvalidDataseriesException;
 
 /**
  * A CF 1.8 compliant Polygon
@@ -263,7 +264,7 @@ public class CFPolygon implements Polygon  {
 					break;
 					
 				default:
-					return null;	// currently do not support anything but dataseries and scalar associations
+					throw new InvalidDataseriesException(InvalidDataseriesException.RANK_MISMATCH);	// currently do not support anything but dataseries and scalar associations
 				
 				}
 			}
@@ -329,7 +330,7 @@ public class CFPolygon implements Polygon  {
 						break;
 						
 					default:
-						return null;	// currently do not support anything but dataseries and scalar associations
+						throw new InvalidDataseriesException(InvalidDataseriesException.RANK_MISMATCH);	// currently do not support anything but dataseries and scalar associations
 					
 					}
 
@@ -350,6 +351,9 @@ public class CFPolygon implements Polygon  {
 			return null;
 		
 		} catch (InvalidRangeException e) {
+			e.printStackTrace();
+			return null;
+		} catch (InvalidDataseriesException e){
 			e.printStackTrace();
 			return null;
 		}
