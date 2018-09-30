@@ -1,6 +1,6 @@
 package thredds.server.wfs;
 
-import ucar.nc2.ft2.coverage.simpgeometry.*;
+import ucar.nc2.ft2.simpgeometry.*;
 
 /**
  * Takes in a Simple Geometry, determines which kind it is, and writes the corresponding xml

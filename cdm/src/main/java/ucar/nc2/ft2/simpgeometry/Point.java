@@ -1,4 +1,4 @@
-package ucar.nc2.ft2.coverage.simpgeometry;
+package ucar.nc2.ft2.simpgeometry;
 
 import ucar.ma2.Array;
 import ucar.nc2.Variable;
