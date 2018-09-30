@@ -1,4 +1,4 @@
-package ucar.nc2.ft2.coverage.simpgeometry;
+package ucar.nc2.ft2.simpgeometry;
 
 import ucar.nc2.Attribute;
 import ucar.nc2.NetcdfFile;
@@ -7,7 +7,7 @@ import ucar.nc2.constants.CDM;
 import ucar.nc2.constants.FeatureType;
 import ucar.nc2.dataset.*;
 import ucar.nc2.ft.FeatureDataset;
-import ucar.nc2.ft2.coverage.adapter.SimpleGeometryCS;
+import ucar.nc2.ft2.simpgeometry.adapter.SimpleGeometryCS;
 import ucar.nc2.time.CalendarDate;
 import ucar.nc2.time.CalendarDateRange;
 import ucar.nc2.util.cache.FileCacheIF;

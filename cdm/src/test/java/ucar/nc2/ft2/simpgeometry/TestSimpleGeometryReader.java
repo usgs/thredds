@@ -1,4 +1,4 @@
-package ucar.nc2.ft2.coverage.simpgeometry;
+package ucar.nc2.ft2.simpgeometry;
 
 import java.io.IOException;
 
@@ -6,6 +6,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import ucar.nc2.dataset.NetcdfDataset;
+import ucar.nc2.ft2.simpgeometry.GeometryType;
+import ucar.nc2.ft2.simpgeometry.Line;
+import ucar.nc2.ft2.simpgeometry.Point;
+import ucar.nc2.ft2.simpgeometry.Polygon;
+import ucar.nc2.ft2.simpgeometry.SimpleGeometryReader;
 import ucar.unidata.util.test.TestDir;
 
 /**

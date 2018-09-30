@@ -50,7 +50,6 @@ public enum FeatureType {
   FMRC,       // two time dimensions, runtime and forecast time
   SWATH,      // 2D latlon, dependent time, polar orbiting satellites
   CURVILINEAR,// 2D latlon, independent time
-  SIMPLE_GEOMETRY,	  // new simple geometry coverage type
 
   ANY_POINT,  // Any of the point types
   POINT,      // unconnected points
@@ -63,6 +62,8 @@ public enum FeatureType {
   RADIAL,     // polar coordinates
   STATION_RADIAL, // time series of radial data
 
+  SIMPLE_GEOMETRY, // geospatial associations with data
+  
   // experimental
   IMAGE,    // pixels, may not be geolocatable
   UGRID;    // unstructured grids
@@ -89,11 +90,14 @@ public enum FeatureType {
 
   public boolean isCoverageFeatureType() {
     return (this == FeatureType.COVERAGE) ||
-            (this == FeatureType.GRID) || (this == FeatureType.FMRC) || (this == FeatureType.SWATH)|| (this == FeatureType.CURVILINEAR) || (this == FeatureType.SIMPLE_GEOMETRY);
+            (this == FeatureType.GRID) || (this == FeatureType.FMRC) || (this == FeatureType.SWATH)|| (this == FeatureType.CURVILINEAR);
   }
 
   public boolean isUnstructuredGridFeatureType() {
     return this == FeatureType.UGRID;
   }
 
+  public boolean isSimpleGeometry() {
+	return this == FeatureType.SIMPLE_GEOMETRY;
+  }
 }

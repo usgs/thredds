@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometry;
+import ucar.nc2.ft2.simpgeometry.SimpleGeometry;
 
 /**
  * A writer for a WFS compliant Feature Collection GML file.
