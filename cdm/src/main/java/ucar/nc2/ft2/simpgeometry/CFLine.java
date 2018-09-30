@@ -227,7 +227,20 @@ public class CFLine implements Line {
 					this.addPoint(itrX.getDoubleNext(), itrY.getDoubleNext());
 				}
 	
-				this.setData(var.read(":," + index).reduce());
+				switch(var.getRank()) {
+				
+				case 2:
+					this.setData(var.read(":," + index).reduce());
+					break;
+					
+				case 1:
+					this.setData(var.read("" + index));
+					break;
+					
+				default:
+					return null;	// currently do not support anything but dataseries and scalar associations
+				
+				}
 			}
 			
 			// If there are multipolygons then take the upper and lower of it and divy it up
@@ -256,8 +269,22 @@ public class CFLine implements Line {
 						smaller--;
 					}
 					
-					// Set data of each
-					tail.setData(var.read(":," + index));
+					// Set data of each	
+					switch(var.getRank()) {
+					
+					case 2:
+						tail.setData(var.read(":," + index).reduce());
+						break;
+						
+					case 1:
+						tail.setData(var.read("" + index));
+						break;
+						
+					default:
+						return null;	// currently do not support anything but dataseries and scalar associations
+					
+					}
+					
 					lower += tail.getPoints().size();
 					pncInd++;
 					tail.setNext(new CFLine());

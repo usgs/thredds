@@ -176,7 +176,7 @@ public class CF1Convention extends CSMConvention {
       }
       
     	  
-      //simple geometry
+      // simple geometry
 
       if(ds.findGlobalAttribute(CF.CONVENTIONS) != null)
       if(getVersion(ds.findGlobalAttribute(CF.CONVENTIONS).getStringValue()) >= 8) // only acknowledge simple geometry standard extension if CF-1.8 or higher
@@ -240,7 +240,9 @@ public class CF1Convention extends CSMConvention {
       		for(Dimension di: dims) {
       			
       			if(!di.getShortName().equals("time")) {
-      				ds.findVariable(di.getFullNameEscaped()).addAttribute(new Attribute(_Coordinate.AxisType, AxisType.SimpleGeometryID.toString()));
+      				if(ds.findVariable(di.getFullNameEscaped()) != null)
+      					ds.findVariable(di.getFullNameEscaped()).addAttribute(new Attribute(_Coordinate.AxisType, AxisType.SimpleGeometryID.toString()));
+      				// handle else case as malformed CF NetCDF
       			}
       			
       			pre = di.getShortName() + " " + pre;

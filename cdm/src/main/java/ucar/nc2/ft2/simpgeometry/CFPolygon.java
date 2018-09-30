@@ -251,7 +251,21 @@ public class CFPolygon implements Polygon  {
 					this.addPoint(itrX.getDoubleNext(), itrY.getDoubleNext());
 				}
 	
-				this.setData(polyvar.read(":," + index).reduce());
+				
+				switch(polyvar.getRank()) {
+				
+				case 2:
+					this.setData(polyvar.read(":," + index).reduce());
+					break;
+					
+				case 1:
+					this.setData(polyvar.read("" + index));
+					break;
+					
+				default:
+					return null;	// currently do not support anything but dataseries and scalar associations
+				
+				}
 			}
 			
 			// If there are multipolygons then take the upper and lower of it and divy it up
@@ -304,7 +318,21 @@ public class CFPolygon implements Polygon  {
 					}
 					
 					// Set data of each
-					tail.setData(polyvar.read(":," + index));
+					switch(polyvar.getRank()) {
+					
+					case 2:
+						tail.setData(polyvar.read(":," + index).reduce());
+						break;
+						
+					case 1:
+						tail.setData(polyvar.read("" + index));
+						break;
+						
+					default:
+						return null;	// currently do not support anything but dataseries and scalar associations
+					
+					}
+
 					lower += tail.getPoints().size();
 					pncInd++;
 					tail.setNext(new CFPolygon());
