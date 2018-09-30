@@ -31,16 +31,15 @@ public class SimpleGeometryStandardFactory implements FeatureDatasetFactory {
 
   private boolean match(FeatureType wantFeatureType, FeatureType covType) {
     if (wantFeatureType == null || wantFeatureType == FeatureType.ANY) return true;
-    // LOOK ever have to return false?
     return true;
   }
 
   public FeatureDataset open(FeatureType ftype, NetcdfDataset ncd, Object analysis, CancelTask task, Formatter errlog) throws IOException {
 
-	  return new SimpleGeometryFeatureDataset( ncd);
+	  return new SimpleGeometryFeatureDataset(ncd);
   }
 
   public FeatureType[] getFeatureTypes() {
-    return new FeatureType[] {FeatureType.GRID, FeatureType.FMRC, FeatureType.SWATH};
+    return new FeatureType[] {FeatureType.SIMPLE_GEOMETRY};
   }
 }
