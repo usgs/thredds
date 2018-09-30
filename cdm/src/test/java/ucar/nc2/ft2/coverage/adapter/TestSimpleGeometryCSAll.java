@@ -10,11 +10,11 @@ import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Variable;
 import ucar.nc2.dataset.CoordinateSystem;
 import ucar.nc2.dataset.NetcdfDataset;
-import ucar.nc2.ft2.coverage.adapter.SimpleGeometryCSBuilder;
-import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometryCoverage;
-import ucar.nc2.ft2.coverage.simpgeometry.GeometryType;
-import ucar.nc2.ft2.coverage.simpgeometry.Polygon;
-import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometry;
+import ucar.nc2.ft2.simpgeometry.GeometryType;
+import ucar.nc2.ft2.simpgeometry.Polygon;
+import ucar.nc2.ft2.simpgeometry.SimpleGeometry;
+import ucar.nc2.ft2.simpgeometry.SimpleGeometryCoverage;
+import ucar.nc2.ft2.simpgeometry.adapter.SimpleGeometryCSBuilder;
 import ucar.unidata.util.test.TestDir;
 
 /**

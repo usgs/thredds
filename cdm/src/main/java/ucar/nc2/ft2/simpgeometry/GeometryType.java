@@ -1,4 +1,4 @@
-package ucar.nc2.ft2.coverage.simpgeometry;
+package ucar.nc2.ft2.simpgeometry;
 
 public enum GeometryType {
     POINT("Point"), LINE("Line"), POLYGON("Polygon");

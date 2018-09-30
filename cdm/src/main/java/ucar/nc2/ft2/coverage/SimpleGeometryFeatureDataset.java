@@ -1,7 +1,7 @@
 package ucar.nc2.ft2.coverage;
 
 import ucar.nc2.ft.FeatureDataset;
-import ucar.nc2.ft2.coverage.adapter.SimpleGeometryCS;
+import ucar.nc2.ft2.simpgeometry.adapter.SimpleGeometryCS;
 
 public interface SimpleGeometryFeatureDataset extends FeatureDataset {
 

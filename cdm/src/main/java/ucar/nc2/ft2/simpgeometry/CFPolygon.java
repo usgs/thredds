@@ -1,4 +1,4 @@
-package ucar.nc2.ft2.coverage.simpgeometry;
+package ucar.nc2.ft2.simpgeometry;
 
 import java.util.List;
 import java.io.IOException;
@@ -329,6 +329,63 @@ public class CFPolygon implements Polygon  {
 		return this;
 	}
 	
+	/**
+	 * Gets the upper bounding box coordinate on the polygon.
+	 * @return double array = (x, y)
+	 */
+	public double[] getBBUpper() {
+		double[] bbUpper = new double[2];
+		
+		List<Point> ptList = this.getPoints();
+		if(ptList.isEmpty()) return null;
+		bbUpper[0] = ptList.get(0).getY();
+		bbUpper[1] = ptList.get(0).getY();
+		
+		for(Point pt : this.getPoints()) {
+			if(bbUpper[0] < pt.getX()){
+				bbUpper[0] = pt.getX();
+			}
+			
+			if(bbUpper[1] < pt.getY()) {
+				bbUpper[1] = pt.getY();
+			}
+		}
+		
+		// Got maximum points, add some padding.
+		bbUpper[0] += 10;
+		bbUpper[1] += 10;
+		
+		return bbUpper;
+	}
+	
+	/**
+	 * Gets the lower bounding box coordinate on the polygon.
+	 * @return double array = (x, y)
+	 */
+	public double[] getBBLower() {
+		double[] bbLower = new double[2];
+		
+		List<Point> ptList = this.getPoints();
+		if(ptList.isEmpty()) return null;
+		bbLower[0] = ptList.get(0).getY();
+		bbLower[1] = ptList.get(0).getY();
+		
+		for(Point pt : this.getPoints()) {
+			if(bbLower[0] > pt.getX()){
+				bbLower[0] = pt.getX();
+			}
+			
+			if(bbLower[1] > pt.getY()) {
+				bbLower[1] = pt.getY();
+			}
+		}
+		
+		// Got minimum points, add some padding.
+		bbLower[0] -= 10;
+		bbLower[1] -= 10;
+		
+		return bbLower;
+	}
 	
 	/**
 	 * Constructs an empty polygon with nothing in it using an Array List.
