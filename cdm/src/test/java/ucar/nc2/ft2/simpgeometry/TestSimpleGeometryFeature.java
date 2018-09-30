@@ -24,7 +24,7 @@ import ucar.nc2.ft2.simpgeometry.GeometryType;
 import ucar.nc2.ft2.simpgeometry.Line;
 import ucar.nc2.ft2.simpgeometry.Point;
 import ucar.nc2.ft2.simpgeometry.Polygon;
-import ucar.nc2.ft2.simpgeometry.SimpleGeometryCoverage;
+import ucar.nc2.ft2.simpgeometry.SimpleGeometryFeature;
 import ucar.nc2.ft2.simpgeometry.adapter.SimpleGeometryCS;
 
 public class TestSimpleGeometryFeature {
@@ -42,7 +42,7 @@ public class TestSimpleGeometryFeature {
 
     @Test (expected = RuntimeException.class)
     public void testSetCoordSysNull() {
-        SimpleGeometryCoverage cov = new SimpleGeometryCoverage(name, dt, att, coordSysName, units, description, user, geometry);
+        SimpleGeometryFeature cov = new SimpleGeometryFeature(name, dt, att, coordSysName, units, description, user, geometry);
         SimpleGeometryCS cs = mock(SimpleGeometryCS.class);
         cov.setCoordSys(cs);
         cov.setCoordSys(cov.getCoordSys());
@@ -56,7 +56,7 @@ public class TestSimpleGeometryFeature {
 
         Point point = mock(CFPoint.class);
         given(cs.getPoint(name, index)).willReturn(point);
-        SimpleGeometryCoverage cov = new SimpleGeometryCoverage(name, dt, att, coordSysName, units, description, user, POINT);
+        SimpleGeometryFeature cov = new SimpleGeometryFeature(name, dt, att, coordSysName, units, description, user, POINT);
         cov.setCoordSys(cs);
         Assert.assertEquals(cov.readGeometry(index), cs.getPoint(name, index));
     }
@@ -69,7 +69,7 @@ public class TestSimpleGeometryFeature {
 
         Line line = mock(CFLine.class);
         given(cs.getLine(name, index)).willReturn(line);
-        SimpleGeometryCoverage cov = new SimpleGeometryCoverage(name, dt, att, coordSysName, units, description, user, LINE);
+        SimpleGeometryFeature cov = new SimpleGeometryFeature(name, dt, att, coordSysName, units, description, user, LINE);
         cov.setCoordSys(cs);
         Assert.assertEquals(cov.readGeometry(index), cs.getLine(name, index));
 
@@ -83,7 +83,7 @@ public class TestSimpleGeometryFeature {
 
         Polygon polygon = mock(CFPolygon.class);
         given(cs.getPolygon(name, index)).willReturn(polygon);
-        SimpleGeometryCoverage cov = new SimpleGeometryCoverage(name, dt, att, coordSysName, units, description, user, POLYGON);
+        SimpleGeometryFeature cov = new SimpleGeometryFeature(name, dt, att, coordSysName, units, description, user, POLYGON);
         cov.setCoordSys(cs);
         Assert.assertEquals(cov.readGeometry(index), cs.getPolygon(name, index));
 
