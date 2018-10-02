@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import thredds.core.TdsRequestedDataset;
 import ucar.nc2.dataset.CoordinateSystem;
 import ucar.nc2.dataset.NetcdfDataset;
-import ucar.nc2.ft2.coverage.adapter.SimpleGeometryCSBuilder;
-import ucar.nc2.ft2.coverage.simpgeometry.*;
+import ucar.nc2.ft2.simpgeometry.*;
+import ucar.nc2.ft2.simpgeometry.adapter.SimpleGeometryCSBuilder;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -290,8 +290,6 @@ public class WFSController extends HttpServlet {
 			
 			if(actualPath != null) dataset = NetcdfDataset.openDataset(actualPath);
 			else return;
-			
-			if(dataset == null) hsres.sendError(HttpServletResponse.SC_NOT_FOUND);	// can't open dataset an error for sure "not found"
 			
 			List<CoordinateSystem> csList = dataset.getCoordinateSystems();
 			SimpleGeometryCSBuilder cs = new SimpleGeometryCSBuilder(dataset, csList.get(0), null);

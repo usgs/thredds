@@ -10,11 +10,11 @@ import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Variable;
 import ucar.nc2.dataset.CoordinateSystem;
 import ucar.nc2.dataset.NetcdfDataset;
-import ucar.nc2.ft2.coverage.adapter.SimpleGeometryCSBuilder;
-import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometryCoverage;
-import ucar.nc2.ft2.coverage.simpgeometry.GeometryType;
-import ucar.nc2.ft2.coverage.simpgeometry.Polygon;
-import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometry;
+import ucar.nc2.ft2.simpgeometry.GeometryType;
+import ucar.nc2.ft2.simpgeometry.Polygon;
+import ucar.nc2.ft2.simpgeometry.SimpleGeometry;
+import ucar.nc2.ft2.simpgeometry.SimpleGeometryFeature;
+import ucar.nc2.ft2.simpgeometry.adapter.SimpleGeometryCSBuilder;
 import ucar.unidata.util.test.TestDir;
 
 /**
@@ -33,7 +33,7 @@ public class TestSimpleGeometryCSAll {
 		SimpleGeometryCSBuilder builder = new SimpleGeometryCSBuilder(data, csl.get(0), null);
 		Variable hru_test = data.findVariable("hru_soil_moist");
 		
-		SimpleGeometryCoverage sgc = new SimpleGeometryCoverage(hru_test.getFullNameEscaped(), hru_test.getDataType(), hru_test.getAttributes(), csl.get(0).getName(), hru_test.getUnitsString(),
+		SimpleGeometryFeature sgc = new SimpleGeometryFeature(hru_test.getFullNameEscaped(), hru_test.getDataType(), hru_test.getAttributes(), csl.get(0).getName(), hru_test.getUnitsString(),
 				hru_test.getDescription(), null, GeometryType.POLYGON);
 		sgc.setCoordSys(builder.makeCoordSys());
 		

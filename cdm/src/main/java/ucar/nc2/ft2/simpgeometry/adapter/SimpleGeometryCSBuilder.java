@@ -2,7 +2,7 @@
  * Copyright (c) 1998-2018 John Caron and University Corporation for Atmospheric Research/Unidata
  * See LICENSE for license information.
  */
-package ucar.nc2.ft2.coverage.adapter;
+package ucar.nc2.ft2.simpgeometry.adapter;
 
 import ucar.nc2.Dimension;
 import ucar.nc2.Variable;
@@ -10,11 +10,11 @@ import ucar.nc2.constants.AxisType;
 import ucar.nc2.constants.CF;
 import ucar.nc2.constants.FeatureType;
 import ucar.nc2.dataset.*;
-import ucar.nc2.ft2.coverage.simpgeometry.GeometryType;
-import ucar.nc2.ft2.coverage.simpgeometry.Line;
-import ucar.nc2.ft2.coverage.simpgeometry.Point;
-import ucar.nc2.ft2.coverage.simpgeometry.Polygon;
-import ucar.nc2.ft2.coverage.simpgeometry.SimpleGeometryReader;
+import ucar.nc2.ft2.simpgeometry.GeometryType;
+import ucar.nc2.ft2.simpgeometry.Line;
+import ucar.nc2.ft2.simpgeometry.Point;
+import ucar.nc2.ft2.simpgeometry.Polygon;
+import ucar.nc2.ft2.simpgeometry.SimpleGeometryReader;
 import ucar.unidata.geoloc.Projection;
 import ucar.unidata.geoloc.ProjectionImpl;
 
@@ -33,7 +33,7 @@ public class SimpleGeometryCSBuilder {
 
   // classify based on largest coordinate system
   public static SimpleGeometryCSBuilder classify(NetcdfDataset ds, Formatter errlog) {
-    if (errlog != null) errlog.format("CoverageFactory for '%s'%n", ds.getLocation());
+    if (errlog != null) errlog.format("SimpleGeometryFactory for '%s'%n", ds.getLocation());
 
     // sort by largest size first
     List<CoordinateSystem> css = new ArrayList<>(ds.getCoordinateSystems());
@@ -46,7 +46,7 @@ public class SimpleGeometryCSBuilder {
     }
     
     if (builder == null) return null;
-    if (errlog != null) errlog.format("coverage = %s%n", builder.type);
+    if (errlog != null) errlog.format("simple geometry = %s%n", builder.type);
     return builder;
   }
 
@@ -343,9 +343,9 @@ public class SimpleGeometryCSBuilder {
   /**
    * Returns the feature type of this type
    * 
-   * @return
+   * @return Feature type of this type
    */
-  public FeatureType getCoverageType() {
+  public FeatureType getFeatureType() {
 	  return this.type;
   }
   

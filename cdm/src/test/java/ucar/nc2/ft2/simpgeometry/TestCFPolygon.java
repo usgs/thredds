@@ -1,10 +1,14 @@
-package ucar.nc2.ft2.coverage.simpgeometry;
+package ucar.nc2.ft2.simpgeometry;
 
 import java.util.List;
 import java.util.Random;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import ucar.nc2.ft2.simpgeometry.CFPolygon;
+import ucar.nc2.ft2.simpgeometry.Point;
+import ucar.nc2.ft2.simpgeometry.Polygon;
 
 /**
  * Tests for simple construction of a CF Polygon.

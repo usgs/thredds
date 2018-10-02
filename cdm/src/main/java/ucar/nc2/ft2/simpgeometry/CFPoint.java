@@ -1,4 +1,4 @@
-package ucar.nc2.ft2.coverage.simpgeometry;
+package ucar.nc2.ft2.simpgeometry;
 
 import java.io.IOException;
 import java.util.List;
@@ -10,7 +10,7 @@ import ucar.nc2.Variable;
 import ucar.nc2.constants.CF;
 import ucar.nc2.dataset.CoordinateAxis;
 import ucar.nc2.dataset.NetcdfDataset;
-import ucar.nc2.ft2.coverage.simpgeometry.Point;
+import ucar.nc2.ft2.simpgeometry.Point;
 
 /**
  * A CF 1.8 compliant Point

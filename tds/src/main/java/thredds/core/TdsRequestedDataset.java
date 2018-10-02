@@ -12,7 +12,7 @@ import ucar.nc2.dataset.NetcdfDataset;
 import ucar.nc2.dt.GridDataset;
 import ucar.nc2.ft.FeatureDatasetPoint;
 import ucar.nc2.ft2.coverage.CoverageCollection;
-import ucar.nc2.ft2.coverage.simpgeometry.*;
+import ucar.nc2.ft2.simpgeometry.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

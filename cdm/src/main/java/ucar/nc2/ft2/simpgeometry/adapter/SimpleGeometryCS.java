@@ -3,7 +3,7 @@
  * See LICENSE for license information.
  */
 
-package ucar.nc2.ft2.coverage.adapter;
+package ucar.nc2.ft2.simpgeometry.adapter;
 
 import java.util.ArrayList;
 import java.util.Formatter;
@@ -13,7 +13,7 @@ import ucar.nc2.constants.AxisType;
 import ucar.nc2.dataset.*;
 import ucar.nc2.Dimension;
 import ucar.nc2.dataset.CoordinateAxis;
-import ucar.nc2.ft2.coverage.simpgeometry.*;
+import ucar.nc2.ft2.simpgeometry.*;
 
 /**
  * Simple Geometry Coordinate System / Enhanced Dataset Implementation

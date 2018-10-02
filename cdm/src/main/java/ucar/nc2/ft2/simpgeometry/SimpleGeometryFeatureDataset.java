@@ -1,4 +1,4 @@
-package ucar.nc2.ft2.coverage.simpgeometry;
+package ucar.nc2.ft2.simpgeometry;
 
 import ucar.nc2.Attribute;
 import ucar.nc2.NetcdfFile;
@@ -7,7 +7,7 @@ import ucar.nc2.constants.CDM;
 import ucar.nc2.constants.FeatureType;
 import ucar.nc2.dataset.*;
 import ucar.nc2.ft.FeatureDataset;
-import ucar.nc2.ft2.coverage.adapter.SimpleGeometryCS;
+import ucar.nc2.ft2.simpgeometry.adapter.SimpleGeometryCS;
 import ucar.nc2.time.CalendarDate;
 import ucar.nc2.time.CalendarDateRange;
 import ucar.nc2.util.cache.FileCacheIF;
@@ -171,21 +171,21 @@ public class SimpleGeometryFeatureDataset implements FeatureDataset {
     public static class SimpleGeometryCovSet  {
 
         private SimpleGeometryCS gcc;
-        private List<SimpleGeometryCoverage> covs = new ArrayList<>();
+        private List<SimpleGeometryFeature> covs = new ArrayList<>();
 
 
         private SimpleGeometryCovSet(SimpleGeometryCS gcc) {
             this.gcc = gcc;
         }
         
-        private void add(SimpleGeometryCoverage cov) {
+        private void add(SimpleGeometryFeature cov) {
             covs.add(cov);
         }
 
         /**
          * Get list of GeoGrid objects
          */
-        public List<SimpleGeometryCoverage> getGrids() {
+        public List<SimpleGeometryFeature> getGrids() {
             return covs;
         }
 
