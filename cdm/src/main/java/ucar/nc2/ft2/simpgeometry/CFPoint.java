@@ -198,7 +198,7 @@ public class CFPoint implements Point{
 				switch(vari.getRank()) {
 				
 				case 2:
-					this.setData(vari.read(CFSimpleGeometryHelper.getSubsetString2D(vari, index)).reduce());
+					this.setData(vari.read(CFSimpleGeometryHelper.getSubsetString(vari, index)).reduce());
 					break;
 					
 				case 1:
@@ -229,7 +229,7 @@ public class CFPoint implements Point{
 					switch(vari.getRank()) {
 					
 					case 2:
-						point.setData(vari.read(CFSimpleGeometryHelper.getSubsetString2D(vari, index)).reduce());
+						point.setData(vari.read(CFSimpleGeometryHelper.getSubsetString(vari, index)).reduce());
 						break;
 						
 					case 1:

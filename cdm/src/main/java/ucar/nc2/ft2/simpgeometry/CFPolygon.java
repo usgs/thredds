@@ -1,6 +1,10 @@
 package ucar.nc2.ft2.simpgeometry;
 
 import java.util.List;
+
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -23,6 +27,7 @@ import ucar.nc2.ft2.simpgeometry.exception.InvalidDataseriesException;
  */
 public class CFPolygon implements Polygon  {
 
+	private Logger cfpl = LoggerFactory.getLogger(CFPolygon.class);
 	private List<Point> points;	// a list of the constitutent points of the Polygon, connected in ascending order as in the CF convention
 	private Polygon next;	// if non-null, next refers to the next line part of a multi-polygon
 	private Polygon prev;	// if non-null, prev refers to the previous line part of a multi-polygon
@@ -256,7 +261,7 @@ public class CFPolygon implements Polygon  {
 				switch(polyvar.getRank()) {
 				
 				case 2:
-					this.setData(polyvar.read(CFSimpleGeometryHelper.getSubsetString2D(polyvar, index)).reduce());
+					this.setData(polyvar.read(CFSimpleGeometryHelper.getSubsetString(polyvar, index)).reduce());
 					break;
 					
 				case 1:
@@ -322,7 +327,7 @@ public class CFPolygon implements Polygon  {
 					switch(polyvar.getRank()) {
 					
 					case 2:
-						tail.setData(polyvar.read(CFSimpleGeometryHelper.getSubsetString2D(polyvar, index)).reduce());
+						tail.setData(polyvar.read(CFSimpleGeometryHelper.getSubsetString(polyvar, index)).reduce());
 						break;
 						
 					case 1:
@@ -346,15 +351,8 @@ public class CFPolygon implements Polygon  {
 			}
 		}
 		
-		catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		
-		} catch (InvalidRangeException e) {
-			e.printStackTrace();
-			return null;
-		} catch (InvalidDataseriesException e){
-			e.printStackTrace();
+		catch (IOException | InvalidRangeException | InvalidDataseriesException e) {
+			cfpl.error(e.getMessage());
 			return null;
 		}
 		

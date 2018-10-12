@@ -10,7 +10,7 @@ import ucar.nc2.constants.CF;
  * Helpers for various simple geometry tasks
  * relating to the CF standard.
  * 
- * @author wchen
+ * @author wchen@usgs.gov
  *
  */
 public class CFSimpleGeometryHelper {
@@ -20,15 +20,13 @@ public class CFSimpleGeometryHelper {
 	 * useful for subsetting timeseries
 	 * 
 	 * 
-	 * If a time dimension is not present, however, it will default to id first and then subsetter second.
-	 * 
 	 * @param var variable to subset
 	 * @param beginInd beginning index (inclusive)
 	 * @param endInd end index (exclusive)
 	 * @param id The SimpleGeometryID to index
 	 * @return subset string
 	 */
-	public static String getSubsetString2D(Variable var, int beginInd, int endInd, int id){
+	public static String getSubsetString(Variable var, int beginInd, int endInd, int id){
 		if(var == null) return null;
 		
 		String subStr = "";
@@ -36,7 +34,7 @@ public class CFSimpleGeometryHelper {
 		List<Dimension> dimList = var.getDimensions();
 		
 		// Enforce two dimension arrays
-		if(dimList.size() > 2 || dimList.size() <= 1) {
+		if(dimList.size() > 2 || dimList.size() < 1) {
 			return null;
 		}
 		
@@ -46,7 +44,7 @@ public class CFSimpleGeometryHelper {
 			if(dim == null) continue;
 			
 			// If not CF Time then select only that ID
-			if(!dim.getShortName().equalsIgnoreCase(CF.TIME) && !dim.getFullNameEscaped().equalsIgnoreCase(CF.TIME)) {
+			if(!CF.TIME.equalsIgnoreCase(dim.getShortName()) && !CF.TIME.equalsIgnoreCase(dim.getFullNameEscaped())) {
 				subStr += id;
 			}
 			
@@ -76,7 +74,7 @@ public class CFSimpleGeometryHelper {
 	 * @param id The SimpleGeometryID to index
 	 * @return subset string
 	 */
-	public static String getSubsetString2D(Variable var, int id) {
-		return getSubsetString2D(var, -1, -1, id);
+	public static String getSubsetString(Variable var, int id) {
+		return getSubsetString(var, -1, -1, id);
 	}
 }

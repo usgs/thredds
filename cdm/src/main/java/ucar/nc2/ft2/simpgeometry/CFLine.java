@@ -3,6 +3,10 @@ package ucar.nc2.ft2.simpgeometry;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 import ucar.ma2.InvalidRangeException;
@@ -22,6 +26,7 @@ import ucar.nc2.ft2.simpgeometry.exception.InvalidDataseriesException;
  */
 public class CFLine implements Line {
 
+	private static final Logger cfl = LoggerFactory.getLogger(CFLine.class);
 	private List<Point> points;	// a list of the constitutent points of the Line, connected in ascending order as in the CF convention
 	private Line next;	// if non-null, next refers to the next line part of a multi-line
 	private Line prev;	// if non-null, prev refers to the previous line part of a multi-line	
@@ -231,7 +236,7 @@ public class CFLine implements Line {
 				switch(var.getRank()) {
 				
 				case 2:
-					this.setData(var.read(CFSimpleGeometryHelper.getSubsetString2D(var, index)).reduce());
+					this.setData(var.read(CFSimpleGeometryHelper.getSubsetString(var, index)).reduce());
 					break;
 					
 				case 1:
@@ -274,7 +279,7 @@ public class CFLine implements Line {
 					switch(var.getRank()) {
 					
 					case 2:
-						tail.setData(var.read(CFSimpleGeometryHelper.getSubsetString2D(var, index)).reduce());
+						tail.setData(var.read(CFSimpleGeometryHelper.getSubsetString(var, index)).reduce());
 						break;
 						
 					case 1:
@@ -298,15 +303,8 @@ public class CFLine implements Line {
 			}
 		}
 		
-		catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		
-		} catch (InvalidRangeException e) {
-			e.printStackTrace();
-			return null;
-		} catch (InvalidDataseriesException e) {
-			e.printStackTrace();
+		catch (IOException  | InvalidRangeException  | InvalidDataseriesException e) {
+			cfl.error(e.getMessage());;
 			return null;
 		}
 		
