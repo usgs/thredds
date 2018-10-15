@@ -1,6 +1,10 @@
 package ucar.nc2.ft2.simpgeometry;
 
 import java.util.List;
+
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -11,6 +15,7 @@ import ucar.nc2.Variable;
 import ucar.nc2.constants.CF;
 import ucar.nc2.dataset.CoordinateAxis;
 import ucar.nc2.dataset.NetcdfDataset;
+import ucar.nc2.ft2.simpgeometry.exception.InvalidDataseriesException;
 
 /**
  * A CF 1.8 compliant Polygon
@@ -22,6 +27,7 @@ import ucar.nc2.dataset.NetcdfDataset;
  */
 public class CFPolygon implements Polygon  {
 
+	private Logger cfpl = LoggerFactory.getLogger(CFPolygon.class);
 	private List<Point> points;	// a list of the constitutent points of the Polygon, connected in ascending order as in the CF convention
 	private Polygon next;	// if non-null, next refers to the next line part of a multi-polygon
 	private Polygon prev;	// if non-null, prev refers to the previous line part of a multi-polygon
@@ -251,7 +257,21 @@ public class CFPolygon implements Polygon  {
 					this.addPoint(itrX.getDoubleNext(), itrY.getDoubleNext());
 				}
 	
-				this.setData(polyvar.read(":," + index).reduce());
+				
+				switch(polyvar.getRank()) {
+				
+				case 2:
+					this.setData(polyvar.read(CFSimpleGeometryHelper.getSubsetString(polyvar, index)).reduce());
+					break;
+					
+				case 1:
+					this.setData(polyvar.read("" + index));
+					break;
+					
+				default:
+					throw new InvalidDataseriesException(InvalidDataseriesException.RANK_MISMATCH);	// currently do not support anything but dataseries and scalar associations
+				
+				}
 			}
 			
 			// If there are multipolygons then take the upper and lower of it and divy it up
@@ -304,7 +324,21 @@ public class CFPolygon implements Polygon  {
 					}
 					
 					// Set data of each
-					tail.setData(polyvar.read(":," + index));
+					switch(polyvar.getRank()) {
+					
+					case 2:
+						tail.setData(polyvar.read(CFSimpleGeometryHelper.getSubsetString(polyvar, index)).reduce());
+						break;
+						
+					case 1:
+						tail.setData(polyvar.read("" + index));
+						break;
+						
+					default:
+						throw new InvalidDataseriesException(InvalidDataseriesException.RANK_MISMATCH);	// currently do not support anything but dataseries and scalar associations
+					
+					}
+
 					lower += tail.getPoints().size();
 					pncInd++;
 					tail.setNext(new CFPolygon());
@@ -317,12 +351,8 @@ public class CFPolygon implements Polygon  {
 			}
 		}
 		
-		catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		
-		} catch (InvalidRangeException e) {
-			e.printStackTrace();
+		catch (IOException | InvalidRangeException | InvalidDataseriesException e) {
+			cfpl.error(e.getMessage());
 			return null;
 		}
 		

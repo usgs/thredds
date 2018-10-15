@@ -3,6 +3,10 @@ package ucar.nc2.ft2.simpgeometry;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 import ucar.ma2.InvalidRangeException;
@@ -10,6 +14,7 @@ import ucar.nc2.Variable;
 import ucar.nc2.constants.CF;
 import ucar.nc2.dataset.CoordinateAxis;
 import ucar.nc2.dataset.NetcdfDataset;
+import ucar.nc2.ft2.simpgeometry.exception.InvalidDataseriesException;
 
 /**
  * A CF 1.8 compliant Line
@@ -21,6 +26,7 @@ import ucar.nc2.dataset.NetcdfDataset;
  */
 public class CFLine implements Line {
 
+	private static final Logger cfl = LoggerFactory.getLogger(CFLine.class);
 	private List<Point> points;	// a list of the constitutent points of the Line, connected in ascending order as in the CF convention
 	private Line next;	// if non-null, next refers to the next line part of a multi-line
 	private Line prev;	// if non-null, prev refers to the previous line part of a multi-line	
@@ -227,7 +233,20 @@ public class CFLine implements Line {
 					this.addPoint(itrX.getDoubleNext(), itrY.getDoubleNext());
 				}
 	
-				this.setData(var.read(":," + index).reduce());
+				switch(var.getRank()) {
+				
+				case 2:
+					this.setData(var.read(CFSimpleGeometryHelper.getSubsetString(var, index)).reduce());
+					break;
+					
+				case 1:
+					this.setData(var.read("" + index));
+					break;
+					
+				default:
+					throw new InvalidDataseriesException(InvalidDataseriesException.RANK_MISMATCH);	// currently do not support anything but dataseries and scalar associations
+				
+				}
 			}
 			
 			// If there are multipolygons then take the upper and lower of it and divy it up
@@ -256,8 +275,22 @@ public class CFLine implements Line {
 						smaller--;
 					}
 					
-					// Set data of each
-					tail.setData(var.read(":," + index));
+					// Set data of each	
+					switch(var.getRank()) {
+					
+					case 2:
+						tail.setData(var.read(CFSimpleGeometryHelper.getSubsetString(var, index)).reduce());
+						break;
+						
+					case 1:
+						tail.setData(var.read("" + index));
+						break;
+						
+					default:
+						throw new InvalidDataseriesException(InvalidDataseriesException.RANK_MISMATCH);	// currently do not support anything but dataseries and scalar associations
+					
+					}
+					
 					lower += tail.getPoints().size();
 					pncInd++;
 					tail.setNext(new CFLine());
@@ -270,12 +303,8 @@ public class CFLine implements Line {
 			}
 		}
 		
-		catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		
-		} catch (InvalidRangeException e) {
-			e.printStackTrace();
+		catch (IOException  | InvalidRangeException  | InvalidDataseriesException e) {
+			cfl.error(e.getMessage());;
 			return null;
 		}
 		
